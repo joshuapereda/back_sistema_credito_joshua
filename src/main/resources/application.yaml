@@ -1,0 +1,27 @@
+server:
+    #PUERTO
+    port: 9600
+spring: 
+    application:
+        # NOMBRE DE LA APLICACIÓN
+        name: control-clientes
+    datasource:
+        # CONFIGURACIÓN DE LA BASE DE DATOS POSTGRESQL
+        driver-class-name: org.postgresql.Driver
+        # URL DE CONEXIÓN A LA BASE DE DATOS
+        # control-clientes - NOMBRE DE LA BASE DE DATOS
+        url: jdbc:postgresql://localhost:5432/control-clientes
+        # USUARIO Y CONTRASEÑA
+        username: postgres
+        password: admin
+    jpa:
+        # DDL-AUTO CONFIGURADO EN CREATE-DROP PARA CREAR Y 
+        # ELIMINAR LAS TABLAS EN CADA EJECUCIÓN
+        hibernate:
+            ddl-auto: create-drop
+        show-sql: true 
+
+
+        
+          
+            
