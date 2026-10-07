@@ -36,11 +36,5 @@ public class Persona {
     @Column(nullable = false)
     private String direccion;
 
-    //Indica que si borro uan persona se borrara tambien el suaurio 
-    //gracias a esto :cascade = CascadeType.REMOVE 
-    @OneToOne(mappedBy = "persona")
-    private Usuario usuario;
 
-    @OneToOne(mappedBy = "persona")
-    private Cliente cliente;
 }

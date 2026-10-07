@@ -1,5 +1,8 @@
 package com.codeper.ControlClientes.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,6 +36,12 @@ public class Cliente {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "persona_id", nullable = false)
     private Persona persona;
+
+
+    //BIDIRECCIONALIDAD 
+    //Permite tener los ids en ambas tablas sin necesidad de relacionarlo 
+    @OneToMany(mappedBy = "cliente")
+    private List<Compra> compras = new ArrayList<>();
 
 
 }

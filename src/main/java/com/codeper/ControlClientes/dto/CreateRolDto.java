@@ -1,8 +1,13 @@
 package com.codeper.ControlClientes.dto;
 
+import java.util.List;
+
+import com.codeper.ControlClientes.entity.Permiso;
 import com.codeper.ControlClientes.entity.Rol;
+
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -24,11 +29,16 @@ public class CreateRolDto {
     @Pattern (regexp = "^[a-zA-ZÀ-ÿñÑ0-9 .,()\\-]{0,200}$", message = "La descripción contiene caracteres no permitidos")
     private String descripcion;
 
-    public static Rol toEntityRol(CreateRolDto createRolDto){
-        Rol rol =new Rol();
-        rol.setNombre(createRolDto.getNombre());
-        rol.setDescripcion(createRolDto.getDescripcion());
-        return  rol;
+    @NotEmpty(message = "Debe asignar al menos un permiso al rol")
+    private List<Integer>permisosId;
+    
+
+    public static Rol toEntityRol(CreateRolDto createRolDto,List<Permiso> permisos){
+       return Rol.builder()
+            .nombre(createRolDto.getNombre())
+            .descripcion(createRolDto.getDescripcion())
+            .permisos(permisos)
+            .build();
     }
 
 }

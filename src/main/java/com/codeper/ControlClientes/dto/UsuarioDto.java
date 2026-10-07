@@ -1,6 +1,7 @@
 package com.codeper.ControlClientes.dto;
 
 import java.util.List;
+import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class UsuarioDto {
     private String gmail;
     private String nombrePersona;
     //Rol 
-    private List<RolDto>roles;
+    private List<Integer>rolesId;
 
     public static UsuarioDto fromEntityUsuario(Usuario usuario){
         return UsuarioDto.builder()
@@ -27,7 +28,9 @@ public class UsuarioDto {
             .username(usuario.getUsername())
             .gmail(usuario.getPersona().getGmail())
             .nombrePersona(usuario.getPersona().getNombre())
-            .roles(usuario.getRoles().stream().map(RolDto::fromEntityRol).toList())
+           .rolesId(usuario.getRoles().stream()
+                    .map(Rol::getId)
+                    .toList()) 
             .build();
     } 
 }

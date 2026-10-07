@@ -45,9 +45,9 @@ public class CreateUsuarioDto {
     //La entidad Rol ya existe en la Bd
     //private List<Integer>roles; Se usa solo cuando al relacion es de N a n
     @NotEmpty  (message = "Debe asignar al menos un rol al usuario")
-    private List<Integer>roles;
+    private List<Integer>rolesId;
 
-    public static Usuario toEntityUsuario(CreateUsuarioDto createUsuarioDto, Persona persona, List<Rol> roles){
+    public static Usuario toEntityUsuario(CreateUsuarioDto createUsuarioDto, Persona persona,List<Rol> roles){ 
         return Usuario.builder()
             .username(createUsuarioDto.getUsername())
             .passwprd(createUsuarioDto.getPasswprd())

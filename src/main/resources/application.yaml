@@ -17,8 +17,10 @@ spring:
     jpa:
         # DDL-AUTO CONFIGURADO EN CREATE-DROP PARA CREAR Y 
         # ELIMINAR LAS TABLAS EN CADA EJECUCIÓN
+        #ddl-auto: create-drop
+
         hibernate:
-            ddl-auto: create-drop
+           ddl-auto: update
         show-sql: true 
 
 

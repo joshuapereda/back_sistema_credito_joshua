@@ -45,6 +45,7 @@ public class ClienteService implements IClienteService {
         if(isEmailExist(createClienteDto.getGmail())){
             throw new RuntimeException("El correo electronico ya está en uso");
         }
+        
         Persona persona= CreateClienteDto.toEntityPersona(createClienteDto);
         persona= personaRepository.save(persona);
         Cliente cliente = CreateClienteDto.toEntityCliente(createClienteDto,persona);
