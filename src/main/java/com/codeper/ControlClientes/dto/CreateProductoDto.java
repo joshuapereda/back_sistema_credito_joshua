@@ -16,21 +16,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor 
 @Builder 
 public class CreateProductoDto {
-    @NotBlank (message = "El nombre no puede estar vacío")
+
+    @NotBlank (message = "El Nombre del producto es obligatorio")
     private String nombre;
 
-    @NotBlank (message = "La foto no puede estar vacía")
+    
     private String foto;
 
-    @NotNull(message = "El precio de venta no puede estar vacío")
-    @DecimalMin(value = "0.01", message = "El precio de venta debe ser mayor a 0")
+    @NotNull(message = "El Precio de venta es obligatorio")
+    @DecimalMin(value = "0.01", message = "El Precio de venta debe ser mayor a 0")
     private BigDecimal precioVenta;
     
-    @NotNull(message = "El precio de compra no puede estar vacío")
-    @DecimalMin(value = "0.01", message = "El precio de compra debe ser mayor a 0")
+    @NotNull(message = "El Precio de compra es obligatorio")
+    @DecimalMin(value = "0.01", message = "El Precio de compra debe ser mayor a 0")
     private BigDecimal precioCompra;
 
-    @NotBlank (message = "El nombre de la categoría no puede estar vacío")
+    @NotBlank (message = "Debes asignar al menos una categotia al Producto")
     private String nombreCategoria;
 
     public static Producto toEntityPProducto(CreateProductoDto createPProductoDto, Categoria pcategoria){

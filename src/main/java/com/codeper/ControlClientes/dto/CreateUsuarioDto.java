@@ -20,17 +20,18 @@ import lombok.NoArgsConstructor;
 public class CreateUsuarioDto {
 
     //Usuario
-    @NotBlank(message = "El username no puede estar vacío")
+    @NotBlank(message = "El Username es obligatorio")
     @Pattern (
         regexp = "^[A-Z][a-zA-Z]*(\\d[a-zA-Z]*){2,4}$",
-        message = "El username debe empezar con mayúscula y contener entre 2 y 4 números"
+        message = "El Username debe empezar con mayúscula y contener entre 2 y 4 números"
     )
+    //Agregar Customer Validation
     private String username;
 
-    @NotBlank(message = "El passwprd no puede estar vacío")
+    @NotBlank(message = "El Passwprd es obligatorio")
     @Pattern(
         regexp = "^(?=[A-Z])(?=.{4,}$)(?=^(?:\\D*\\d){2,4}\\D*$)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?~`]).+$",
-        message = "El password debe empezar con mayúscula, tener mínimo 4 caracteres, entre 2 y 4 números, y al menos un símbolo especial"
+        message = "El Password debe empezar con mayúscula, tener mínimo 4 caracteres, entre 2 y 4 números, y al menos un símbolo especial"
     )
     private String passwprd;
     
@@ -38,13 +39,13 @@ public class CreateUsuarioDto {
     //Nos indica que las entidades se van a crear al mismo tiempo
     //ose la entidad Persona tampoco existe ne la BD
     //La entidad Persona ya existe en la BD (se crea por separado)
-    @NotNull (message = "Debe seleccionar una persona")
+    @NotNull (message = "Debe asignar al menos una Persona al Usuario ")
     private Integer personaId;
 
     //Rol
     //La entidad Rol ya existe en la Bd
     //private List<Integer>roles; Se usa solo cuando al relacion es de N a n
-    @NotEmpty  (message = "Debe asignar al menos un rol al usuario")
+    @NotEmpty  (message = "Debe asignar al menos un Rol al usuario")
     private List<Integer>rolesId;
 
     public static Usuario toEntityUsuario(CreateUsuarioDto createUsuarioDto, Persona persona,List<Rol> roles){ 

@@ -1,8 +1,6 @@
 package com.codeper.ControlClientes.dto;
 
 import com.codeper.ControlClientes.entity.Permiso;
-
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

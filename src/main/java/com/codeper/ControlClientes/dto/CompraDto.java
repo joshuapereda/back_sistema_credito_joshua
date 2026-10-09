@@ -1,16 +1,13 @@
 package com.codeper.ControlClientes.dto;
 
 import java.time.LocalDateTime;
-
-import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Compra;
-import com.codeper.ControlClientes.entity.TipoCompra;
-import com.codeper.ControlClientes.entity.Usuario;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+
 @Data 
 @AllArgsConstructor 
 @NoArgsConstructor 

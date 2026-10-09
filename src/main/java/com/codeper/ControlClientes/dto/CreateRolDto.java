@@ -1,10 +1,8 @@
 package com.codeper.ControlClientes.dto;
 
 import java.util.List;
-
 import com.codeper.ControlClientes.entity.Permiso;
 import com.codeper.ControlClientes.entity.Rol;
-
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,15 +19,15 @@ import lombok.NoArgsConstructor;
 @Builder 
 public class CreateRolDto {
     
-    @NotBlank (message = "El nombre no puede estar vacío")
+    @NotBlank (message = "El Nombre del rol es obligatorio")
     private String nombre;
     
     @Column(length = 200)
-    @Size(max = 200, message = "La descripción no puede superar los 200 caracteres")
-    @Pattern (regexp = "^[a-zA-ZÀ-ÿñÑ0-9 .,()\\-]{0,200}$", message = "La descripción contiene caracteres no permitidos")
+    @Size(max = 200, message = "La Descripción no puede superar los 200 caracteres")
+    @Pattern (regexp = "^[a-zA-ZÀ-ÿñÑ0-9 .,()\\-]{0,200}$", message = "La Descripción contiene caracteres no permitidos")
     private String descripcion;
 
-    @NotEmpty(message = "Debe asignar al menos un permiso al rol")
+    @NotEmpty(message = "Debe asignar al menos un Permiso al Rol")
     private List<Integer>permisosId;
     
 

@@ -13,11 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor 
 @Builder 
 public class CreateCategoriaDto {
-    @NotBlank (message = "El nombre de la categoria es obligatorio")
-    @Size(min=1,max = 50, message = "El nombre no puede tener más de 50 caracteres")
+
+    @NotBlank (message = "El Nombre de la Categoria es obligatorio")
+    @Size(min=1,max = 50, message = "El Nombre no puede tener más de 50 caracteres")
     private String nombre;
 
-    @Size(max = 200, message = "La descripción no puede tener más de 200 caracteres")
+    @Size(max = 200, message = "La Descripción no puede tener más de 200 caracteres")
     private String descripcion;
     
     public static Categoria toEntityCategoria(CreateCategoriaDto createPCategoriaDto){

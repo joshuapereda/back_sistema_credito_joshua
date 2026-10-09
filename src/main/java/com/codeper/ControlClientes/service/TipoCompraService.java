@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.codeper.ControlClientes.dto.CreateTipoCompraDto;
 import com.codeper.ControlClientes.dto.TipoCompraDto;
-import com.codeper.ControlClientes.entity.Permiso;
 import com.codeper.ControlClientes.entity.TipoCompra;
 import com.codeper.ControlClientes.repository.TipoCompraRepository;
 

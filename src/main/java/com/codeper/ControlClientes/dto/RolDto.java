@@ -1,7 +1,6 @@
 package com.codeper.ControlClientes.dto;
 
 import java.util.List;
-
 import com.codeper.ControlClientes.entity.Permiso;
 import com.codeper.ControlClientes.entity.Rol;
 import lombok.AllArgsConstructor;
