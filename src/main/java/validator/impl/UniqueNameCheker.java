@@ -11,11 +11,13 @@ import validator.spec.IUniqueNameCheker;
 @Service 
 public class UniqueNameCheker implements IUniqueNameCheker {
 
-    @Autowired
+    @Autowired 
     private UsuarioRepository usuarioRepository;
+
     @Autowired
     private PersonaRepository personaRepository;
-
+    
+    //La versión nueva recibe además el nombre del campo (fieldName) y con eso decide dónde buscar:
     @Override
     public boolean isUniqueName(String fieldName, String value) {
         return switch (fieldName) {
@@ -24,4 +26,13 @@ public class UniqueNameCheker implements IUniqueNameCheker {
             default -> throw new IllegalArgumentException("Campo no soportado: " + fieldName);
         };
     }
+
+    /* 
+    @Override
+    public boolean isUniqueName(String name) {
+       //VALIDAR
+       return !usuarioRepository.existsByUsername(name);
+    }*/
+    
+
 }

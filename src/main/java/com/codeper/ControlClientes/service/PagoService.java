@@ -13,6 +13,7 @@ import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Pago;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PagoRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service 
 public class PagoService  implements IPagoService {
@@ -36,9 +37,16 @@ public class PagoService  implements IPagoService {
         .orElseThrow(()-> new RuntimeException("Pago no encontrada con id: " + id));
     }
 
-    @Override
+    @Override   
+    @Transactional 
     public PagoDto crearPago(CreatePagoDto createPagoDto) {
-         Compra compra = compraRepository.findById(createPagoDto.getCompraId())
+
+    if (createPagoDto.getMonto() == null
+            || createPagoDto.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
+        throw new RuntimeException("El monto debe ser mayor a cero.");
+    }
+
+    Compra compra = compraRepository.findById(createPagoDto.getCompraId())
         .orElseThrow(() -> new RuntimeException("Compra no encontrada"));
 
     // 1. Validar que aún se pueda pagar
@@ -67,12 +75,13 @@ public class PagoService  implements IPagoService {
 
     pagoRepository.save(pago);
     compraRepository.save(compra);
-
+    
     // 5. Devolver el DTO  // <- esta línea es la que te falta
-        return PagoDto.fromEntityPago(pago);
+    return PagoDto.fromEntityPago(pago);
     }
 
     @Override
+    @Transactional
     public PagoDto actualizarPago(Integer id, PagoDto actualizarPagoDto) {
 
         Compra compra= compraRepository.findById(actualizarPagoDto.getId())
