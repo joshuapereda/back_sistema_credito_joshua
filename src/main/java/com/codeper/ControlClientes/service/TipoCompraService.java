@@ -43,6 +43,7 @@ public class TipoCompraService implements ITipoCompraService {
         
         tcompraRetrieved.setNombre(actualizarTipoCompra.getNombre());
         tcompraRetrieved.setDescripcion(actualizarTipoCompra.getDescripcion());
+        tcompraRetrieved.setEsCredito(actualizarTipoCompra.getEsCredito());
         tcompraRetrieved=tipoCompraRepository.save(tcompraRetrieved);
 
         return TipoCompraDto.fromEntityTipoCompra(tcompraRetrieved);
