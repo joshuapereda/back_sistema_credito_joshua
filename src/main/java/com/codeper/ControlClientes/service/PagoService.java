@@ -83,19 +83,46 @@ public class PagoService  implements IPagoService {
     @Override
     @Transactional
     public PagoDto actualizarPago(Integer id, PagoDto actualizarPagoDto) {
-
-        Compra compra= compraRepository.findById(actualizarPagoDto.getId())
-            .orElseThrow(()-> new RuntimeException("Compra no encontrada con id: " + actualizarPagoDto.getId()));
-
+        
+        // Paso 1: buscar el pago 
         Pago pagoRetrieved = pagoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
         
-        pagoRetrieved.setMonto(actualizarPagoDto.getMonto());
-        pagoRetrieved.setSaldoRestante(actualizarPagoDto.getSaldoRestante());
-        pagoRetrieved.setFechaHora(LocalDateTime.now());
-        pagoRetrieved.setCompra(compra);
+        // Paso 2: validar el monto
+        if (actualizarPagoDto.getMonto() == null
+            || actualizarPagoDto.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
+        throw new RuntimeException("El monto debe ser mayor a cero.");
+        }
 
+        Compra compra = pagoRetrieved.getCompra();
+        //Paso 3: Guardar el monto anterior
+        BigDecimal montoAnterior = pagoRetrieved.getMonto();
+        //Paso 4: Guardar el monto montoNuevo
+        BigDecimal montoNuevo = actualizarPagoDto.getMonto();
+
+
+        //Paso 5: Descontar el monto nuevo
+        BigDecimal saldoNuevo = compra.getSaldo().add(montoAnterior).subtract(montoNuevo);
+
+        //Paso 6: Validar el saldo nuevo
+        if (saldoNuevo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("El monto del pago excede el saldo de la compra.");
+        }
+
+         // Paso 7: actualizar la compra
+        compra.setSaldo(saldoNuevo);
+        compra.setEstado(saldoNuevo.compareTo(BigDecimal.ZERO) == 0
+                ? EstadoCompra.PAGADO
+                : EstadoCompra.PENDIENTE);
+        compraRepository.save(compra);
+        
+        // Paso 8: actualizar el pago
+        pagoRetrieved.setMonto(montoNuevo);
+        pagoRetrieved.setSaldoRestante(saldoNuevo);
+        pagoRetrieved.setFechaHora(LocalDateTime.now());
         pagoRepository.save(pagoRetrieved);
+
+        // Paso 9: devolver el DTO
         return PagoDto.fromEntityPago(pagoRetrieved);
     }
 
