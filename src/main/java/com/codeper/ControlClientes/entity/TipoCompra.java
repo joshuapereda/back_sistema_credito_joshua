@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity 
 @Table (name ="tipo_compra")
 public class TipoCompra {
+
     @Id 
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Integer id;
@@ -27,6 +28,5 @@ public class TipoCompra {
 
     @Column (length = 200)
     private String descripcion;
-
 
 }

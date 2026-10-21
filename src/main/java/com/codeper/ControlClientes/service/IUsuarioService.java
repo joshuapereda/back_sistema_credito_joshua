@@ -10,5 +10,4 @@ public interface IUsuarioService {
     UsuarioDto crearUsuario(CreateUsuarioDto createUsuarioDto);
     UsuarioDto actualizarUsuario(Integer id, CreateUsuarioDto usuarioActualizar);
     void eliminarUsuario(Integer id);
-
 }

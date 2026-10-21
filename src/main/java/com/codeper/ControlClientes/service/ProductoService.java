@@ -9,10 +9,9 @@ import com.codeper.ControlClientes.entity.Categoria;
 import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
 import com.codeper.ControlClientes.repository.ProductoRepository;
-import jakarta.persistence.EntityNotFoundException;
-
 @Service 
 public class ProductoService implements IProductoService {
+
     @Autowired 
     private CategoriaRepository pCategoriaRepository;
 
@@ -35,10 +34,8 @@ public class ProductoService implements IProductoService {
 
     @Override
     public ProductoDto crearProducto(CreateProductoDto createPProductoDto) {
-        Categoria categoria = pCategoriaRepository
-            .findByNombre(createPProductoDto.getNombreCategoria())
-            .orElseThrow(() -> new EntityNotFoundException(
-                    "No existe la categoría: " + createPProductoDto.getNombreCategoria()));
+        Categoria categoria = pCategoriaRepository.findById(createPProductoDto.getCategoriaId())
+            .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
 
         Producto producto = CreateProductoDto.toEntityPProducto(createPProductoDto, categoria);
         producto = pProductoRepository.save(producto);
@@ -47,8 +44,19 @@ public class ProductoService implements IProductoService {
 
     @Override
     public ProductoDto actualizarProducto(Integer id, ProductoDto pproductoActualizado) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actualizarProducto'");
+        Producto productoRetrieved= pProductoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrada con id: " + id));
+        Categoria categoria = pCategoriaRepository.findById(pproductoActualizado.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+        
+        productoRetrieved.setNombre(pproductoActualizado.getNombre());
+        productoRetrieved.setFoto(pproductoActualizado.getFoto());
+        productoRetrieved.setPrecioVenta(pproductoActualizado.getPrecioVenta());
+        productoRetrieved.setPrecioCompra(pproductoActualizado.getPrecioCompra());
+        productoRetrieved.setCategoria(categoria);
+
+        pProductoRepository.save(productoRetrieved);
+        return ProductoDto.fromEntityProducto(productoRetrieved);
     }
 
     @Override

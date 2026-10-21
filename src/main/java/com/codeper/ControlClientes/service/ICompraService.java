@@ -7,9 +7,7 @@ import com.codeper.ControlClientes.dto.CreateCompraDto;
 public interface ICompraService {
     List<CompraDto> listarCompra();
     CompraDto listarCompraPorId(Integer id);
-    CompraDto crearCompra(CreateCompraDto crearCompra);
+    CompraDto crearCompra(CreateCompraDto dto);
     CompraDto actualizarCompra(Integer id, CreateCompraDto compraActualizada);
     void eliminarCompra(Integer id);
-
-
 }

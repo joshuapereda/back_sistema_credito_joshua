@@ -55,5 +55,4 @@ public class TipoCompraService implements ITipoCompraService {
         }
         tipoCompraRepository.deleteById(id);
     }
-
 }

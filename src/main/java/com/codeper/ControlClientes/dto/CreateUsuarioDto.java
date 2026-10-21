@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import validator.UniqueName;
 
 @Data 
 @AllArgsConstructor 
@@ -25,6 +26,7 @@ public class CreateUsuarioDto {
         regexp = "^[A-Z][a-zA-Z]*(\\d[a-zA-Z]*){2,4}$",
         message = "El Username debe empezar con mayúscula y contener entre 2 y 4 números"
     )
+    @UniqueName (fieldName = "username")
     //Agregar Customer Validation
     private String username;
 

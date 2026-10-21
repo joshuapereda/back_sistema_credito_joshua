@@ -19,11 +19,10 @@ public class ClienteService implements IClienteService {
     @Autowired
     private PersonaRepository personaRepository; 
 
-
     @Override
     public List<ClienteDto> listarCliente() {
         return  clienteRepository.findAll().stream().map(cliente ->{
-            //obtener el Persona correspondiente a ese cliente
+            //obtener la Persona correspondiente a ese cliente
             Persona persona= cliente.getPersona();
             //retornar el listado de cliente
             return ClienteDto.fromEntityCliente(cliente, persona);
@@ -81,7 +80,7 @@ public class ClienteService implements IClienteService {
      // VALIDATIONS
     
     boolean isEmailExist(String email) {
-    return personaRepository.existsByGmail(email);
-}
+        return personaRepository.existsByGmail(email);
+    }
 
 }

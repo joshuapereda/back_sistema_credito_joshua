@@ -10,5 +10,4 @@ public interface IPermisoService {
     PermisoDto crearPermiso(CreatePermisoDto createPermisoDto);
     PermisoDto actualizarPermiso(Integer id, CreatePermisoDto actualizarPermiso);
     void eliminarPermiso(Integer id);
-
 }

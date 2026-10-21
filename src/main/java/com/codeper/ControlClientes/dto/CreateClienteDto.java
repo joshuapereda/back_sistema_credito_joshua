@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import validator.UniqueName;
 
 @Data 
 @AllArgsConstructor 
@@ -19,6 +20,7 @@ public class CreateClienteDto {
 
     @NotBlank (message = "El Nombre del Cliente es obligatorio")
     @Size( min=1,max = 50, message = "El Nombre del cliente no puede tener más de 50 caracteres")
+    @UniqueName (fieldName = "nombre")
     //Agregar Customer Validations 
     private String nombre;
 

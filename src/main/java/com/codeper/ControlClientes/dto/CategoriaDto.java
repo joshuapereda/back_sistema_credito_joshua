@@ -23,5 +23,4 @@ public class CategoriaDto {
             .descripcion(pCategoria.getDescripcion())
             .build();
     }
-
 }

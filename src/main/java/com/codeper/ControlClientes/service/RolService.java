@@ -89,6 +89,6 @@ public class RolService implements IRolService {
 
         throw new RuntimeException("Permisos no encontrados: " + noExisten);
     }
-    return permisos;
-}
+        return permisos;
+    }
 }

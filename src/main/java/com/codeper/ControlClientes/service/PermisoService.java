@@ -56,5 +56,4 @@ public class PermisoService implements IPermisoService {
         }
         permisoRepository.deleteById(id);
     }
-
 }

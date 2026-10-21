@@ -8,9 +8,9 @@ import com.codeper.ControlClientes.dto.CategoriaDto;
 import com.codeper.ControlClientes.entity.Categoria;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
 
-
 @Service 
 public class CategoriaService implements ICategoriaService {
+
     @Autowired 
     private CategoriaRepository pCategoriaRepository;
 

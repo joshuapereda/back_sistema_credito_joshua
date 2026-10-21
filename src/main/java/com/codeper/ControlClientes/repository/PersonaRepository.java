@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.codeper.ControlClientes.entity.Persona;
 
 public interface PersonaRepository extends JpaRepository<Persona,Integer> {
-    //VALIDACION POR SERVICE
-    boolean existsByGmail(String email);
+   //QUERY METHODS
+    boolean existsByNombre(String nombre);
+
+    boolean existsByGmail(String gmail);
 
 }

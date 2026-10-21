@@ -10,5 +10,4 @@ public interface IRolService {
     RolDto crearRol(CreateRolDto createRolDto);
     RolDto actualizarRol(Integer id, RolDto rolActualizar );
     void eliminarRol(Integer id);
-
 }

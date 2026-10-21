@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity 
 @Table (name ="roles")
 public class Rol {
+    
     @Id 
     @GeneratedValue (strategy=GenerationType.IDENTITY)
     private Integer id;

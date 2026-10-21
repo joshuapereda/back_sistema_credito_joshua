@@ -10,5 +10,4 @@ public interface ITipoCompraService {
     TipoCompraDto crearTipoCompra(CreateTipoCompraDto createTipoCompraDto);
     TipoCompraDto editarTipoCompra(Integer id, CreateTipoCompraDto actualizarTipoCompra);
     void eliminarTipoCompra(Integer id);
-
 }

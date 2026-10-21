@@ -16,44 +16,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-
 @RestController 
 @RequestMapping ("api/permisos")
 public class PermisoController {
+
     @Autowired 
     private IPermisoService permisoService;
 
     @GetMapping()
-    public ResponseEntity<List<PermisoDto>>getAllPermiso(){
+    public ResponseEntity<List<PermisoDto>> listarPermiso(){
         return ResponseEntity.ok(permisoService.listarPermiso());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<PermisoDto>getAllPermisoPorId(@PathVariable Integer id ) {
+    public ResponseEntity<PermisoDto> obtenerPermisoPorId(@PathVariable Integer id ) {
         return ResponseEntity.ok(permisoService.obtenerPermisoPorId(id));
     }
-
     @PostMapping()
-    public ResponseEntity<PermisoDto> postPermiso(@Valid @RequestBody CreatePermisoDto createPermisoDto) {
+    public ResponseEntity<PermisoDto> crearPermiso(@Valid @RequestBody CreatePermisoDto createPermisoDto) {
         return ResponseEntity.ok(permisoService.crearPermiso(createPermisoDto));
     }
-
     @PutMapping("/{id}")
-    public ResponseEntity<PermisoDto> putPermiso(@PathVariable Integer id, @RequestBody CreatePermisoDto createPermisoDto) {
+    public ResponseEntity<PermisoDto> actualizarPermiso(@PathVariable Integer id,@Valid @RequestBody CreatePermisoDto createPermisoDto) {
         return ResponseEntity.ok(permisoService.actualizarPermiso(id, createPermisoDto));
     }
-
     @DeleteMapping("/{id}")
-    public void eliminarUsuario(@PathVariable  Integer id){
+    public void eliminarPermiso(@PathVariable  Integer id){
         permisoService.eliminarPermiso(id);
     }
-    
-    
-    
-
-
-    
-   
-
 }

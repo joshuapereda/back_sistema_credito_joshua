@@ -3,11 +3,9 @@ package com.codeper.ControlClientes;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.codeper.ControlClientes", "validator"})
 public class ControlClientesApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(ControlClientesApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(ControlClientesApplication.class, args);
+    }
 }

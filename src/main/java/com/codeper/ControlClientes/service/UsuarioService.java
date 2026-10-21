@@ -102,10 +102,5 @@ public class UsuarioService implements IUsuarioService {
         throw new RuntimeException("Roles no encontrados: " + noExisten);
     }
     return roles;
-}  
-
-    
-
-    
-
+    }  
 }

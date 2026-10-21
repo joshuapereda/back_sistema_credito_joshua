@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity 
 @Table (name ="permisos")
 public class Permiso {
+    
     @Id 
     @GeneratedValue (strategy=GenerationType.IDENTITY)
     private Integer id;

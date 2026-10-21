@@ -29,5 +29,4 @@ public class ClienteDto {
             .docIdentidad(cliente.getDocIdentidad())
             .build();
     }
-
 }

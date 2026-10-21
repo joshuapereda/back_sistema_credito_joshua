@@ -17,7 +17,7 @@ public class ProductoDto {
     private String foto;
     private BigDecimal precioVenta;
     private BigDecimal precioCompra;
-    private String nombreCategoria;
+    private Integer categoriaId;
 
 
     public static ProductoDto fromEntityProducto(Producto pproducto){
@@ -27,7 +27,7 @@ public class ProductoDto {
             .foto(pproducto.getFoto())
             .precioVenta(pproducto.getPrecioVenta())
             .precioCompra(pproducto.getPrecioCompra())
-            .nombreCategoria(pproducto.getCategoria().getNombre())
+            .categoriaId(pproducto.getCategoria().getId())
             .build();
     }
 

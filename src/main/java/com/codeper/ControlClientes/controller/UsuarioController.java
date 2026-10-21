@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController 
 @RequestMapping ("api/usuarios")
@@ -24,26 +24,23 @@ public class UsuarioController {
     private IUsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDto>>getAllUsuario() {
+    public ResponseEntity<List<UsuarioDto>>listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuario());
     }
-
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDto> getAllUsuarioById(@PathVariable Integer id) {
+    public ResponseEntity<UsuarioDto> listarUsuarioPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
     }
-
     @PostMapping
     public ResponseEntity<UsuarioDto> createUsuario(@Validated  @RequestBody CreateUsuarioDto createUsuarioDto) {
         return  ResponseEntity.ok(usuarioService.crearUsuario(createUsuarioDto));
     }
-
+    @PutMapping ("/{id}")
+    public ResponseEntity<UsuarioDto> actualizarUsuario(@PathVariable Integer id, @Validated @RequestBody CreateUsuarioDto createUsuarioDto) {
+        return ResponseEntity.ok(usuarioService.actualizarUsuario(id, createUsuarioDto));
+    }
     @DeleteMapping("/{id}")
     public void eliminarUsuario(@PathVariable  Integer id){
         usuarioService.eliminarUsuario(id);
     }
-    
-    
-    
-
 }
