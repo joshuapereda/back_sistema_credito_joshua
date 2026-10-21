@@ -16,6 +16,7 @@ import com.codeper.ControlClientes.entity.TipoCompra;
 import com.codeper.ControlClientes.entity.Usuario;
 import com.codeper.ControlClientes.repository.ClienteRepository;
 import com.codeper.ControlClientes.repository.CompraRepository;
+import com.codeper.ControlClientes.repository.PagoRepository;
 import com.codeper.ControlClientes.repository.ProductoRepository;
 import com.codeper.ControlClientes.repository.TipoCompraRepository;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
@@ -39,6 +40,9 @@ public class CompraService implements ICompraService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private PagoRepository pagoRepository;
 
     @Override
     public List<CompraDto> listarCompra() {
@@ -73,35 +77,13 @@ public class CompraService implements ICompraService {
         compra.setTipoCompra(tCompra);
         compra.setFechaHora(LocalDateTime.now());
 
-        //ESTE PROCESO  ESTA IMPLMENTANDO DENTRO DE LA FUNCION cargarDetalles() PARA NO REPETIR CODIGO
-        /*  3. Una línea por cada producto
-        BigDecimal total = BigDecimal.ZERO;
-        for (CreateCompraDto.DetalleItemDto item : dto.getDetalles()) {
-            Producto producto = productoRepository.findById(item.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con id: " + item.getProductoId()));
-
-            // subtotal = precio de venta × cantidad (lo calcula el backend)
-            BigDecimal subtotal = producto.getPrecioVenta()
-                .multiply(BigDecimal.valueOf(item.getCantidad()));
-            total = total.add(subtotal);
-
-            DetalleCompra detalle = new DetalleCompra();
-            detalle.setCantidad(item.getCantidad());
-            detalle.setSubtotal(subtotal);
-            detalle.setProducto(producto);
-            detalle.setCompra(compra);
-            compra.getDetalles().add(detalle);   // ← sin esto no se guarda
-        }*/
+        // 3. Una línea por cada producto
         BigDecimal total = cargarDetalles(compra, dto);
-        // 4. Total y saldo
+
+        // 4. Total, saldo y estado (compra nueva: todavía no tiene pagos)
         compra.setTotal(total);
-       if ("Credito".equalsIgnoreCase(tCompra.getNombre())) {
-            compra.setSaldo(total);
-            compra.setEstado(EstadoCompra.PENDIENTE);
-        } else { // contado
-            compra.setSaldo(BigDecimal.ZERO);
-            compra.setEstado(EstadoCompra.PAGADO);
-        }
+        aplicarSaldoYEstado(compra, BigDecimal.ZERO);
+
         // 5. Guarda compra + detalles (cascade)
         return CompraDto.fromEntityCompra(compraRepository.save(compra));
     }
@@ -130,9 +112,9 @@ public class CompraService implements ICompraService {
         compra.getDetalles().clear();   // orphanRemoval las borra de la BD
         BigDecimal total = cargarDetalles(compra, compraActualizada);
 
-        // 4. Recalcular total y saldo
+        // 4. Recalcular total, saldo y estado descontando lo que ya se pagó
         compra.setTotal(total);
-        compra.setSaldo(calcularSaldo(tCompra, total));
+        aplicarSaldoYEstado(compra, pagoRepository.sumarPagosPorCompra(id));
 
         return CompraDto.fromEntityCompra(compraRepository.save(compra));
     }
@@ -157,8 +139,29 @@ public class CompraService implements ICompraService {
         return total;
     }
 
-    private BigDecimal calcularSaldo(TipoCompra tipo, BigDecimal total) {
-        return "CONTADO".equalsIgnoreCase(tipo.getNombre()) ? BigDecimal.ZERO : total;
+    // Única regla de saldo y estado, usada al crear y al editar.
+    // Contado: no queda deuda. Crédito: saldo = total - lo que ya pagó.
+    private void aplicarSaldoYEstado(Compra compra, BigDecimal totalPagado) {
+        TipoCompra tipo = compra.getTipoCompra();
+        if (tipo.getEsCredito() == null) {
+            throw new RuntimeException("El tipo de compra '" + tipo.getNombre()
+                + "' no indica si es a crédito o al contado (campo esCredito).");
+        }
+
+        if (!tipo.getEsCredito()) {
+            compra.setSaldo(BigDecimal.ZERO);
+            compra.setEstado(EstadoCompra.PAGADO);
+            return;
+        }
+
+        BigDecimal saldo = compra.getTotal().subtract(totalPagado);
+        if (saldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("El nuevo total (" + compra.getTotal()
+                + ") es menor a lo que el cliente ya pagó (" + totalPagado + ").");
+        }
+
+        compra.setSaldo(saldo);
+        compra.setEstado(saldo.compareTo(BigDecimal.ZERO) == 0 ? EstadoCompra.PAGADO : EstadoCompra.PENDIENTE);
     }
 
     @Override
@@ -168,80 +171,5 @@ public class CompraService implements ICompraService {
         }
         compraRepository.deleteById(id);
     }
-
-/* 
-    @Override
-    public List<CompraDto> listarCompra() {
-       
-    }
-
-    @Override
-    public CompraDto listarCompraPorId(Integer id) {
-      return  compraRepository.findById(id).map(compra->{
-        return  CompraDto.fromEntityCompra(compra);
-      }).orElseThrow(()-> new RuntimeException("Cliente no encontrado con el ID: "+ id));
-    }
-
-    @Override
-    public CompraDto crearCompra(CreateCompraDto crearCompra) {
-       //VALIDAR SI EXISTE 
-        Usuario usuario = usuarioRepository.findById(crearCompra.getUsuarioId())
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrada"));
-
-        Cliente cliente =clienteRepository.findById(crearCompra.getClienteId())
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrada"));
-
-        TipoCompra tCompra = tipoCompraRepository.findById(crearCompra.getTipoCompraId())
-            .orElseThrow(() -> new RuntimeException("Tipo de compra  no encontrada"));
-
-        Compra compra= new Compra();
-        compra.setCliente(cliente);
-        compra.setUsuario(usuario);
-        compra.setTipoCompra(tCompra);
-        compra.setFechaHora(LocalDateTime.now());
-        compra.setTotal(crearCompra.getTotal());
-       
-        if ("CONTADO".equalsIgnoreCase(tCompra.getNombre())) {
-            compra.setSaldo(0.0);
-        } else {
-            compra.setSaldo(crearCompra.getTotal());
-        }
-
-        return CompraDto.fromEntityCompra(compraRepository.save(compra));
-    
-    }
-
-    @Override
-    public CompraDto actualizarCompra(Integer id, CreateCompraDto compraActualizada) {
-         //VALIDAR SI EXISTE 
-        Compra compraRetrieved=compraRepository.findById(id)
-            .orElseThrow(()-> new  RuntimeException("Compra no encontrada con el id: "+id));
-        
-        Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrada con el id: "+id));
-
-        Cliente cliente =clienteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrada con el id: "+id));
-
-        TipoCompra tCompra = tipoCompraRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Tipo de compra no  encontrada con el id: "+id));
-
-        compraRetrieved.setFechaHora(compraActualizada.getFechaHora());
-        compraRetrieved.setTotal(compraActualizada.getTotal());
-        compraRetrieved.setSaldo(compraActualizada.getSaldo());
-        compraRetrieved.setCliente(cliente);
-        compraRetrieved.setUsuario(usuario);
-        compraRetrieved.setTipoCompra(tCompra);
-
-        return CompraDto.fromEntityCompra(compraRepository.save(compraRetrieved));
-    }
-
-    @Override
-    public void eliminarCompra(Integer id) {
-        if (!compraRepository.existsById(id)) {
-        throw new RuntimeException("Compra no encontrada con id: " + id);
-        }
-        compraRepository.deleteById(id);
-    }*/
 
 }
