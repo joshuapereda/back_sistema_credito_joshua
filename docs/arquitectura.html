@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitectura Sistema Crédito</title>
+<style>
+  :root {
+    --bg: #f7f6f3; --surface: #ffffff; --text: #1d1d1f; --muted: #62646a; --line: #dcdad4;
+    --accent: #2f6fdb; --accent-soft: #e6eefc;
+    --c1: #2f6fdb; --c1s: #e6eefc;   /* controller */
+    --c2: #1d8a5c; --c2s: #e3f4ec;   /* service */
+    --c3: #b26a00; --c3s: #fbf0de;   /* repository */
+    --c4: #7a4cc2; --c4s: #efe8fa;   /* db / dto */
+    --warn: #b3401f; --warns: #fbe9e3;
+    --code: #f0eee9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141517; --surface: #1d1e21; --text: #ececec; --muted: #a2a4aa; --line: #34363b;
+      --accent: #7aa7f5; --accent-soft: #23304a;
+      --c1: #7aa7f5; --c1s: #22304a; --c2: #5fcf9c; --c2s: #1d3a2e;
+      --c3: #e5a54a; --c3s: #3a2e1b; --c4: #b495ec; --c4s: #2f2645;
+      --warn: #f08a6a; --warns: #3e2520; --code: #26282c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141517; --surface: #1d1e21; --text: #ececec; --muted: #a2a4aa; --line: #34363b;
+    --accent: #7aa7f5; --accent-soft: #23304a;
+    --c1: #7aa7f5; --c1s: #22304a; --c2: #5fcf9c; --c2s: #1d3a2e;
+    --c3: #e5a54a; --c3s: #3a2e1b; --c4: #b495ec; --c4s: #2f2645;
+    --warn: #f08a6a; --warns: #3e2520; --code: #26282c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 32px 16px 80px; }
+  header h1 { font-size: 2rem; margin: 0 0 4px; letter-spacing: -0.02em; }
+  header p { color: var(--muted); margin: 0; }
+  nav { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+    margin: 24px -16px 0; padding: 10px 16px; display: flex; gap: 6px; overflow-x: auto; }
+  nav a { color: var(--muted); text-decoration: none; padding: 4px 10px; border-radius: 6px; white-space: nowrap; font-size: .9rem; }
+  nav a:hover { background: var(--accent-soft); color: var(--accent); }
+  section { margin-top: 48px; }
+  h2 { font-size: 1.4rem; margin: 0 0 12px; letter-spacing: -0.01em; }
+  h3 { font-size: 1.05rem; margin: 24px 0 8px; }
+  p { margin: 8px 0; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .stat b { display: block; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+  .stat span { font-size: 1.05rem; }
+  code, pre { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .88rem; }
+  code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
+  pre { background: var(--code); padding: 14px; border-radius: 8px; overflow-x: auto; margin: 8px 0; }
+  pre code { background: none; padding: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+  .tablewrap { overflow-x: auto; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--text); }
+  .layer { cursor: pointer; }
+  .layer rect { transition: stroke-width .15s; }
+  .layer:hover rect, .layer.on rect { stroke-width: 3; }
+  .detail { margin-top: 12px; min-height: 96px; border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; }
+  .detail h4 { margin: 0 0 4px; }
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 8px 0; }
+  .steps li { counter-increment: s; position: relative; padding: 6px 0 6px 38px; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 6px; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: .85rem; display: grid; place-items: center; }
+  .pill { display: inline-block; font-size: .75rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; }
+  .pend { background: var(--c3s); color: var(--c3); }
+  .paid { background: var(--c2s); color: var(--c2); }
+  .warnbox { background: var(--warns); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); border-radius: 10px; padding: 4px 18px; }
+  .warnbox li { margin: 6px 0; }
+  .sim { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 680px) { .sim { grid-template-columns: 1fr; } header h1 { font-size: 1.6rem; } }
+  label { font-size: .85rem; color: var(--muted); display: block; margin-bottom: 4px; }
+  input, select, button { font: inherit; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); width: 100%; }
+  button { background: var(--accent); color: #fff; border: none; cursor: pointer; font-weight: 600; }
+  button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .row > * { flex: 1; }
+  .log { font-family: ui-monospace, Consolas, monospace; font-size: .85rem; max-height: 220px; overflow-y: auto; }
+  .log div { padding: 4px 0; border-bottom: 1px dashed var(--line); }
+  .err { color: var(--warn); }
+  .bar { height: 10px; background: var(--code); border-radius: 99px; overflow: hidden; margin: 8px 0; }
+  .bar i { display: block; height: 100%; background: var(--c2); width: 0; transition: width .3s; }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sistema de Crédito Joshua · Backend</h1>
+    <p>Cómo funciona la API <code>ControlClientes</code>: capas, modelo de datos y la lógica de compras a crédito y pagos.</p>
+  </header>
+
+  <nav>
+    <a href="#resumen">Resumen</a>
+    <a href="#capas">Capas</a>
+    <a href="#peticion">Una petición</a>
+    <a href="#modelo">Modelo de datos</a>
+    <a href="#negocio">Compra y pago</a>
+    <a href="#simulador">Simulador</a>
+    <a href="#validacion">Validación</a>
+    <a href="#endpoints">Endpoints</a>
+    <a href="#pendientes">Pendientes</a>
+  </nav>
+
+  <!-- RESUMEN -->
+  <section id="resumen">
+    <h2>¿Qué es?</h2>
+    <p>Una API REST que permite a un negocio registrar <b>clientes</b> y <b>productos</b>, venderles al <b>contado</b> o a <b>crédito</b>, y llevar el control de los <b>abonos</b> hasta que la deuda queda saldada. También guarda <b>usuarios</b> (vendedores) con <b>roles</b> y <b>permisos</b>.</p>
+    <div class="grid" style="margin-top:16px">
+      <div class="card stat"><b>Lenguaje</b><span>Java 25</span></div>
+      <div class="card stat"><b>Framework</b><span>Spring Boot 4.1</span></div>
+      <div class="card stat"><b>Base de datos</b><span>PostgreSQL</span></div>
+      <div class="card stat"><b>Persistencia</b><span>JPA / Hibernate</span></div>
+      <div class="card stat"><b>Puerto</b><span>9600</span></div>
+      <div class="card stat"><b>Arranque</b><span><code>./mvnw spring-boot:run</code></span></div>
+    </div>
+  </section>
+
+  <!-- CAPAS -->
+  <section id="capas">
+    <h2>Arquitectura en capas</h2>
+    <p>Cada petición atraviesa cuatro capas. Ninguna capa se salta a otra: el controlador nunca habla con el repositorio directamente. <span class="muted">Haz clic en una capa para ver qué hace.</span></p>
+    <div class="card">
+      <svg viewBox="0 0 760 360" role="img" aria-label="Diagrama de capas">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/>
+          </marker>
+        </defs>
+        <g class="layer" data-k="http">
+          <rect x="230" y="8" width="300" height="44" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="380" y="35" text-anchor="middle" font-size="14" font-weight="600">Cliente HTTP (Postman / Front)</text>
+        </g>
+        <line x1="380" y1="52" x2="380" y2="76" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+        <text x="390" y="69" font-size="11" fill="var(--muted)">JSON</text>
+
+        <g class="layer" data-k="controller">
+          <rect x="200" y="80" width="360" height="54" rx="8" fill="var(--c1s)" stroke="var(--c1)" stroke-width="1.5"/>
+          <text x="380" y="103" text-anchor="middle" font-size="15" font-weight="700" fill="var(--c1)">controller/</text>
+          <text x="380" y="122" text-anchor="middle" font-size="12">@RestController · @Valid · ResponseEntity</text>
+        </g>
+        <line x1="380" y1="134" x2="380" y2="158" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+        <text x="390" y="151" font-size="11" fill="var(--muted)">CreateXxxDto</text>
+
+        <g class="layer" data-k="service">
+          <rect x="200" y="162" width="360" height="54" rx="8" fill="var(--c2s)" stroke="var(--c2)" stroke-width="1.5"/>
+          <text x="380" y="185" text-anchor="middle" font-size="15" font-weight="700" fill="var(--c2)">service/</text>
+          <text x="380" y="204" text-anchor="middle" font-size="12">IXxxService → XxxService · reglas de negocio</text>
+        </g>
+        <line x1="380" y1="216" x2="380" y2="240" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+        <text x="390" y="233" font-size="11" fill="var(--muted)">Entidad</text>
+
+        <g class="layer" data-k="repository">
+          <rect x="200" y="244" width="360" height="54" rx="8" fill="var(--c3s)" stroke="var(--c3)" stroke-width="1.5"/>
+          <text x="380" y="267" text-anchor="middle" font-size="15" font-weight="700" fill="var(--c3)">repository/</text>
+          <text x="380" y="286" text-anchor="middle" font-size="12">JpaRepository&lt;Entidad, Integer&gt;</text>
+        </g>
+        <line x1="380" y1="298" x2="380" y2="314" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+
+        <g class="layer" data-k="db">
+          <rect x="280" y="316" width="200" height="38" rx="19" fill="var(--c4s)" stroke="var(--c4)" stroke-width="1.5"/>
+          <text x="380" y="340" text-anchor="middle" font-size="14" font-weight="700" fill="var(--c4)">PostgreSQL</text>
+        </g>
+
+        <!-- side boxes -->
+        <g class="layer" data-k="dto">
+          <rect x="16" y="120" width="150" height="96" rx="8" fill="var(--surface)" stroke="var(--c4)" stroke-dasharray="5 4" stroke-width="1.5"/>
+          <text x="91" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="var(--c4)">dto/</text>
+          <text x="91" y="172" text-anchor="middle" font-size="11">toEntity…()</text>
+          <text x="91" y="190" text-anchor="middle" font-size="11">fromEntity…()</text>
+        </g>
+        <line x1="166" y1="150" x2="198" y2="118" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="166" y1="186" x2="198" y2="190" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+        <g class="layer" data-k="entity">
+          <rect x="594" y="200" width="150" height="66" rx="8" fill="var(--surface)" stroke="var(--c3)" stroke-dasharray="5 4" stroke-width="1.5"/>
+          <text x="669" y="228" text-anchor="middle" font-size="14" font-weight="700" fill="var(--c3)">entity/</text>
+          <text x="669" y="248" text-anchor="middle" font-size="11">@Entity = tabla</text>
+        </g>
+        <line x1="594" y1="232" x2="562" y2="232" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+        <g class="layer" data-k="validator">
+          <rect x="594" y="80" width="150" height="66" rx="8" fill="var(--surface)" stroke="var(--c1)" stroke-dasharray="5 4" stroke-width="1.5"/>
+          <text x="669" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="var(--c1)">validator/</text>
+          <text x="669" y="128" text-anchor="middle" font-size="11">@UniqueName</text>
+        </g>
+        <line x1="594" y1="107" x2="562" y2="107" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 3"/>
+      </svg>
+      <div class="detail" id="layerDetail"></div>
+    </div>
+  </section>
+
+  <!-- PETICION -->
+  <section id="peticion">
+    <h2>Recorrido de una petición</h2>
+    <p>Ejemplo: <code>POST /api/clientes</code> para registrar un cliente nuevo.</p>
+    <div class="card">
+      <svg viewBox="0 0 760 330" role="img" aria-label="Diagrama de secuencia">
+        <g font-size="12" font-weight="700" text-anchor="middle">
+          <rect x="10" y="6" width="120" height="30" rx="6" fill="var(--surface)" stroke="var(--line)"/><text x="70" y="26">Cliente HTTP</text>
+          <rect x="165" y="6" width="130" height="30" rx="6" fill="var(--c1s)" stroke="var(--c1)"/><text x="230" y="26" fill="var(--c1)">ClienteController</text>
+          <rect x="325" y="6" width="120" height="30" rx="6" fill="var(--c2s)" stroke="var(--c2)"/><text x="385" y="26" fill="var(--c2)">ClienteService</text>
+          <rect x="475" y="6" width="130" height="30" rx="6" fill="var(--c3s)" stroke="var(--c3)"/><text x="540" y="26" fill="var(--c3)">Repositorios</text>
+          <rect x="635" y="6" width="115" height="30" rx="6" fill="var(--c4s)" stroke="var(--c4)"/><text x="692" y="26" fill="var(--c4)">PostgreSQL</text>
+        </g>
+        <g stroke="var(--line)" stroke-dasharray="4 4">
+          <line x1="70" y1="36" x2="70" y2="320"/><line x1="230" y1="36" x2="230" y2="320"/>
+          <line x1="385" y1="36" x2="385" y2="320"/><line x1="540" y1="36" x2="540" y2="320"/>
+          <line x1="692" y1="36" x2="692" y2="320"/>
+        </g>
+        <g font-size="11.5" stroke-width="1.5">
+          <line x1="70" y1="62" x2="226" y2="62" stroke="var(--text)" marker-end="url(#ar)"/><text x="148" y="56" text-anchor="middle">JSON CreateClienteDto</text>
+          <rect x="234" y="72" width="150" height="34" rx="4" fill="var(--c1s)"/>
+          <text x="240" y="86">@Valid: @NotBlank, @Email,</text><text x="240" y="100">@Pattern, @UniqueName</text>
+          <line x1="230" y1="124" x2="381" y2="124" stroke="var(--text)" marker-end="url(#ar)"/><text x="306" y="118" text-anchor="middle">crearCliente(dto)</text>
+          <line x1="385" y1="150" x2="536" y2="150" stroke="var(--text)" marker-end="url(#ar)"/><text x="460" y="144" text-anchor="middle">existsByGmail?</text>
+          <line x1="385" y1="180" x2="536" y2="180" stroke="var(--text)" marker-end="url(#ar)"/><text x="460" y="174" text-anchor="middle">save(Persona)</text>
+          <line x1="540" y1="190" x2="688" y2="190" stroke="var(--muted)" marker-end="url(#ar)"/><text x="614" y="184" text-anchor="middle" fill="var(--muted)">INSERT persona</text>
+          <line x1="385" y1="216" x2="536" y2="216" stroke="var(--text)" marker-end="url(#ar)"/><text x="460" y="210" text-anchor="middle">save(Cliente)</text>
+          <line x1="540" y1="226" x2="688" y2="226" stroke="var(--muted)" marker-end="url(#ar)"/><text x="614" y="220" text-anchor="middle" fill="var(--muted)">INSERT cliente</text>
+          <line x1="381" y1="262" x2="234" y2="262" stroke="var(--c2)" stroke-dasharray="5 3" marker-end="url(#ar)"/><text x="306" y="256" text-anchor="middle" fill="var(--c2)">ClienteDto</text>
+          <line x1="226" y1="298" x2="74" y2="298" stroke="var(--c1)" stroke-dasharray="5 3" marker-end="url(#ar)"/><text x="148" y="292" text-anchor="middle" fill="var(--c1)">200 OK + JSON</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- MODELO -->
+  <section id="modelo">
+    <h2>Modelo de datos</h2>
+    <p><b>Persona</b> guarda los datos comunes (nombre, correo, teléfono, dirección). Tanto un <b>Cliente</b> como un <b>Usuario</b> <i>tienen</i> una persona (relación 1:1). La <b>Compra</b> es el centro del sistema.</p>
+    <div class="card">
+      <svg viewBox="0 0 780 470" role="img" aria-label="Diagrama entidad relación">
+        <g font-size="11.5" stroke-width="1.4">
+          <!-- relationships -->
+          <g stroke="var(--muted)" fill="none">
+            <path d="M150 90 V150"/>            <!-- persona-cliente -->
+            <path d="M150 50 H560 V150"/>       <!-- persona-usuario -->
+            <path d="M210 190 H320"/>           <!-- cliente-compra -->
+            <path d="M500 190 H500"/>
+            <path d="M440 190 H500"/>           <!-- compra-usuario -->
+            <path d="M380 230 V290"/>           <!-- compra-tipo? no: compra-detalle -->
+            <path d="M330 240 L210 300"/>       <!-- compra-tipocompra -->
+            <path d="M430 240 L560 300"/>       <!-- compra-pago -->
+            <path d="M620 190 H660"/>           <!-- usuario-rol -->
+            <path d="M710 220 V290"/>           <!-- rol-permiso -->
+            <path d="M380 340 V390"/>           <!-- detalle-producto -->
+            <path d="M440 415 H540"/>           <!-- producto-categoria -->
+          </g>
+          <!-- cardinalities -->
+          <g fill="var(--muted)" font-size="10.5" font-weight="700">
+            <text x="156" y="106">1</text><text x="156" y="146">1</text>
+            <text x="566" y="66">1</text><text x="566" y="146">1</text>
+            <text x="214" y="184">1</text><text x="308" y="184">N</text>
+            <text x="444" y="184">N</text><text x="490" y="184">1</text>
+            <text x="386" y="246">1</text><text x="386" y="286">N</text>
+            <text x="300" y="256">N</text><text x="220" y="292">1</text>
+            <text x="446" y="256">1</text><text x="540" y="292">N</text>
+            <text x="624" y="184">N</text><text x="650" y="184">M</text>
+            <text x="716" y="236">N</text><text x="716" y="286">M</text>
+            <text x="386" y="356">N</text><text x="386" y="386">1</text>
+            <text x="446" y="409">N</text><text x="530" y="409">1</text>
+          </g>
+          <!-- entities -->
+          <g>
+            <rect x="80" y="20" width="140" height="70" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="150" y="40" text-anchor="middle" font-weight="700">Persona</text>
+            <text x="90" y="58" fill="var(--muted)">nombre · gmail</text><text x="90" y="74" fill="var(--muted)">telefono · direccion</text>
+
+            <rect x="90" y="150" width="120" height="70" rx="6" fill="var(--c1s)" stroke="var(--c1)"/>
+            <text x="150" y="172" text-anchor="middle" font-weight="700" fill="var(--c1)">Cliente</text>
+            <text x="100" y="192" fill="var(--muted)">docIdentidad</text>
+
+            <rect x="320" y="140" width="120" height="100" rx="6" fill="var(--c2s)" stroke="var(--c2)" stroke-width="2"/>
+            <text x="380" y="162" text-anchor="middle" font-weight="700" fill="var(--c2)">Compra</text>
+            <text x="330" y="182" fill="var(--muted)">fechaHora</text><text x="330" y="198" fill="var(--muted)">total · saldo</text>
+            <text x="330" y="214" fill="var(--muted)">estado</text>
+
+            <rect x="500" y="150" width="120" height="70" rx="6" fill="var(--c4s)" stroke="var(--c4)"/>
+            <text x="560" y="172" text-anchor="middle" font-weight="700" fill="var(--c4)">Usuario</text>
+            <text x="510" y="192" fill="var(--muted)">username</text><text x="510" y="208" fill="var(--muted)">passwprd</text>
+
+            <rect x="660" y="160" width="100" height="60" rx="6" fill="var(--c4s)" stroke="var(--c4)"/>
+            <text x="710" y="182" text-anchor="middle" font-weight="700" fill="var(--c4)">Rol</text>
+            <text x="670" y="202" fill="var(--muted)">nombre</text>
+
+            <rect x="650" y="290" width="120" height="60" rx="6" fill="var(--c4s)" stroke="var(--c4)"/>
+            <text x="710" y="312" text-anchor="middle" font-weight="700" fill="var(--c4)">Permiso</text>
+            <text x="660" y="332" fill="var(--muted)">recurso · accion</text>
+
+            <rect x="110" y="290" width="130" height="60" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="175" y="312" text-anchor="middle" font-weight="700">TipoCompra</text>
+            <text x="120" y="332" fill="var(--muted)">Contado / Credito</text>
+
+            <rect x="310" y="290" width="140" height="50" rx="6" fill="var(--c2s)" stroke="var(--c2)"/>
+            <text x="380" y="310" text-anchor="middle" font-weight="700" fill="var(--c2)">DetalleCompra</text>
+            <text x="320" y="328" fill="var(--muted)">cantidad · subtotal</text>
+
+            <rect x="500" y="290" width="120" height="60" rx="6" fill="var(--c3s)" stroke="var(--c3)"/>
+            <text x="560" y="312" text-anchor="middle" font-weight="700" fill="var(--c3)">Pago</text>
+            <text x="510" y="332" fill="var(--muted)">monto · saldoRest.</text>
+
+            <rect x="320" y="390" width="120" height="60" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="380" y="412" text-anchor="middle" font-weight="700">Producto</text>
+            <text x="330" y="432" fill="var(--muted)">precioVenta</text>
+
+            <rect x="540" y="390" width="120" height="50" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="600" y="420" text-anchor="middle" font-weight="700">Categoria</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <h3>Detalles que vale la pena entender</h3>
+    <ul>
+      <li><b>N:M</b> Usuario↔Rol y Rol↔Permiso generan tablas intermedias automáticas: <code>usuario_rol</code> y <code>rol_permiso</code> (<code>@JoinTable</code>).</li>
+      <li><b>Compra → DetalleCompra</b> usa <code>cascade = ALL</code> y <code>orphanRemoval = true</code>: guardas la compra y sus líneas se guardan solas; si quitas una línea de la lista, se borra de la BD.</li>
+      <li><b>mappedBy</b> indica el lado "inverso" de una relación bidireccional: no crea columna nueva, solo permite navegar (p. ej. <code>cliente.getCompras()</code>).</li>
+      <li><b>EstadoCompra</b> es un <code>enum</code> guardado como texto: <span class="pill pend">PENDIENTE</span> o <span class="pill paid">PAGADO</span>.</li>
+    </ul>
+  </section>
+
+  <!-- NEGOCIO -->
+  <section id="negocio">
+    <h2>La lógica central: compra y pago</h2>
+    <div class="card">
+      <svg viewBox="0 -24 760 214" role="img" aria-label="Ciclo de vida de una compra">
+        <g font-size="12.5" stroke-width="1.6">
+          <rect x="10" y="70" width="130" height="50" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="75" y="92" text-anchor="middle" font-weight="700">POST /compra</text>
+          <text x="75" y="110" text-anchor="middle" fill="var(--muted)" font-size="11">total = Σ subtotal</text>
+
+          <path d="M140 85 L250 40" stroke="var(--muted)" fill="none" marker-end="url(#ar)"/>
+          <text x="160" y="50" font-size="11" fill="var(--muted)">tipo Crédito</text>
+          <path d="M140 105 L530 160" stroke="var(--muted)" fill="none" marker-end="url(#ar)"/>
+          <text x="250" y="150" font-size="11" fill="var(--muted)">tipo Contado → saldo = 0</text>
+
+          <rect x="252" y="16" width="170" height="54" rx="27" fill="var(--c3s)" stroke="var(--c3)"/>
+          <text x="337" y="40" text-anchor="middle" font-weight="700" fill="var(--c3)">PENDIENTE</text>
+          <text x="337" y="57" text-anchor="middle" font-size="11">saldo = total</text>
+
+          <path d="M380 16 C 420 -14, 300 -14, 300 16" stroke="var(--c3)" fill="none" marker-end="url(#ar)"/>
+          <text x="440" y="14" font-size="11" fill="var(--c3)">POST /pago (saldo − monto &gt; 0)</text>
+
+          <path d="M422 50 L560 130" stroke="var(--c2)" fill="none" marker-end="url(#ar)"/>
+          <text x="500" y="80" font-size="11" fill="var(--c2)">pago deja saldo = 0</text>
+
+          <rect x="532" y="130" width="170" height="54" rx="27" fill="var(--c2s)" stroke="var(--c2)"/>
+          <text x="617" y="154" text-anchor="middle" font-weight="700" fill="var(--c2)">PAGADO</text>
+          <text x="617" y="171" text-anchor="middle" font-size="11">no acepta más pagos</text>
+        </g>
+      </svg>
+    </div>
+
+    <h3>Crear compra — <code>CompraService.crearCompra()</code></h3>
+<pre><code>POST /api/compra
+{
+  "clienteId": 1, "usuarioId": 1, "tipoCompraId": 2,
+  "detalles": [ { "productoId": 3, "cantidad": 2 },
+                { "productoId": 5, "cantidad": 1 } ]
+}</code></pre>
+    <ol class="steps">
+      <li>Busca usuario, cliente y tipo de compra. Si falta alguno → <code>EntityNotFoundException</code>.</li>
+      <li>Crea la compra con <code>fechaHora = now()</code>.</li>
+      <li>Por cada línea: toma el <code>precioVenta</code> del producto (el cliente HTTP <i>no</i> manda precios), calcula <code>subtotal = precio × cantidad</code> y lo suma al total.</li>
+      <li>Si el tipo se llama <code>Credito</code> → saldo = total, <span class="pill pend">PENDIENTE</span>. Si no → saldo = 0, <span class="pill paid">PAGADO</span>.</li>
+      <li>Guarda todo en una sola transacción (<code>@Transactional</code>).</li>
+    </ol>
+
+    <h3>Registrar pago — <code>PagoService.crearPago()</code></h3>
+<pre><code>POST /api/pago
+{ "compraId": 10, "monto": 50.00 }</code></pre>
+    <ol class="steps">
+      <li>Si la compra ya está PAGADO → error.</li>
+      <li><code>saldoRestante = saldo − monto</code>. Si es negativo → error "excede el saldo".</li>
+      <li>Guarda el pago (con su <code>saldoRestante</code> como historial) y actualiza el saldo de la compra.</li>
+      <li>Si el saldo llega a 0 → la compra pasa a PAGADO.</li>
+    </ol>
+  </section>
+
+  <!-- SIMULADOR -->
+  <section id="simulador">
+    <h2>Simulador</h2>
+    <p class="muted">Reproduce en tu navegador la misma lógica de <code>crearCompra</code> y <code>crearPago</code>. No se conecta a la API.</p>
+    <div class="card sim">
+      <div>
+        <label for="sTipo">Tipo de compra</label>
+        <select id="sTipo"><option>Credito</option><option>Contado</option></select>
+        <div class="row" style="margin-top:10px">
+          <div><label for="sPrecio">Precio venta</label><input id="sPrecio" type="number" value="180" min="0" step="0.01"></div>
+          <div><label for="sCant">Cantidad</label><input id="sCant" type="number" value="2" min="1"></div>
+        </div>
+        <button id="sCrear">Crear compra</button>
+        <div style="margin-top:16px">
+          <label for="sMonto">Monto del pago</label>
+          <div class="row"><input id="sMonto" type="number" value="100" min="0" step="0.01"><button id="sPagar" class="ghost">Pagar</button></div>
+        </div>
+      </div>
+      <div>
+        <div id="sEstado" class="muted">Crea una compra para empezar.</div>
+        <div class="bar"><i id="sBar"></i></div>
+        <div class="log" id="sLog"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALIDACION -->
+  <section id="validacion">
+    <h2>Validación personalizada <code>@UniqueName</code></h2>
+    <p>Además de las validaciones estándar (<code>@NotBlank</code>, <code>@Email</code>, <code>@Pattern</code> para celular peruano <code>^9\d{8}$</code>, <code>@Positive</code>…), el proyecto define su propia anotación para impedir nombres repetidos.</p>
+    <div class="card">
+<pre><code>// En el DTO
+@UniqueName(fieldName = "username")
+private String username;</code></pre>
+      <ol class="steps">
+        <li><code>@UniqueName</code> (anotación) declara que el campo debe ser único.</li>
+        <li><code>UniqueNameValidator</code> la ejecuta cuando el controlador usa <code>@Valid</code>.</li>
+        <li>Llama a <code>IUniqueNameCheker.isUniqueName(fieldName, valor)</code>.</li>
+        <li><code>UniqueNameCheker</code> decide qué repositorio consultar: <code>"username"</code> → <code>existsByUsername</code>, <code>"nombre"</code> → <code>existsByNombre</code>.</li>
+        <li>Si ya existe → la petición se rechaza con <i>"El valor de 'username' ya fue registrado"</i>.</li>
+      </ol>
+      <p class="muted">El paquete <code>validator</code> está fuera de <code>com.codeper.ControlClientes</code>, por eso la clase principal declara <code>scanBasePackages = {"com.codeper.ControlClientes", "validator"}</code>.</p>
+    </div>
+  </section>
+
+  <!-- ENDPOINTS -->
+  <section id="endpoints">
+    <h2>Endpoints</h2>
+    <p>Todos los recursos exponen el mismo CRUD: <code>GET</code>, <code>GET /{id}</code>, <code>POST</code>, <code>PUT /{id}</code>, <code>DELETE /{id}</code>.</p>
+    <div class="card tablewrap">
+      <table>
+        <thead><tr><th>Recurso</th><th>Ruta</th><th>Notas</th></tr></thead>
+        <tbody>
+          <tr><td>Categorías</td><td><code>/api/categorias</code></td><td>Agrupan productos</td></tr>
+          <tr><td>Productos</td><td><code>/api/productos</code></td><td>Precio de venta y de compra, foto, categoría</td></tr>
+          <tr><td>Clientes</td><td><code>/api/clientes</code></td><td>Crea Persona + Cliente; valida correo y nombre únicos</td></tr>
+          <tr><td>Usuarios</td><td><code>/api/usuarios</code></td><td>Persona + username + lista de <code>rolesId</code></td></tr>
+          <tr><td>Roles</td><td><code>/api/roles</code></td><td>Con lista de permisos</td></tr>
+          <tr><td>Permisos</td><td><code>/api/permisos</code></td><td>recurso + acción</td></tr>
+          <tr><td>Tipos de compra</td><td><code>/api/tipoCompras</code></td><td>Crear <code>Contado</code> y <code>Credito</code></td></tr>
+          <tr><td>Compras</td><td><code>/api/compra</code></td><td>Con detalles; calcula total, saldo y estado</td></tr>
+          <tr><td>Pagos</td><td><code>/api/pago</code></td><td>Abonos que reducen el saldo</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Orden para probar desde cero</h3>
+    <ol class="steps">
+      <li>Categoría → Producto</li>
+      <li>Tipos de compra <code>Contado</code> y <code>Credito</code></li>
+      <li>Permiso → Rol → Usuario</li>
+      <li>Cliente</li>
+      <li>Compra a crédito</li>
+      <li>Pagos hasta que la compra quede PAGADO</li>
+    </ol>
+  </section>
+
+  <!-- PENDIENTES -->
+  <section id="pendientes">
+    <h2>Observaciones y pendientes</h2>
+    <p>Puntos que encontré revisando el código y conviene corregir:</p>
+    <div class="warnbox">
+      <ul>
+        <li><b>No hay manejador global de errores</b> (<code>@RestControllerAdvice</code>): los "no encontrado" responden 500 en vez de 404/400.</li>
+        <li><b>Crédito/Contado inconsistente</b>: al crear se compara con <code>"Credito"</code>, al actualizar con <code>"CONTADO"</code>; y <code>actualizarCompra</code> no recalcula el estado.</li>
+        <li><b><code>actualizarPago</code></b> busca la compra usando el id del pago y no recalcula saldos.</li>
+        <li><b><code>crearPago</code> sin <code>@Transactional</code></b>: pago y compra se guardan por separado.</li>
+        <li><b>Borrar una compra con pagos</b> fallará por la llave foránea.</li>
+        <li><b><code>actualizarCliente</code></b> rechaza el correo aunque sea el mismo del cliente editado.</li>
+        <li><b>Seguridad</b>: contraseña en texto plano, sin Spring Security; roles/permisos aún no se aplican.</li>
+        <li><b>Typos</b>: tabla <code>pproducto</code>, campo <code>passwprd</code>, <code>UniqueNameCheker</code>.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Detalle de capas
+  const info = {
+    http: ["Cliente HTTP", "Postman, Insomnia o el frontend. Envía y recibe JSON en http://localhost:9600/api/..."],
+    controller: ["controller/ — la puerta de entrada", "Clases @RestController. Reciben la petición, validan el DTO con @Valid y llaman al servicio. No tienen lógica de negocio. Ej.: CompraController → /api/compra."],
+    service: ["service/ — el cerebro", "Interfaz IXxxService + implementación XxxService (@Service). Aquí están las reglas: calcular totales y subtotales, decidir saldo y estado, validar que un pago no exceda el saldo, verificar correos repetidos."],
+    repository: ["repository/ — acceso a datos", "Interfaces que extienden JpaRepository. Spring genera el SQL solo; métodos como existsByGmail o existsByUsername se crean a partir del nombre."],
+    db: ["PostgreSQL", "Base 'control-clientes'. Con ddl-auto: update, Hibernate crea y actualiza las tablas al arrancar según las entidades."],
+    dto: ["dto/ — lo que entra y sale", "CreateXxxDto: datos de entrada con validaciones y métodos toEntity…(). XxxDto: respuesta aplanada con fromEntity…(). Así las entidades JPA nunca se exponen directamente."],
+    entity: ["entity/ — las tablas", "Clases @Entity con Lombok (@Data, @Builder). Definen columnas y relaciones (@OneToOne, @ManyToOne, @OneToMany, @ManyToMany)."],
+    validator: ["validator/ — reglas propias", "Anotación @UniqueName que consulta la BD para impedir nombres o usernames repetidos."]
+  };
+  const det = document.getElementById("layerDetail");
+  function show(k) {
+    document.querySelectorAll(".layer").forEach(g => g.classList.toggle("on", g.dataset.k === k));
+    det.innerHTML = `<h4>${info[k][0]}</h4><p>${info[k][1]}</p>`;
+  }
+  document.querySelectorAll(".layer").forEach(g => g.addEventListener("click", () => show(g.dataset.k)));
+  show("service");
+
+  // Simulador
+  let compra = null;
+  const $ = id => document.getElementById(id);
+  const fmt = n => "S/ " + n.toFixed(2);
+  function log(msg, err) {
+    const d = document.createElement("div");
+    if (err) d.className = "err";
+    d.textContent = msg;
+    $("sLog").prepend(d);
+  }
+  function render() {
+    if (!compra) return;
+    const pagado = compra.total - compra.saldo;
+    const pct = compra.total > 0 ? (pagado / compra.total) * 100 : 100;
+    $("sBar").style.width = pct + "%";
+    const cls = compra.estado === "PAGADO" ? "paid" : "pend";
+    $("sEstado").innerHTML = `Total <b>${fmt(compra.total)}</b> · Saldo <b>${fmt(compra.saldo)}</b> · <span class="pill ${cls}">${compra.estado}</span>`;
+  }
+  $("sCrear").onclick = () => {
+    const precio = Number($("sPrecio").value), cant = Number($("sCant").value);
+    if (!(cant > 0)) { log("La cantidad debe ser mayor a 0", true); return; }
+    const total = precio * cant;
+    const credito = $("sTipo").value.toLowerCase() === "credito";
+    compra = { total, saldo: credito ? total : 0, estado: credito ? "PENDIENTE" : "PAGADO" };
+    $("sLog").innerHTML = "";
+    log(`Compra creada (${$("sTipo").value}): subtotal = ${fmt(precio)} × ${cant} = ${fmt(total)}`);
+    render();
+  };
+  $("sPagar").onclick = () => {
+    if (!compra) { log("Primero crea una compra", true); return; }
+    if (compra.estado === "PAGADO") { log("Error: Esta compra ya está pagada.", true); return; }
+    const monto = Number($("sMonto").value);
+    const rest = Math.round((compra.saldo - monto) * 100) / 100;
+    if (rest < 0) { log("Error: El monto del pago excede el saldo de la compra.", true); return; }
+    compra.saldo = rest;
+    if (rest === 0) compra.estado = "PAGADO";
+    log(`Pago ${fmt(monto)} → saldoRestante ${fmt(rest)}${rest === 0 ? " → PAGADO" : ""}`);
+    render();
+  };
+</script>
+</body>
+</html>
