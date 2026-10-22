@@ -29,4 +29,9 @@ public class TipoCompra {
     @Column (length = 200)
     private String descripcion;
 
+    // true = crédito (queda saldo pendiente), false = contado (se paga al momento)
+    // Sin nullable = false para que Hibernate pueda agregar la columna a los registros existentes
+    @Column
+    private Boolean esCredito;
+
 }

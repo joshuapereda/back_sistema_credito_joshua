@@ -14,12 +14,14 @@ public class TipoCompraDto {
     private Integer id;
     private String nombre;
     private String descripcion;
+    private Boolean esCredito;
 
     public static TipoCompraDto fromEntityTipoCompra( TipoCompra tipoCompra){
         return TipoCompraDto.builder()
             .id(tipoCompra.getId())
             .nombre(tipoCompra.getNombre())
             .descripcion(tipoCompra.getDescripcion())
+            .esCredito(tipoCompra.getEsCredito())
             .build();
     }
 }
