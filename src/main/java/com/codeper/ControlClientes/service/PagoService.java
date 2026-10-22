@@ -84,27 +84,57 @@ public class PagoService  implements IPagoService {
     @Transactional
     public PagoDto actualizarPago(Integer id, PagoDto actualizarPagoDto) {
 
-        Compra compra= compraRepository.findById(actualizarPagoDto.getId())
-            .orElseThrow(()-> new RuntimeException("Compra no encontrada con id: " + actualizarPagoDto.getId()));
-
-        Pago pagoRetrieved = pagoRepository.findById(id)
+        Pago pago = pagoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
-        
-        pagoRetrieved.setMonto(actualizarPagoDto.getMonto());
-        pagoRetrieved.setSaldoRestante(actualizarPagoDto.getSaldoRestante());
-        pagoRetrieved.setFechaHora(LocalDateTime.now());
-        pagoRetrieved.setCompra(compra);
 
-        pagoRepository.save(pagoRetrieved);
-        return PagoDto.fromEntityPago(pagoRetrieved);
+        if (actualizarPagoDto.getMonto() == null
+                || actualizarPagoDto.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("El monto debe ser mayor a cero.");
+        }
+
+        pago.setMonto(actualizarPagoDto.getMonto());
+        pagoRepository.saveAndFlush(pago);
+
+        recalcularSaldos(pago.getCompra());
+
+        return PagoDto.fromEntityPago(pago);
     }
 
-    @Override
+   @Override
+    @Transactional
     public void eliminarPago(Integer id) {
-        if (!pagoRepository.existsById(id)) {
-        throw new RuntimeException("Pago no encontrado con id: " + id);
+        Pago pago = pagoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+
+        Compra compra = pago.getCompra();
+
+        pagoRepository.delete(pago);
+        pagoRepository.flush();
+
+        recalcularSaldos(compra);
+    }
+
+    private void recalcularSaldos(Compra compra) {
+        List<Pago> pagos = pagoRepository.findByCompraIdOrderByIdAsc(compra.getId());
+
+        BigDecimal saldo = compra.getTotal();
+
+        for (Pago p : pagos) {
+            saldo = saldo.subtract(p.getMonto());
+            p.setSaldoRestante(saldo);
         }
-        pagoRepository.deleteById(id);
+
+        if (saldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("El monto del pago excede el saldo de la compra.");
+        }
+
+        compra.setSaldo(saldo);
+        compra.setEstado(saldo.compareTo(BigDecimal.ZERO) == 0
+                ? EstadoCompra.PAGADO
+                : EstadoCompra.PENDIENTE);
+
+        pagoRepository.saveAll(pagos);
+        compraRepository.save(compra);
     }
 
 }
