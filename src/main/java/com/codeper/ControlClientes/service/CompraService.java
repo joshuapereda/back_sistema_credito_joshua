@@ -119,7 +119,9 @@ public class CompraService implements ICompraService {
         return CompraDto.fromEntityCompra(compraRepository.save(compra));
     }
     private BigDecimal cargarDetalles(Compra compra, CreateCompraDto dto) {
+    
     BigDecimal total = BigDecimal.ZERO;
+    
     for (CreateCompraDto.DetalleItemDto item : dto.getDetalles()) {
         Producto producto = productoRepository.findById(item.getProductoId())
             .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con id: " + item.getProductoId()));
