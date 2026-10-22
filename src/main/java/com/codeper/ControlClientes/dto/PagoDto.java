@@ -21,7 +21,7 @@ public class PagoDto {
     private LocalDateTime fechaHora;
     
     private String nombreClienteCompra;
-    
+
     private BigDecimal saldoRestante;
 
     private BigDecimal totalCompra;
