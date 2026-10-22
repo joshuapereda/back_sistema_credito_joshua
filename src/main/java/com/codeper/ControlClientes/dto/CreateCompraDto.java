@@ -42,11 +42,8 @@ public class CreateCompraDto {
     @NotEmpty(message = "Debes asignar al menos un producto a la compra")
     @Valid
     private List<DetalleItemDto> detalles;
-
     //---------DetalleCompra------------//
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
+    @Data @AllArgsConstructor @NoArgsConstructor
     public static class DetalleItemDto {
         @NotNull(message = "El producto es obligatorio")
         private Integer productoId; //qué producto
