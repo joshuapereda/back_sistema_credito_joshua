@@ -84,19 +84,27 @@ public class PagoService  implements IPagoService {
     @Transactional
     public PagoDto actualizarPago(Integer id, PagoDto actualizarPagoDto) {
 
+        // Paso 1: buscar el pago
         Pago pago = pagoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
 
+        // Paso 2: validar el monto
         if (actualizarPagoDto.getMonto() == null
                 || actualizarPagoDto.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("El monto debe ser mayor a cero.");
         }
 
+        // Paso 3: cambiar el monto y guardarlo ya en la BD (flush)
         pago.setMonto(actualizarPagoDto.getMonto());
+        //saveAndFlush lo guarda y lo envía a la base de datos en ese instante.
         pagoRepository.saveAndFlush(pago);
 
+        /*  Paso 4: recalcular saldos de todos los pagos y de la compra
+        Le pasas la compra de ese pago (pago.getCompra()) y el método:
+        Trae todos los pagos de esa compra en orden.*/
         recalcularSaldos(pago.getCompra());
 
+        // Paso 5: devolver el DTO
         return PagoDto.fromEntityPago(pago);
     }
 
@@ -115,6 +123,7 @@ public class PagoService  implements IPagoService {
     }
 
     private void recalcularSaldos(Compra compra) {
+
         List<Pago> pagos = pagoRepository.findByCompraIdOrderByIdAsc(compra.getId());
 
         BigDecimal saldo = compra.getTotal();

@@ -77,14 +77,18 @@ public class CompraService implements ICompraService {
         compra.setTipoCompra(tCompra);
         compra.setFechaHora(LocalDateTime.now());
 
-        // 3. Una línea por cada producto
+        /* 3. Cargar detalles: por cada producto del DTO crea un DetalleCompra
+        (producto, cantidad, precio unitario y subtotal = precio x cantidad),
+        lo agrega a la compra y devuelve el total (suma de todos los subtotales). */
         BigDecimal total = cargarDetalles(compra, dto);
 
-        // 4. Total, saldo y estado (compra nueva: todavía no tiene pagos)
+        // 4. Guarda en la cabecera el total calculado por el backend
         compra.setTotal(total);
+
+        // 5. Define saldo y estado según el tipo de compra (crédito o contado)
         aplicarSaldoYEstado(compra, BigDecimal.ZERO);
 
-        // 5. Guarda compra + detalles (cascade)
+        // 6. Guarda compra + detalles (cascade)
         return CompraDto.fromEntityCompra(compraRepository.save(compra));
     }
 

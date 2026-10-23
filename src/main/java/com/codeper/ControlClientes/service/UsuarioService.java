@@ -10,6 +10,7 @@ import com.codeper.ControlClientes.dto.UsuarioDto;
 import com.codeper.ControlClientes.entity.Persona;
 import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.entity.Usuario;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PersonaRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
@@ -37,7 +38,8 @@ public class UsuarioService implements IUsuarioService {
     public UsuarioDto obtenerUsuarioPorId(Integer id) {
         return usuarioRepository.findById(id).map(usuario->{
             return UsuarioDto.fromEntityUsuario(usuario);
-        }).orElseThrow(()->new RuntimeException("Usuario con el id: "+id+" no emcontrado"));
+            //el ResourNotFoundException es un error Personalizado
+        }).orElseThrow(() -> new ResourNotFoundException("Usuario",id));
     }
 
     @Override
