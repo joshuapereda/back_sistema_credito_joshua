@@ -12,12 +12,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import validator.UniqueName;
 
 @Data 
 @AllArgsConstructor 
 @NoArgsConstructor 
-@Builder 
+@Builder
+//para convertir nuestro log a cadena
+@ToString 
 public class CreateUsuarioDto {
 
     //Usuario

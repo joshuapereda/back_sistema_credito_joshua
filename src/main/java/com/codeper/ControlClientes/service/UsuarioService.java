@@ -36,10 +36,16 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public UsuarioDto obtenerUsuarioPorId(Integer id) {
-        return usuarioRepository.findById(id).map(usuario->{
+        //el try es la sintaxis correcto para trabajr con errores 
+        try {
+            return usuarioRepository.findById(id).map(usuario->{
             return UsuarioDto.fromEntityUsuario(usuario);
             //el ResourNotFoundException es un error Personalizado
-        }).orElseThrow(() -> new ResourNotFoundException("Usuario",id));
+            }).orElseThrow(() -> new ResourNotFoundException("Usuario",id));
+        } catch (ResourNotFoundException e) {
+          throw e;
+        }
+       
     }
 
     @Override

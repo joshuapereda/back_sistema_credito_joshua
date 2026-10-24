@@ -23,6 +23,27 @@ spring:
            ddl-auto: update
         show-sql: true 
 
+#Anadir configuracion para trabajar con Loggs
+logging:
+    level:
+        root: INFO
+        #como esta creado nuestro proyecto
+        com.codeper.ControlClientes: DEBUG
+        org.springframework.web: WARN
+        org.hibernate: WARN
+    #Configurar archivo para guardar nuestros logs
+    file:
+        #dura de donde va estar el archivo
+        name: logs/control-cliente.log
+    logback:
+        rollingpolicy:
+            file-name-pattern: logs/control-cliente-%d{yyyy-MM-dd}.%i.log
+            #indicar cada cuantos dias va eliminar el historial de los loggs guardados
+            max-history: 30
+            #tamaño maximo de archivo
+            max-file-size: 10MB
+            #el total de logs que no pase de 1 GB
+            total-size-cap: 1GB
 
         
           
