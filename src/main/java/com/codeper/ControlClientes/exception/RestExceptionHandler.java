@@ -38,7 +38,7 @@ public class RestExceptionHandler {
         .path(req.getRequestURI())
         .build(), new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    //Definir metodos 
+    //ERRORES GLOBALES 
     //@ExceptionHandler le indica a Spring qué tipo de excepción debe manejar ese método
     @ExceptionHandler(Exception.class)
     //La anotación @ResponseStatus permite indicar el estado HTTP que debe utilizarse para una respuesta.
@@ -53,14 +53,15 @@ public class RestExceptionHandler {
         .build(), new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    
     //Manejar error de Validacion
     //@ExceptionHandler le indica a Spring qué tipo de excepción debe manejar ese método.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     //La anotación @ResponseStatus permite indicar el estado HTTP que debe utilizarse para una respuesta.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<CustomErrorResponse<List<String>>> handleValidationException(MethodArgumentNotValidException x, HttpServletRequest req){
+    public ResponseEntity<CustomErrorResponse<List<String>>> handleValidationException(MethodArgumentNotValidException x, HttpServletRequest req){ //HttpServletRequest req -para optener la ruta
         logger.error("MethodArgumentNotValidException-GEH: {}",x.getMessage(),x);
-        //variable auxiliar
+        //variable auxiliar para optener los errores 
         List<String>errors=x.getBindingResult().getFieldErrors().stream()
             .map(error ->error.getField()+": "+error.getDefaultMessage())
             .collect(Collectors.toList());

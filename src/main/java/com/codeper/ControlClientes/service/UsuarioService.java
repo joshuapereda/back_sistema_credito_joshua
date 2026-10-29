@@ -45,14 +45,13 @@ public class UsuarioService implements IUsuarioService {
         } catch (ResourNotFoundException e) {
           throw e;
         }
-       
     }
 
     @Override
     public UsuarioDto crearUsuario(CreateUsuarioDto createUsuarioDto) {
         //VALIDAR SI EXISTE LA PERSONA 
         Persona persona = personaRepository.findById(createUsuarioDto.getPersonaId())
-            .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+            .orElseThrow(() -> new ResourNotFoundException("Persona",createUsuarioDto.getPersonaId()));
         // VALIDAR ROL EXISTENTE 
         List<Rol>roles=validarYObtenerRoles(createUsuarioDto.getRolesId());
 
@@ -65,11 +64,11 @@ public class UsuarioService implements IUsuarioService {
     public UsuarioDto actualizarUsuario(Integer id, CreateUsuarioDto usuarioActualizar) {
         //VALIDAR USUARIO
         Usuario usuarioRetrieved = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el id: " + id));
+                .orElseThrow(() -> new ResourNotFoundException("Usuario " , id));
 
         //VALIDAR PERSONA
         Persona persona = personaRepository.findById(usuarioActualizar.getPersonaId())
-                .orElseThrow(() -> new RuntimeException("Persona no encontrada con el id: " + usuarioActualizar.getPersonaId()));
+                .orElseThrow(() -> new ResourNotFoundException("Persona " , usuarioActualizar.getPersonaId()));
 
         //VALIDAR ROL
         List<Rol>roles=validarYObtenerRoles(usuarioActualizar.getRolesId());
@@ -84,8 +83,8 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public void eliminarUsuario(Integer id) {
-      if (!usuarioRepository.existsById(id)) {
-        throw new RuntimeException("Usuario no encontrada con id: " + id);
+        if (!usuarioRepository.existsById(id)) {
+            throw new ResourNotFoundException("Usuario", id);
         }
         usuarioRepository.deleteById(id);
     }
@@ -107,7 +106,7 @@ public class UsuarioService implements IUsuarioService {
                 .filter(id -> !encontrados.contains(id))
                 .toList();
 
-        throw new RuntimeException("Roles no encontrados: " + noExisten);
+        throw new ResourNotFoundException("Roles " , noExisten);
     }
     return roles;
     }  

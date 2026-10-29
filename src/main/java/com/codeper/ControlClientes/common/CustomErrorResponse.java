@@ -15,7 +15,7 @@ public class CustomErrorResponse<T> {
     //datos como Int,string, double etc es un tipo de dato generico
 
     private int statusCode; // aca va el nuemro del error 400
-    private String errorCode;// Bad Request
+    private String errorCode;//mensaje: Bad Request
     private String timestamp; //fecha
     private T message; //mensaje de error 
     private String path; //ruta del error 

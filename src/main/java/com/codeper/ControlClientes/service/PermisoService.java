@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.codeper.ControlClientes.dto.CreatePermisoDto;
 import com.codeper.ControlClientes.dto.PermisoDto;
 import com.codeper.ControlClientes.entity.Permiso;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PermisoRepository;
 
 @Service 
@@ -23,9 +24,13 @@ public class PermisoService implements IPermisoService {
 
     @Override
     public PermisoDto obtenerPermisoPorId(Integer id) {
-        return permisoRepository.findById(id)
+        try{
+            return permisoRepository.findById(id)
                .map(PermisoDto::fromEntityPermiso)
-               .orElseThrow(()-> new RuntimeException("Permiso no encontrado con el id: "+id));
+               .orElseThrow(()-> new ResourNotFoundException("Permiso ",id));
+        }catch(ResourNotFoundException e){
+            throw e;
+        }
     }
 
     @Override
@@ -39,7 +44,7 @@ public class PermisoService implements IPermisoService {
     public PermisoDto actualizarPermiso(Integer id, CreatePermisoDto actualizarPermiso) {
          //VALIDAR SI EXISTE LA PERSONA 
         Permiso permisoRetrieved = permisoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Permiso no encontrado con el id: " + id));
+                .orElseThrow(() -> new ResourNotFoundException("Permiso" ,id));
 
         permisoRetrieved.setNombre(actualizarPermiso.getNombre());
         permisoRetrieved.setRecurso(actualizarPermiso.getRecurso());
@@ -52,7 +57,7 @@ public class PermisoService implements IPermisoService {
     @Override
     public void eliminarPermiso(Integer id) {
          if (!permisoRepository.existsById(id)) {
-        throw new RuntimeException("Permiso no encontrada con id: " + id);
+        throw new ResourNotFoundException("Permiso " , id);
         }
         permisoRepository.deleteById(id);
     }

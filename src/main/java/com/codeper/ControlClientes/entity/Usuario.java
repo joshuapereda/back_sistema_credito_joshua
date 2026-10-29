@@ -33,7 +33,7 @@ public class Usuario {
     @Column(nullable = false, length = 50)
     private String username;
 
-    @Column(nullable = false, length = 20)
+   @Column(nullable = false, length = 100)
     private String passwprd;
 
     //Relacion 1 a 1 (Persona) 

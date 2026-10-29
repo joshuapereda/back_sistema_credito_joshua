@@ -11,6 +11,7 @@ import com.codeper.ControlClientes.dto.PagoDto;
 import com.codeper.ControlClientes.entity.Compra;
 import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Pago;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PagoRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +33,14 @@ public class PagoService  implements IPagoService {
 
     @Override
     public PagoDto obtenerPagoPorId(Integer id) {
-        return pagoRepository.findById(id)
-        .map(PagoDto::fromEntityPago)
-        .orElseThrow(()-> new RuntimeException("Pago no encontrada con id: " + id));
+        try{
+            return pagoRepository.findById(id)
+            .map(PagoDto::fromEntityPago)
+            .orElseThrow(()-> new ResourNotFoundException("Pago " , id));
+        }catch(ResourNotFoundException e){
+            throw e;
+        }
+        
     }
 
     @Override   
@@ -47,7 +53,7 @@ public class PagoService  implements IPagoService {
     }
 
     Compra compra = compraRepository.findById(createPagoDto.getCompraId())
-        .orElseThrow(() -> new RuntimeException("Compra no encontrada"));
+        .orElseThrow(() -> new ResourNotFoundException("Compra ",createPagoDto.getCompraId()));
 
     // 1. Validar que aún se pueda pagar
     if (compra.getEstado() == EstadoCompra.PAGADO) {
@@ -86,7 +92,7 @@ public class PagoService  implements IPagoService {
 
         // Paso 1: buscar el pago
         Pago pago = pagoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourNotFoundException("Pago " , id));
 
         // Paso 2: validar el monto
         if (actualizarPagoDto.getMonto() == null
@@ -112,7 +118,7 @@ public class PagoService  implements IPagoService {
     @Transactional
     public void eliminarPago(Integer id) {
         Pago pago = pagoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+            .orElseThrow(() -> new ResourNotFoundException("Pago " ,id));
 
         Compra compra = pago.getCompra();
 

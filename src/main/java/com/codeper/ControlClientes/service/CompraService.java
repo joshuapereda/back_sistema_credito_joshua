@@ -14,6 +14,7 @@ import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.TipoCompra;
 import com.codeper.ControlClientes.entity.Usuario;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.ClienteRepository;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PagoRepository;
@@ -53,9 +54,14 @@ public class CompraService implements ICompraService {
 
     @Override
     public CompraDto listarCompraPorId(Integer id) {
-        return compraRepository.findById(id)
+        try {
+            return compraRepository.findById(id)
             .map(CompraDto::fromEntityCompra)  // los detalles se arman dentro del DTO
-            .orElseThrow(() -> new EntityNotFoundException("Compra no encontrada con id: " + id));
+            .orElseThrow(() -> new ResourNotFoundException("Compra " , id));
+            
+        } catch (ResourNotFoundException e) {
+           throw e;
+        }
     }
 
     @Override
@@ -64,11 +70,11 @@ public class CompraService implements ICompraService {
 
         // 1. Validar que existan
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-            .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + dto.getUsuarioId()));
+            .orElseThrow(() -> new ResourNotFoundException("Usuario" , dto.getUsuarioId()));
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
-            .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con id: " + dto.getClienteId()));
+            .orElseThrow(() -> new ResourNotFoundException("Cliente " ,dto.getClienteId()));
         TipoCompra tCompra = tipoCompraRepository.findById(dto.getTipoCompraId())
-            .orElseThrow(() -> new EntityNotFoundException("Tipo de compra no encontrado con id: " + dto.getTipoCompraId()));
+            .orElseThrow(() -> new ResourNotFoundException("Tipo de compra" , dto.getTipoCompraId()));
 
         // 2. Cabecera
         Compra compra = new Compra();
@@ -98,15 +104,15 @@ public class CompraService implements ICompraService {
 
         // 1. La compra debe existir
         Compra compra = compraRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Compra no encontrada con id: " + id));
+            .orElseThrow(() -> new ResourNotFoundException("Compra " , id));
 
         // 2. Validar que existan y actualizar la cabecera (la fecha original NO se toca)
         Usuario usuario = usuarioRepository.findById(compraActualizada.getUsuarioId())
-            .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + compraActualizada.getUsuarioId()));
+            .orElseThrow(() -> new ResourNotFoundException("Usuario " , compraActualizada.getUsuarioId()));
         Cliente cliente = clienteRepository.findById(compraActualizada.getClienteId())
-            .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con id: " + compraActualizada.getClienteId()));
+            .orElseThrow(() -> new ResourNotFoundException("Cliente " , compraActualizada.getClienteId()));
         TipoCompra tCompra = tipoCompraRepository.findById(compraActualizada.getTipoCompraId())
-            .orElseThrow(() -> new EntityNotFoundException("Tipo de compra no encontrado con id: " + compraActualizada.getTipoCompraId()));
+            .orElseThrow(() -> new ResourNotFoundException("Tipo de compra " , compraActualizada.getTipoCompraId()));
 
         compra.setUsuario(usuario);
         compra.setCliente(cliente);
@@ -173,7 +179,7 @@ public class CompraService implements ICompraService {
     @Override
     public void eliminarCompra(Integer id) {
          if (!compraRepository.existsById(id)) {
-        throw new EntityNotFoundException("Compra no encontrada con id: " + id);
+        throw new ResourNotFoundException("Compra" , id);
         }
         compraRepository.deleteById(id);
     }

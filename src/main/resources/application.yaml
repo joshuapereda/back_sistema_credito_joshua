@@ -45,6 +45,12 @@ logging:
             #el total de logs que no pase de 1 GB
             total-size-cap: 1GB
 
-        
-          
+    #para usar el refresh token      
+application:
+    jwt:
+        #clave secreta (Base64, mínimo 32 bytes)
+        secret-key: mT8qZ2vK9xR4pL7nB3wY6cF1hJ5dS0aGuE8iO2tV4yXkNzQrMbWjPlCeHfA7gDsU9oTvKx3Y5nBq1ZwR6cLpJm4aFhE2dSiG8uOyVtX0kNzQr7MbWjPlCe
+        #cada cuanto tiempo va crear el acces token
+        access-token-expiration: 900000 #15 minutos en milisegundos
+        refresh-token-expiration: 604800000 #7 dias en milisegundos
             

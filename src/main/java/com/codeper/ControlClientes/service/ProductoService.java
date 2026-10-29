@@ -7,6 +7,7 @@ import com.codeper.ControlClientes.dto.CreateProductoDto;
 import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.entity.Categoria;
 import com.codeper.ControlClientes.entity.Producto;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
 import com.codeper.ControlClientes.repository.ProductoRepository;
 @Service 
@@ -27,15 +28,18 @@ public class ProductoService implements IProductoService {
 
     @Override
     public ProductoDto obtenerProductoPorId(Integer id) {
-        return pProductoRepository.findById(id)
+        try{
+             return pProductoRepository.findById(id)
                 .map(ProductoDto::fromEntityProducto)
-                .orElseThrow(()-> new RuntimeException("Producto no encontrada con id: " + id));
+                .orElseThrow(()-> new ResourNotFoundException("Producto " , id));
+        }catch(ResourNotFoundException e){
+            throw e;
+        }
     }
-
     @Override
     public ProductoDto crearProducto(CreateProductoDto createPProductoDto) {
         Categoria categoria = pCategoriaRepository.findById(createPProductoDto.getCategoriaId())
-            .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            .orElseThrow(() -> new ResourNotFoundException("Categoría ",createPProductoDto.getCategoriaId()));
 
         Producto producto = CreateProductoDto.toEntityPProducto(createPProductoDto, categoria);
         producto = pProductoRepository.save(producto);
@@ -45,9 +49,9 @@ public class ProductoService implements IProductoService {
     @Override
     public ProductoDto actualizarProducto(Integer id, ProductoDto pproductoActualizado) {
         Producto productoRetrieved= pProductoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrada con id: " + id));
+                .orElseThrow(() -> new ResourNotFoundException("Producto " , id));
         Categoria categoria = pCategoriaRepository.findById(pproductoActualizado.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourNotFoundException("Categoría ",pproductoActualizado.getCategoriaId()));
         
         productoRetrieved.setNombre(pproductoActualizado.getNombre());
         productoRetrieved.setFoto(pproductoActualizado.getFoto());
@@ -62,7 +66,7 @@ public class ProductoService implements IProductoService {
     @Override
     public void eliminarProducto(Integer id) {
        if (!pProductoRepository.existsById(id)) {
-        throw new RuntimeException("Producto no encontrada con id: " + id);
+        throw new ResourNotFoundException("Producto  " , id);
         }
         pProductoRepository.deleteById(id);
     }
