@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.codeper.ControlClientes.dto.CreateCategoriaDto;
 import com.codeper.ControlClientes.dto.CategoriaDto;
 import com.codeper.ControlClientes.entity.Categoria;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
 
 @Service 
@@ -20,14 +21,16 @@ public class CategoriaService implements ICategoriaService {
                 .map(CategoriaDto::fromEntityPCategoria)
                 .toList();
     }
-
     @Override
     public CategoriaDto obetenerCategoriaPorId(Integer id) {
-        return  pCategoriaRepository.findById(id)
+        try{
+             return  pCategoriaRepository.findById(id)
                 .map(CategoriaDto::fromEntityPCategoria)
-                .orElseThrow(() -> new RuntimeException("Categoria no encontrada con id: " + id));
+                .orElseThrow(() -> new ResourNotFoundException("Categoria " , id));
+        }catch(ResourNotFoundException e){
+            throw e;
+        }
     }
-
     @Override
     public CategoriaDto crearCategoria(CreateCategoriaDto createCategoriaDto) {
         Categoria categoria=CreateCategoriaDto.toEntityCategoria(createCategoriaDto);
@@ -37,18 +40,20 @@ public class CategoriaService implements ICategoriaService {
     
     @Override
     public CategoriaDto actualizarCategoria(Integer id, CategoriaDto categoriaActualizado) {
-        Categoria categoria = new Categoria();
-        categoria.setNombre(categoriaActualizado.getNombre());
-        categoria.setDescripcion(categoriaActualizado.getDescripcion());
+        //VALIDAR SI EXISTE LA CATEGORIA 
+        Categoria categoriaRetrieved = pCategoriaRepository.findById(id)
+                .orElseThrow(() -> new ResourNotFoundException("Categoria" , id));
 
-        categoria = pCategoriaRepository.save(categoria);
+        categoriaRetrieved.setNombre(categoriaActualizado.getNombre());
+        categoriaRetrieved.setDescripcion(categoriaActualizado.getDescripcion());
+        categoriaRetrieved = pCategoriaRepository.save(categoriaRetrieved);
 
-        return CategoriaDto.fromEntityPCategoria(categoria);
+        return CategoriaDto.fromEntityPCategoria(categoriaRetrieved);
     }
     @Override
     public void eliminarCategoria(Integer id) {
         if (!pCategoriaRepository.existsById(id)) {
-        throw new RuntimeException("Categoria no encontrada con id: " + id);
+        throw new ResourNotFoundException("Categoria " , id);
         }
         pCategoriaRepository.deleteById(id);
     }

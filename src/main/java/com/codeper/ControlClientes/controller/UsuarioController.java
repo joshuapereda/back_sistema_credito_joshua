@@ -1,6 +1,9 @@
 package com.codeper.ControlClientes.controller;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController 
 @RequestMapping ("api/usuarios")
 public class UsuarioController {
+
+    // Logs por defecto
+    private static final Logger logger=LoggerFactory.getLogger(UsuarioController.class);
    
     @Autowired 
     private IUsuarioService usuarioService;
@@ -33,6 +39,7 @@ public class UsuarioController {
     }
     @PostMapping
     public ResponseEntity<UsuarioDto> createUsuario(@Validated  @RequestBody CreateUsuarioDto createUsuarioDto) {
+        logger.info("Datos recibidos para creacion de Usuario: {}",createUsuarioDto.toString());
         return  ResponseEntity.ok(usuarioService.crearUsuario(createUsuarioDto));
     }
     @PutMapping ("/{id}")

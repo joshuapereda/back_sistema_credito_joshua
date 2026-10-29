@@ -11,6 +11,7 @@ import com.codeper.ControlClientes.dto.PagoDto;
 import com.codeper.ControlClientes.entity.Compra;
 import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Pago;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PagoRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +33,14 @@ public class PagoService  implements IPagoService {
 
     @Override
     public PagoDto obtenerPagoPorId(Integer id) {
-        return pagoRepository.findById(id)
-        .map(PagoDto::fromEntityPago)
-        .orElseThrow(()-> new RuntimeException("Pago no encontrada con id: " + id));
+        try{
+            return pagoRepository.findById(id)
+            .map(PagoDto::fromEntityPago)
+            .orElseThrow(()-> new ResourNotFoundException("Pago " , id));
+        }catch(ResourNotFoundException e){
+            throw e;
+        }
+        
     }
 
     @Override   
@@ -47,7 +53,7 @@ public class PagoService  implements IPagoService {
     }
 
     Compra compra = compraRepository.findById(createPagoDto.getCompraId())
-        .orElseThrow(() -> new RuntimeException("Compra no encontrada"));
+        .orElseThrow(() -> new ResourNotFoundException("Compra ",createPagoDto.getCompraId()));
 
     // 1. Validar que aún se pueda pagar
     if (compra.getEstado() == EstadoCompra.PAGADO) {
@@ -84,27 +90,56 @@ public class PagoService  implements IPagoService {
     @Transactional
     public PagoDto actualizarPago(Integer id, PagoDto actualizarPagoDto) {
 
-        Compra compra= compraRepository.findById(actualizarPagoDto.getId())
-            .orElseThrow(()-> new RuntimeException("Compra no encontrada con id: " + actualizarPagoDto.getId()));
-
-        Pago pagoRetrieved = pagoRepository.findById(id)
+        Pago pago = pagoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
-        
-        pagoRetrieved.setMonto(actualizarPagoDto.getMonto());
-        pagoRetrieved.setSaldoRestante(actualizarPagoDto.getSaldoRestante());
-        pagoRetrieved.setFechaHora(LocalDateTime.now());
-        pagoRetrieved.setCompra(compra);
 
-        pagoRepository.save(pagoRetrieved);
-        return PagoDto.fromEntityPago(pagoRetrieved);
+        if (actualizarPagoDto.getMonto() == null
+                || actualizarPagoDto.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("El monto debe ser mayor a cero.");
+        }
+
+        pago.setMonto(actualizarPagoDto.getMonto());
+        pagoRepository.saveAndFlush(pago);
+
+        recalcularSaldos(pago.getCompra());
+
+        return PagoDto.fromEntityPago(pago);
     }
 
     @Override
     public void eliminarPago(Integer id) {
-        if (!pagoRepository.existsById(id)) {
-        throw new RuntimeException("Pago no encontrado con id: " + id);
+        Pago pago = pagoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
+
+        Compra compra = pago.getCompra();
+
+        pagoRepository.delete(pago);
+        pagoRepository.flush();
+
+        recalcularSaldos(compra);
+    }
+
+    private void recalcularSaldos(Compra compra) {
+        List<Pago> pagos = pagoRepository.findByCompraIdOrderByIdAsc(compra.getId());
+
+        BigDecimal saldo = compra.getTotal();
+
+        for (Pago p : pagos) {
+            saldo = saldo.subtract(p.getMonto());
+            p.setSaldoRestante(saldo);
         }
-        pagoRepository.deleteById(id);
+
+        if (saldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("El monto del pago excede el saldo de la compra.");
+        }
+
+        compra.setSaldo(saldo);
+        compra.setEstado(saldo.compareTo(BigDecimal.ZERO) == 0
+                ? EstadoCompra.PAGADO
+                : EstadoCompra.PENDIENTE);
+
+        pagoRepository.saveAll(pagos);
+        compraRepository.save(compra);
     }
 
 }

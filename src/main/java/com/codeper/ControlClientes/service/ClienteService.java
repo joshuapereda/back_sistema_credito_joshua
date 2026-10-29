@@ -7,6 +7,7 @@ import com.codeper.ControlClientes.dto.CreateClienteDto;
 import com.codeper.ControlClientes.dto.ClienteDto;
 import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Persona;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.ClienteRepository;
 import com.codeper.ControlClientes.repository.PersonaRepository;
 
@@ -31,11 +32,15 @@ public class ClienteService implements IClienteService {
 
     @Override
     public ClienteDto obtenerClientePorId(Integer id) {
-        return clienteRepository.findById(id).map(cliente -> {
-        //obtener el Persona correspondiente a ese cliente
-        Persona persona= cliente.getPersona();
-        return ClienteDto.fromEntityCliente(cliente, persona);
-        }).orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+        try{
+            return clienteRepository.findById(id).map(cliente -> {
+            //obtener el Persona correspondiente a ese cliente
+            Persona persona= cliente.getPersona();
+            return ClienteDto.fromEntityCliente(cliente, persona);
+            }).orElseThrow(() -> new ResourNotFoundException("Usuario", id));
+        }catch(ResourNotFoundException e){
+            throw e;
+        }
     }
 
     @Override
@@ -60,7 +65,7 @@ public class ClienteService implements IClienteService {
             throw new RuntimeException("El correo electronico ya está en uso");
         }
         Cliente clienteRetrieved= clienteRepository.findById(id).orElseThrow(() -> 
-        new RuntimeException("Cliente no encontrado con id: " + id));
+        new ResourNotFoundException("Cliente " , id));
         //Actualizar Cliente
         clienteRetrieved.setDocIdentidad(clienteActualizado.getDocIdentidad());
         Persona personaRetrieved= clienteRetrieved.getPersona();
@@ -75,7 +80,11 @@ public class ClienteService implements IClienteService {
 
     @Override
     public void eliminarCliente(Integer id) {
-       clienteRepository.deleteById(id);
+       if (!clienteRepository.existsById(id)) {
+            throw new ResourNotFoundException("Cliente", id);
+        }
+
+        clienteRepository.deleteById(id);
     }
      // VALIDATIONS
     

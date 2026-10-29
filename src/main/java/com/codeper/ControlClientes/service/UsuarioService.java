@@ -10,6 +10,7 @@ import com.codeper.ControlClientes.dto.UsuarioDto;
 import com.codeper.ControlClientes.entity.Persona;
 import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.entity.Usuario;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PersonaRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
@@ -35,16 +36,22 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public UsuarioDto obtenerUsuarioPorId(Integer id) {
-        return usuarioRepository.findById(id).map(usuario->{
+        //el try es la sintaxis correcto para trabajr con errores 
+        try {
+            return usuarioRepository.findById(id).map(usuario->{
             return UsuarioDto.fromEntityUsuario(usuario);
-        }).orElseThrow(()->new RuntimeException("Usuario con el id: "+id+" no emcontrado"));
+            //el ResourNotFoundException es un error Personalizado
+            }).orElseThrow(() -> new ResourNotFoundException("Usuario",id));
+        } catch (ResourNotFoundException e) {
+          throw e;
+        }
     }
 
     @Override
     public UsuarioDto crearUsuario(CreateUsuarioDto createUsuarioDto) {
         //VALIDAR SI EXISTE LA PERSONA 
         Persona persona = personaRepository.findById(createUsuarioDto.getPersonaId())
-            .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+            .orElseThrow(() -> new ResourNotFoundException("Persona",createUsuarioDto.getPersonaId()));
         // VALIDAR ROL EXISTENTE 
         List<Rol>roles=validarYObtenerRoles(createUsuarioDto.getRolesId());
 
@@ -57,11 +64,11 @@ public class UsuarioService implements IUsuarioService {
     public UsuarioDto actualizarUsuario(Integer id, CreateUsuarioDto usuarioActualizar) {
         //VALIDAR USUARIO
         Usuario usuarioRetrieved = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el id: " + id));
+                .orElseThrow(() -> new ResourNotFoundException("Usuario " , id));
 
         //VALIDAR PERSONA
         Persona persona = personaRepository.findById(usuarioActualizar.getPersonaId())
-                .orElseThrow(() -> new RuntimeException("Persona no encontrada con el id: " + usuarioActualizar.getPersonaId()));
+                .orElseThrow(() -> new ResourNotFoundException("Persona " , usuarioActualizar.getPersonaId()));
 
         //VALIDAR ROL
         List<Rol>roles=validarYObtenerRoles(usuarioActualizar.getRolesId());
@@ -76,8 +83,8 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public void eliminarUsuario(Integer id) {
-      if (!usuarioRepository.existsById(id)) {
-        throw new RuntimeException("Usuario no encontrada con id: " + id);
+        if (!usuarioRepository.existsById(id)) {
+            throw new ResourNotFoundException("Usuario", id);
         }
         usuarioRepository.deleteById(id);
     }
@@ -99,7 +106,7 @@ public class UsuarioService implements IUsuarioService {
                 .filter(id -> !encontrados.contains(id))
                 .toList();
 
-        throw new RuntimeException("Roles no encontrados: " + noExisten);
+        throw new ResourNotFoundException("Roles " , noExisten);
     }
     return roles;
     }  

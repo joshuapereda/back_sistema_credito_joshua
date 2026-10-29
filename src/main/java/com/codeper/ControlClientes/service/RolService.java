@@ -9,6 +9,7 @@ import com.codeper.ControlClientes.dto.CreateRolDto;
 import com.codeper.ControlClientes.dto.RolDto;
 import com.codeper.ControlClientes.entity.Permiso;
 import com.codeper.ControlClientes.entity.Rol;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PermisoRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
 
@@ -31,9 +32,13 @@ public class RolService implements IRolService {
 
     @Override
     public RolDto listarRolPorId(Integer id) {
-        return rolRepository.findById(id)
+        try{
+            return rolRepository.findById(id)
                 .map(RolDto::fromEntityRol)
-                .orElseThrow(()->new RuntimeException("Rol no encontrado con el id: "+ id));
+                .orElseThrow(()->new ResourNotFoundException("Rol ", id));
+        }catch(ResourNotFoundException e){
+            throw e;
+        }
     }
 
     @Override
@@ -50,7 +55,7 @@ public class RolService implements IRolService {
     @Override
     public RolDto actualizarRol(Integer id, RolDto rolActualizar) {
         Rol rol = rolRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado con el id: " + id));
+                .orElseThrow(() -> new ResourNotFoundException("Rol " , id));
         // Validar que existan los permisos
         List<Permiso> permisos = validarYObtenerPermisos(rolActualizar.getPermisosId());
        
@@ -65,7 +70,7 @@ public class RolService implements IRolService {
     @Override
     public void eliminarRol(Integer id) {
         if (!rolRepository.existsById(id)) {
-        throw new RuntimeException("Rol no encontrada con id: " + id);
+        throw new ResourNotFoundException("Rol " , id);
         }
         rolRepository.deleteById(id);
     }

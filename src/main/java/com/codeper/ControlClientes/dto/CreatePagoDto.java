@@ -1,13 +1,11 @@
 package com.codeper.ControlClientes.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import com.codeper.ControlClientes.entity.Compra;
 import com.codeper.ControlClientes.entity.Pago;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

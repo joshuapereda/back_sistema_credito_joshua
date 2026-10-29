@@ -1,0 +1,128 @@
+2026-10-23T01:46:10.359-05:00  INFO 5172 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 5172 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-10-23T01:46:10.361-05:00 DEBUG 5172 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-10-23T01:46:10.362-05:00  INFO 5172 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-10-23T01:46:10.400-05:00  INFO 5172 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-23T01:46:10.400-05:00  INFO 5172 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-23T01:46:11.047-05:00  INFO 5172 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-23T01:46:11.109-05:00  INFO 5172 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 55 ms. Found 10 JPA repository interfaces.
+2026-10-23T01:46:11.511-05:00  INFO 5172 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-10-23T01:46:11.526-05:00  INFO 5172 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-23T01:46:11.527-05:00  INFO 5172 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-23T01:46:11.577-05:00  INFO 5172 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1176 ms
+2026-10-23T01:46:11.844-05:00  INFO 35212 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 35212 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-10-23T01:46:11.849-05:00 DEBUG 35212 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-10-23T01:46:11.855-05:00  INFO 35212 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-10-23T01:46:11.913-05:00  INFO 35212 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-23T01:46:11.914-05:00  INFO 35212 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-23T01:46:12.317-05:00  INFO 5172 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-23T01:46:12.347-05:00  INFO 5172 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-23T01:46:12.484-05:00  INFO 5172 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@39f80779
+2026-10-23T01:46:12.486-05:00  INFO 5172 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-23T01:46:12.580-05:00  INFO 35212 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-23T01:46:12.649-05:00  INFO 35212 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 10 JPA repository interfaces.
+2026-10-23T01:46:13.116-05:00  INFO 35212 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-10-23T01:46:13.135-05:00  INFO 35212 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-23T01:46:13.135-05:00  INFO 35212 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-23T01:46:13.176-05:00  INFO 35212 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1262 ms
+2026-10-23T01:46:13.693-05:00  INFO 5172 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-23T01:46:13.769-05:00  INFO 5172 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-23T01:46:13.823-05:00  INFO 35212 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-23T01:46:13.854-05:00  INFO 35212 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-23T01:46:14.028-05:00  INFO 35212 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1c9b8b77
+2026-10-23T01:46:14.030-05:00  INFO 35212 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-23T01:46:14.701-05:00  WARN 5172 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-23T01:46:15.083-05:00  INFO 5172 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-10-23T01:46:15.087-05:00  INFO 5172 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 5.097 seconds (process running for 5.674)
+2026-10-23T01:46:15.238-05:00  INFO 35212 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-23T01:46:15.305-05:00  INFO 35212 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-23T01:46:16.254-05:00  WARN 35212 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-23T01:46:16.564-05:00  WARN 35212 --- [control-clientes] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-10-23T01:46:16.566-05:00  INFO 35212 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-23T01:46:16.569-05:00  INFO 35212 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-23T01:46:16.571-05:00  INFO 35212 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-10-23T01:46:16.590-05:00  INFO 35212 --- [control-clientes] [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-10-23T01:46:16.603-05:00 ERROR 35212 --- [control-clientes] [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 9600 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 9600 or configure this application to listen on another port.
+
+2026-10-23T01:51:29.347-05:00  INFO 30952 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 30952 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-10-23T01:51:29.350-05:00 DEBUG 30952 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-10-23T01:51:29.351-05:00  INFO 30952 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-10-23T01:51:29.398-05:00  INFO 30952 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-23T01:51:29.398-05:00  INFO 30952 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-23T01:51:30.035-05:00  INFO 30952 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-23T01:51:30.106-05:00  INFO 30952 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 64 ms. Found 10 JPA repository interfaces.
+2026-10-23T01:51:30.490-05:00  INFO 30952 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-10-23T01:51:30.502-05:00  INFO 30952 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-23T01:51:30.502-05:00  INFO 30952 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-23T01:51:30.538-05:00  INFO 30952 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1138 ms
+2026-10-23T01:51:31.078-05:00  INFO 30952 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-23T01:51:31.102-05:00  INFO 30952 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-23T01:51:31.241-05:00  INFO 30952 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@48249df8
+2026-10-23T01:51:31.243-05:00  INFO 30952 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-23T01:51:32.195-05:00  INFO 30952 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-23T01:51:32.254-05:00  INFO 30952 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-23T01:51:33.054-05:00  WARN 30952 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-23T01:51:33.304-05:00  INFO 30952 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-10-23T01:51:33.309-05:00  INFO 30952 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 4.383 seconds (process running for 4.836)
+2026-10-23T01:51:58.062-05:00  INFO 30952 --- [control-clientes] [http-nio-9600-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-23T01:51:58.256-05:00 ERROR 30952 --- [control-clientes] [http-nio-9600-exec-1] c.c.C.controller.UsuarioController       : MethodArgumentNotValidException-GEH: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.codeper.ControlClientes.dto.UsuarioDto> com.codeper.ControlClientes.controller.UsuarioController.createUsuario(com.codeper.ControlClientes.dto.CreateUsuarioDto): [Field error in object 'createUsuarioDto' on field 'username': rejected value [Truenxaxopay2002]; codes [UniqueName.createUsuarioDto.username,UniqueName.username,UniqueName.java.lang.String,UniqueName]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createUsuarioDto.username,username]; arguments []; default message [username],username]; default message [El valor de 'username' ya fue registrado]] 
+
+org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.codeper.ControlClientes.dto.UsuarioDto> com.codeper.ControlClientes.controller.UsuarioController.createUsuario(com.codeper.ControlClientes.dto.CreateUsuarioDto): [Field error in object 'createUsuarioDto' on field 'username': rejected value [Truenxaxopay2002]; codes [UniqueName.createUsuarioDto.username,UniqueName.username,UniqueName.java.lang.String,UniqueName]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createUsuarioDto.username,username]; arguments []; default message [username],username]; default message [El valor de 'username' ya fue registrado]] 
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:165) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:174) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649) ~[tomcat-embed-core-11.0.22.jar:6.1]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.22.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
+
+2026-10-23T01:51:58.292-05:00  WARN 30952 --- [control-clientes] [http-nio-9600-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.codeper.ControlClientes.dto.UsuarioDto> com.codeper.ControlClientes.controller.UsuarioController.createUsuario(com.codeper.ControlClientes.dto.CreateUsuarioDto): [Field error in object 'createUsuarioDto' on field 'username': rejected value [Truenxaxopay2002]; codes [UniqueName.createUsuarioDto.username,UniqueName.username,UniqueName.java.lang.String,UniqueName]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createUsuarioDto.username,username]; arguments []; default message [username],username]; default message [El valor de 'username' ya fue registrado]] ]
