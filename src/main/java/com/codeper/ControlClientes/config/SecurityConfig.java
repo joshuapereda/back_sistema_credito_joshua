@@ -33,8 +33,8 @@ public class SecurityConfig {
                     //Dar seguridad a las peticiones
                     //permitAll - permite pones que es una ruta avierta cualquiera púede ingresar
                     .requestMatchers("/api/auth/**", "/error").permitAll()
-                    .requestMatchers("/productos").hasAnyAuthority("VER_PRODUCTOS","ROLE_ENCARGADO_ALMACEN")
-                    .requestMatchers("/ventas").hasAnyAuthority("VER_VENTAS","ROLE_VENDEDOR")
+                    .requestMatchers("/productos").hasAnyAuthority("LISTAR_PRODUCTOS","ROLE_ENCARGADO_ALMACEN")
+                    .requestMatchers("/ventas").hasAnyAuthority("ROL_ADMIN")
                     //con esto va indicar que el resto de las ruta no va pedir  ni roles ni permisos 
                     //solo va pedir token osea que esten autenticados
                     .anyRequest().authenticated()
