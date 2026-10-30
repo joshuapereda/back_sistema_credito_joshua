@@ -106,7 +106,8 @@ public class PagoService  implements IPagoService {
         return PagoDto.fromEntityPago(pago);
     }
 
-    @Override
+   @Override
+    @Transactional
     public void eliminarPago(Integer id) {
         Pago pago = pagoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Pago no encontrado con id: " + id));
