@@ -5,15 +5,29 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreatePagoDto;
 import com.codeper.ControlClientes.dto.PagoDto;
+import com.codeper.ControlClientes.dto.PagoFilterCriteria;
+import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.entity.Compra;
 import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Pago;
+import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PagoRepository;
+import com.codeper.ControlClientes.repository.specofocation.PagoSpecification;
+import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service 
@@ -129,5 +143,36 @@ public class PagoService  implements IPagoService {
         }
         compra.setSaldo(saldo);
         compraRepository.save(compra);
+    }
+
+    @Override
+    public PageableResponse<PagoDto> getPagoPagination(PageableRequest<PagoFilterCriteria> pageableRequest) {
+         try {
+            //SORT PERMITE MANEJAR ORDENAMIENTO
+            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
+            ? Sort.by(pageableRequest.getSortField()).ascending()
+            : Sort.by(pageableRequest.getSortField()).descending();
+            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+
+            //filtrado
+            Specification<Pago>specification =null;
+            if(pageableRequest.getCriterials() !=null){
+               specification = PagoSpecification.createSpecification(
+                                pageableRequest.getCriterials(),
+                                pageableRequest.getFilterValue());
+            }
+            Page<Pago>pagoPage=pagoRepository.findAll(specification,pageable);
+            //devolver los datos
+            return PageableResponse.<PagoDto>builder()
+            .content(pagoPage.getContent().stream().map(PagoDto::fromEntityPago).toList())
+            .pageNumber(pagoPage.getNumber())
+            .pageSize(pagoPage.getSize())
+            .totalElements(pagoPage.getTotalElements())
+            .totalPages(pagoPage.getTotalPages())
+            .build();
+            
+        } catch (Exception e) {
+           throw new RuntimeException("Error de paginacion de pagos");
+        }
     }
 }

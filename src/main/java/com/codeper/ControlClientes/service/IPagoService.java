@@ -1,8 +1,12 @@
 package com.codeper.ControlClientes.service;
 
 import java.util.List;
+
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreatePagoDto;
 import com.codeper.ControlClientes.dto.PagoDto;
+import com.codeper.ControlClientes.dto.PagoFilterCriteria;
 
 public interface IPagoService {
 
@@ -11,6 +15,7 @@ public interface IPagoService {
     PagoDto crearPago(CreatePagoDto createPagoDto);
     PagoDto actualizarPago(Integer id, PagoDto actualizarPagoDto);
     void eliminarPago(Integer id);
-    
-
+     //paginacion
+    PageableResponse<PagoDto>getPagoPagination(PageableRequest<PagoFilterCriteria>pageableRequest);
 }
+    

@@ -4,14 +4,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateRolDto;
+import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.RolDto;
+import com.codeper.ControlClientes.dto.RolFilterCriteria;
 import com.codeper.ControlClientes.entity.Permiso;
+import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PermisoRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
+import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
+import com.codeper.ControlClientes.repository.specofocation.RolSpecification;
 
 @Service 
 public class RolService implements IRolService {
@@ -95,5 +108,36 @@ public class RolService implements IRolService {
         throw new RuntimeException("Permisos no encontrados: " + noExisten);
     }
         return permisos;
+    }
+
+    @Override
+    public PageableResponse<RolDto> getRolPagination(PageableRequest<RolFilterCriteria> pageableRequest) {
+        try {
+            //SORT PERMITE MANEJAR ORDENAMIENTO
+            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
+            ? Sort.by(pageableRequest.getSortField()).ascending()
+            : Sort.by(pageableRequest.getSortField()).descending();
+            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+
+            //filtrado
+            Specification<Rol>specification =null;
+            if(pageableRequest.getCriterials() !=null){
+               specification = RolSpecification.createSpecification(
+                                pageableRequest.getCriterials(),
+                                pageableRequest.getFilterValue());
+            }
+            Page<Rol>rolPage=rolRepository.findAll(specification,pageable);
+            //devolver los datos
+            return PageableResponse.<RolDto>builder()
+            .content(rolPage.getContent().stream().map(RolDto::fromEntityRol).toList())
+            .pageNumber(rolPage.getNumber())
+            .pageSize(rolPage.getSize())
+            .totalElements(rolPage.getTotalElements())
+            .totalPages(rolPage.getTotalPages())
+            .build();
+            
+        } catch (Exception e) {
+           throw new RuntimeException("Error de paginacion de roles");
+        }
     }
 }
