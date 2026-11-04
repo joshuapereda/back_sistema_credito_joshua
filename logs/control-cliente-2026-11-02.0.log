@@ -1,0 +1,192 @@
+2026-10-30T00:13:07.408-05:00  INFO 22920 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 22920 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-10-30T00:13:07.413-05:00 DEBUG 22920 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-10-30T00:13:07.413-05:00  INFO 22920 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T00:13:07.458-05:00  INFO 22920 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-30T00:13:07.458-05:00  INFO 22920 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-30T00:13:08.158-05:00  INFO 22920 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T00:13:08.224-05:00  INFO 22920 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 60 ms. Found 10 JPA repository interfaces.
+2026-10-30T00:13:08.776-05:00  INFO 22920 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-10-30T00:13:08.789-05:00  INFO 22920 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-30T00:13:08.790-05:00  INFO 22920 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-30T00:13:08.836-05:00  INFO 22920 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1377 ms
+2026-10-30T00:13:09.416-05:00  INFO 22920 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T00:13:09.443-05:00  INFO 22920 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-30T00:13:09.701-05:00  INFO 22920 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7781a7d
+2026-10-30T00:13:09.704-05:00  INFO 22920 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-30T00:13:10.875-05:00  INFO 22920 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T00:13:10.942-05:00  INFO 22920 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-30T00:13:11.150-05:00 DEBUG 22920 --- [control-clientes] [restartedMain] c.c.C.auth.JwtAuthenticationFilter       : Filter 'jwtAuthenticationFilter' configured for use
+2026-10-30T00:13:11.193-05:00  INFO 22920 --- [control-clientes] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-30T00:13:11.193-05:00  WARN 22920 --- [control-clientes] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-30T00:13:11.895-05:00  WARN 22920 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-30T00:13:12.393-05:00  INFO 22920 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-10-30T00:13:12.398-05:00  INFO 22920 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 5.381 seconds (process running for 5.979)
+2026-10-30T00:16:09.000-05:00  INFO 22728 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 22728 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-10-30T00:16:09.003-05:00 DEBUG 22728 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-10-30T00:16:09.005-05:00  INFO 22728 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T00:16:09.056-05:00  INFO 22728 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-30T00:16:09.057-05:00  INFO 22728 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-30T00:16:09.918-05:00  INFO 22728 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T00:16:09.992-05:00  INFO 22728 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 64 ms. Found 10 JPA repository interfaces.
+2026-10-30T00:16:10.574-05:00  INFO 22728 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-10-30T00:16:10.589-05:00  INFO 22728 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-30T00:16:10.591-05:00  INFO 22728 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-30T00:16:10.642-05:00  INFO 22728 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1584 ms
+2026-10-30T00:16:11.196-05:00  INFO 22728 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T00:16:11.224-05:00  INFO 22728 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-30T00:16:11.376-05:00  INFO 22728 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@183ddf5d
+2026-10-30T00:16:11.378-05:00  INFO 22728 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-30T00:16:12.561-05:00  INFO 22728 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T00:16:12.622-05:00  INFO 22728 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-30T00:16:12.803-05:00 DEBUG 22728 --- [control-clientes] [restartedMain] c.c.C.auth.JwtAuthenticationFilter       : Filter 'jwtAuthenticationFilter' configured for use
+2026-10-30T00:16:12.840-05:00  INFO 22728 --- [control-clientes] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-30T00:16:12.841-05:00  WARN 22728 --- [control-clientes] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-30T00:16:13.641-05:00  WARN 22728 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-30T00:16:14.186-05:00  INFO 22728 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-10-30T00:16:14.192-05:00  INFO 22728 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 5.756 seconds (process running for 6.247)
+2026-10-30T00:19:21.576-05:00  INFO 37960 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 37960 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-10-30T00:19:21.579-05:00 DEBUG 37960 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-10-30T00:19:21.579-05:00  INFO 37960 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T00:19:21.617-05:00  INFO 37960 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-30T00:19:21.617-05:00  INFO 37960 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-30T00:19:22.316-05:00  INFO 37960 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T00:19:22.398-05:00  INFO 37960 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 72 ms. Found 10 JPA repository interfaces.
+2026-10-30T00:19:22.958-05:00  INFO 37960 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-10-30T00:19:22.973-05:00  INFO 37960 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-30T00:19:22.973-05:00  INFO 37960 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-30T00:19:23.017-05:00  INFO 37960 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1398 ms
+2026-10-30T00:19:23.596-05:00  INFO 37960 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T00:19:23.620-05:00  INFO 37960 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-30T00:19:23.752-05:00  INFO 37960 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5872f373
+2026-10-30T00:19:23.753-05:00  INFO 37960 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-30T00:19:24.903-05:00  INFO 37960 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T00:19:24.974-05:00  INFO 37960 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-30T00:19:25.176-05:00 DEBUG 37960 --- [control-clientes] [restartedMain] c.c.C.auth.JwtAuthenticationFilter       : Filter 'jwtAuthenticationFilter' configured for use
+2026-10-30T00:19:25.229-05:00  INFO 37960 --- [control-clientes] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-30T00:19:25.230-05:00  WARN 37960 --- [control-clientes] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-30T00:19:26.001-05:00  WARN 37960 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-30T00:19:26.494-05:00  INFO 37960 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-10-30T00:19:26.499-05:00  INFO 37960 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 5.303 seconds (process running for 5.911)
+2026-10-30T00:21:24.743-05:00  INFO 37960 --- [control-clientes] [http-nio-9600-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-30T00:22:07.518-05:00 ERROR 37960 --- [control-clientes] [http-nio-9600-exec-4] c.c.C.controller.UsuarioController       : MethodArgumentNotValidException-GEH: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.codeper.ControlClientes.dto.UsuarioDto> com.codeper.ControlClientes.controller.UsuarioController.createUsuario(com.codeper.ControlClientes.dto.CreateUsuarioDto): [Field error in object 'createUsuarioDto' on field 'passwprd': rejected value [Admin2004]; codes [Pattern.createUsuarioDto.passwprd,Pattern.passwprd,Pattern.java.lang.String,Pattern]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createUsuarioDto.passwprd,passwprd]; arguments []; default message [passwprd],[Ljakarta.validation.constraints.Pattern$Flag;@52ea2c29,^(?=[A-Z])(?=.{4,}$)(?=^(?:\D*\d){2,4}\D*$)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~`]).+$]; default message [El Password debe empezar con mayúscula, tener mínimo 4 caracteres, entre 2 y 4 números, y al menos un símbolo especial]] 
+
+org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.codeper.ControlClientes.dto.UsuarioDto> com.codeper.ControlClientes.controller.UsuarioController.createUsuario(com.codeper.ControlClientes.dto.CreateUsuarioDto): [Field error in object 'createUsuarioDto' on field 'passwprd': rejected value [Admin2004]; codes [Pattern.createUsuarioDto.passwprd,Pattern.passwprd,Pattern.java.lang.String,Pattern]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createUsuarioDto.passwprd,passwprd]; arguments []; default message [passwprd],[Ljakarta.validation.constraints.Pattern$Flag;@52ea2c29,^(?=[A-Z])(?=.{4,}$)(?=^(?:\D*\d){2,4}\D*$)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~`]).+$]; default message [El Password debe empezar con mayúscula, tener mínimo 4 caracteres, entre 2 y 4 números, y al menos un símbolo especial]] 
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:165) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:174) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649) ~[tomcat-embed-core-11.0.22.jar:6.1]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.8.jar:7.0.8]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.22.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$2(FilterChainProxy.java:235) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:376) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:132) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:86) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:181) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at com.codeper.ControlClientes.auth.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:69) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:96) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:385) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:237) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:195) ~[spring-security-web-7.1.0.jar:7.1.0]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:317) ~[spring-security-config-7.1.0.jar:7.1.0]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:355) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:272) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.8.jar:7.0.8]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1801) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.22.jar:11.0.22]
+	at java.base/java.lang.Thread.run(Thread.java:1474) ~[na:na]
+
+2026-10-30T00:22:07.537-05:00  WARN 37960 --- [control-clientes] [http-nio-9600-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.codeper.ControlClientes.dto.UsuarioDto> com.codeper.ControlClientes.controller.UsuarioController.createUsuario(com.codeper.ControlClientes.dto.CreateUsuarioDto): [Field error in object 'createUsuarioDto' on field 'passwprd': rejected value [Admin2004]; codes [Pattern.createUsuarioDto.passwprd,Pattern.passwprd,Pattern.java.lang.String,Pattern]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createUsuarioDto.passwprd,passwprd]; arguments []; default message [passwprd],[Ljakarta.validation.constraints.Pattern$Flag;@52ea2c29,^(?=[A-Z])(?=.{4,}$)(?=^(?:\D*\d){2,4}\D*$)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~`]).+$]; default message [El Password debe empezar con mayúscula, tener mínimo 4 caracteres, entre 2 y 4 números, y al menos un símbolo especial]] ]
+2026-10-30T00:22:36.541-05:00  INFO 38716 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 38716 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-10-30T00:22:36.544-05:00 DEBUG 38716 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-10-30T00:22:36.545-05:00  INFO 38716 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-10-30T00:22:36.600-05:00  INFO 38716 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-10-30T00:22:36.600-05:00  INFO 38716 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-10-30T00:22:37.468-05:00  INFO 38716 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-30T00:22:37.538-05:00  INFO 38716 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 59 ms. Found 10 JPA repository interfaces.
+2026-10-30T00:22:38.125-05:00  INFO 38716 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-10-30T00:22:38.138-05:00  INFO 38716 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-30T00:22:38.139-05:00  INFO 38716 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-30T00:22:38.189-05:00  INFO 38716 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1589 ms
+2026-10-30T00:22:38.758-05:00  INFO 38716 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-30T00:22:38.785-05:00  INFO 38716 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-30T00:22:38.926-05:00  INFO 38716 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2f5450ff
+2026-10-30T00:22:38.927-05:00  INFO 38716 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-30T00:22:40.143-05:00  INFO 38716 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-30T00:22:40.218-05:00  INFO 38716 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-30T00:22:40.416-05:00 DEBUG 38716 --- [control-clientes] [restartedMain] c.c.C.auth.JwtAuthenticationFilter       : Filter 'jwtAuthenticationFilter' configured for use
+2026-10-30T00:22:40.452-05:00  INFO 38716 --- [control-clientes] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-10-30T00:22:40.452-05:00  WARN 38716 --- [control-clientes] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-30T00:22:41.209-05:00  WARN 38716 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-30T00:22:41.673-05:00  INFO 38716 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-10-30T00:22:41.680-05:00  INFO 38716 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 5.651 seconds (process running for 6.164)

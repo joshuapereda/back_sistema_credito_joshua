@@ -1,6 +1,9 @@
 server:
     #PUERTO
     port: 9600
+    tomcat:
+        max-swallow-size: 20MB
+        max-http-form-post-size: 20MB
 spring: 
     application:
         # NOMBRE DE LA APLICACIÓN
@@ -21,7 +24,11 @@ spring:
 
         hibernate:
            ddl-auto: update
-        show-sql: true 
+        show-sql: true
+    servlet:
+        multipart:
+            max-file-size: 20MB
+            max-request-size: 20MB
 
 #Anadir configuracion para trabajar con Loggs
 logging:
@@ -53,4 +60,7 @@ application:
         #cada cuanto tiempo va crear el acces token
         access-token-expiration: 900000 #15 minutos en milisegundos
         refresh-token-expiration: 604800000 #7 dias en milisegundos
-            
+
+    #definir el path de la carpeta donde se guardaran los archivos
+storage:
+    location: C:/Proyectos_Joshua/Back/ControlClientes/images       

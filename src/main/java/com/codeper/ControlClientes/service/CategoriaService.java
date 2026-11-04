@@ -3,6 +3,8 @@ package com.codeper.ControlClientes.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.codeper.ControlClientes.dto.CreateCategoriaDto;
 import com.codeper.ControlClientes.dto.CategoriaDto;
 import com.codeper.ControlClientes.entity.Categoria;
@@ -14,6 +16,9 @@ public class CategoriaService implements ICategoriaService {
 
     @Autowired 
     private CategoriaRepository pCategoriaRepository;
+
+    @Autowired 
+    private FileService fileService;
 
     @Override
     public List<CategoriaDto> listaCategoria() {
@@ -34,6 +39,7 @@ public class CategoriaService implements ICategoriaService {
     @Override
     public CategoriaDto crearCategoria(CreateCategoriaDto createCategoriaDto) {
         Categoria categoria=CreateCategoriaDto.toEntityCategoria(createCategoriaDto);
+        categoria.setFoto(guardarFoto(createCategoriaDto.getFoto()));
         categoria=pCategoriaRepository.save(categoria);
         return CategoriaDto.fromEntityPCategoria(categoria);
     }
@@ -56,5 +62,11 @@ public class CategoriaService implements ICategoriaService {
         throw new ResourNotFoundException("Categoria " , id);
         }
         pCategoriaRepository.deleteById(id);
+    }
+    private String guardarFoto(MultipartFile foto) {
+        if (foto == null || foto.isEmpty()) {
+        return null;
+    }
+    return fileService.createFile(foto);
     }
 }

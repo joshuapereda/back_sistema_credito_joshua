@@ -1,6 +1,9 @@
 package com.codeper.ControlClientes.entity;
 
 import java.math.BigDecimal;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,9 +32,9 @@ public class Producto {
     @Column (nullable = false, length = 50)
     private String nombre;
 
-
     @Column (nullable = false, length = 200)
     private String foto;
+    
     @Column (nullable = false)
     private BigDecimal precioVenta;
 

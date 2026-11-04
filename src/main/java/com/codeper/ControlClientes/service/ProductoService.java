@@ -3,6 +3,7 @@ package com.codeper.ControlClientes.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import com.codeper.ControlClientes.dto.CreateProductoDto;
 import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.entity.Categoria;
@@ -18,6 +19,10 @@ public class ProductoService implements IProductoService {
 
     @Autowired 
     private ProductoRepository pProductoRepository;
+
+    @Autowired 
+    private FileService fileService;
+
 
     @Override
     public List<ProductoDto> listarProducto() {
@@ -42,25 +47,28 @@ public class ProductoService implements IProductoService {
             .orElseThrow(() -> new ResourNotFoundException("Categoría ",createPProductoDto.getCategoriaId()));
 
         Producto producto = CreateProductoDto.toEntityPProducto(createPProductoDto, categoria);
+        producto.setFoto(guardarFoto(createPProductoDto.getFoto()));
         producto = pProductoRepository.save(producto);
         return ProductoDto.fromEntityProducto(producto);
     }
 
     @Override
-    public ProductoDto actualizarProducto(Integer id, ProductoDto pproductoActualizado) {
-        Producto productoRetrieved= pProductoRepository.findById(id)
-                .orElseThrow(() -> new ResourNotFoundException("Producto " , id));
-        Categoria categoria = pCategoriaRepository.findById(pproductoActualizado.getCategoriaId())
-                .orElseThrow(() -> new ResourNotFoundException("Categoría ",pproductoActualizado.getCategoriaId()));
-        
-        productoRetrieved.setNombre(pproductoActualizado.getNombre());
-        productoRetrieved.setFoto(pproductoActualizado.getFoto());
-        productoRetrieved.setPrecioVenta(pproductoActualizado.getPrecioVenta());
-        productoRetrieved.setPrecioCompra(pproductoActualizado.getPrecioCompra());
-        productoRetrieved.setCategoria(categoria);
+    public ProductoDto actualizarProducto(Integer id, CreateProductoDto dto) {
+        Producto producto = pProductoRepository.findById(id)
+                .orElseThrow(() -> new ResourNotFoundException("Producto ", id));
+        Categoria categoria = pCategoriaRepository.findById(dto.getCategoriaId())
+                .orElseThrow(() -> new ResourNotFoundException("Categoría ", dto.getCategoriaId()));
 
-        pProductoRepository.save(productoRetrieved);
-        return ProductoDto.fromEntityProducto(productoRetrieved);
+        producto.setNombre(dto.getNombre().trim());
+        producto.setPrecioVenta(dto.getPrecioVenta());
+        producto.setPrecioCompra(dto.getPrecioCompra());
+        producto.setCategoria(categoria);
+
+        if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+            producto.setFoto(guardarFoto(dto.getFoto()));
+        }
+
+        return ProductoDto.fromEntityProducto(pProductoRepository.save(producto));
     }
 
     @Override
@@ -70,5 +78,11 @@ public class ProductoService implements IProductoService {
         }
         pProductoRepository.deleteById(id);
     }
-
+    // método privado compartido: un solo lugar para manejar el archivo y el error
+    private String guardarFoto(MultipartFile foto) {
+        if (foto == null || foto.isEmpty()) {
+        return null;
+    }
+    return fileService.createFile(foto);
+    }
 }

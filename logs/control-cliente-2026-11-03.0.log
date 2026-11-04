@@ -1,0 +1,100 @@
+2026-11-03T00:34:03.479-05:00  INFO 29080 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 29080 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-11-03T00:34:03.485-05:00 DEBUG 29080 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-11-03T00:34:03.486-05:00  INFO 29080 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-11-03T00:34:03.582-05:00  INFO 29080 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-11-03T00:34:03.583-05:00  INFO 29080 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-11-03T00:34:04.147-05:00  INFO 29080 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-03T00:34:04.187-05:00  INFO 29080 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 1 JPA repository interface.
+2026-11-03T00:34:04.638-05:00  INFO 29080 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-11-03T00:34:04.656-05:00  INFO 29080 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-03T00:34:04.659-05:00  INFO 29080 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-11-03T00:34:04.717-05:00  INFO 29080 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1133 ms
+2026-11-03T00:34:05.220-05:00  INFO 29080 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-03T00:34:05.244-05:00  INFO 29080 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-03T00:34:05.371-05:00  INFO 29080 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3d0cf09e
+2026-11-03T00:34:05.372-05:00  INFO 29080 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-03T00:34:06.492-05:00  INFO 29080 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-03T00:34:06.541-05:00  INFO 29080 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-03T00:34:06.722-05:00 DEBUG 29080 --- [control-clientes] [restartedMain] c.c.C.auth.JwtAuthenticationFilter       : Filter 'jwtAuthenticationFilter' configured for use
+2026-11-03T00:34:06.766-05:00  INFO 29080 --- [control-clientes] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-11-03T00:34:06.767-05:00  WARN 29080 --- [control-clientes] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-11-03T00:34:06.778-05:00  WARN 29080 --- [control-clientes] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'categoriaController': Unsatisfied dependency expressed through field 'pCategoriaService': No qualifying bean of type 'com.codeper.ControlClientes.service.ICategoriaService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-11-03T00:34:06.779-05:00  INFO 29080 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-11-03T00:34:06.783-05:00  INFO 29080 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-11-03T00:34:06.786-05:00  INFO 29080 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-11-03T00:34:06.789-05:00  INFO 29080 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-11-03T00:34:06.801-05:00  INFO 29080 --- [control-clientes] [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-11-03T00:34:06.820-05:00 ERROR 29080 --- [control-clientes] [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field pCategoriaService in com.codeper.ControlClientes.controller.CategoriaController required a bean of type 'com.codeper.ControlClientes.service.ICategoriaService' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.codeper.ControlClientes.service.ICategoriaService' in your configuration.
+
+2026-11-03T00:34:55.536-05:00  INFO 26712 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 26712 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-11-03T00:34:55.538-05:00 DEBUG 26712 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-11-03T00:34:55.539-05:00  INFO 26712 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-11-03T00:34:55.574-05:00  INFO 26712 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-11-03T00:34:55.574-05:00  INFO 26712 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-11-03T00:34:56.162-05:00  INFO 26712 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-03T00:34:56.228-05:00  INFO 26712 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 57 ms. Found 10 JPA repository interfaces.
+2026-11-03T00:34:56.717-05:00  INFO 26712 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-11-03T00:34:56.730-05:00  INFO 26712 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-03T00:34:56.731-05:00  INFO 26712 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-11-03T00:34:56.772-05:00  INFO 26712 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1197 ms
+2026-11-03T00:34:57.279-05:00  INFO 26712 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-03T00:34:57.301-05:00  INFO 26712 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-03T00:34:57.415-05:00  INFO 26712 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5f718c84
+2026-11-03T00:34:57.416-05:00  INFO 26712 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-03T00:34:58.367-05:00  INFO 26712 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-03T00:34:58.410-05:00  INFO 26712 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-03T00:34:58.555-05:00 DEBUG 26712 --- [control-clientes] [restartedMain] c.c.C.auth.JwtAuthenticationFilter       : Filter 'jwtAuthenticationFilter' configured for use
+2026-11-03T00:34:58.591-05:00  INFO 26712 --- [control-clientes] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-11-03T00:34:58.592-05:00  WARN 26712 --- [control-clientes] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-11-03T00:34:59.176-05:00  WARN 26712 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-11-03T00:34:59.572-05:00  INFO 26712 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-11-03T00:34:59.578-05:00  INFO 26712 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 4.363 seconds (process running for 4.851)
+2026-11-03T00:35:08.705-05:00  INFO 26712 --- [control-clientes] [http-nio-9600-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-03T00:43:35.527-05:00  WARN 26712 --- [control-clientes] [http-nio-9600-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2026-11-03T00:45:08.042-05:00  WARN 26712 --- [control-clientes] [http-nio-9600-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2026-11-03T00:45:14.043-05:00  WARN 26712 --- [control-clientes] [http-nio-9600-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2026-11-03T00:46:20.484-05:00  WARN 26712 --- [control-clientes] [http-nio-9600-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2026-11-03T00:47:38.591-05:00  INFO 24964 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Starting ControlClientesApplication using Java 25.0.3 with PID 24964 (C:\Proyectos_Joshua\Back\ControlClientes\target\classes started by Joshua in C:\Proyectos_Joshua\Back\ControlClientes)
+2026-11-03T00:47:38.593-05:00 DEBUG 24964 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Running with Spring Boot v4.1.0, Spring v7.0.8
+2026-11-03T00:47:38.594-05:00  INFO 24964 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-11-03T00:47:38.629-05:00  INFO 24964 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-11-03T00:47:38.629-05:00  INFO 24964 --- [control-clientes] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-11-03T00:47:39.165-05:00  INFO 24964 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-03T00:47:39.225-05:00  INFO 24964 --- [control-clientes] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 53 ms. Found 10 JPA repository interfaces.
+2026-11-03T00:47:39.610-05:00  INFO 24964 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 9600 (http)
+2026-11-03T00:47:39.621-05:00  INFO 24964 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-03T00:47:39.621-05:00  INFO 24964 --- [control-clientes] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-11-03T00:47:39.654-05:00  INFO 24964 --- [control-clientes] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1024 ms
+2026-11-03T00:47:40.085-05:00  INFO 24964 --- [control-clientes] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-03T00:47:40.106-05:00  INFO 24964 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-03T00:47:40.221-05:00  INFO 24964 --- [control-clientes] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@9975801
+2026-11-03T00:47:40.222-05:00  INFO 24964 --- [control-clientes] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-03T00:47:41.178-05:00  INFO 24964 --- [control-clientes] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-03T00:47:41.228-05:00  INFO 24964 --- [control-clientes] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-03T00:47:41.371-05:00 DEBUG 24964 --- [control-clientes] [restartedMain] c.c.C.auth.JwtAuthenticationFilter       : Filter 'jwtAuthenticationFilter' configured for use
+2026-11-03T00:47:41.402-05:00  INFO 24964 --- [control-clientes] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-11-03T00:47:41.403-05:00  WARN 24964 --- [control-clientes] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-11-03T00:47:41.972-05:00  WARN 24964 --- [control-clientes] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-11-03T00:47:42.353-05:00  INFO 24964 --- [control-clientes] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9600 (http) with context path '/'
+2026-11-03T00:47:42.356-05:00  INFO 24964 --- [control-clientes] [restartedMain] c.c.C.ControlClientesApplication         : Started ControlClientesApplication in 4.093 seconds (process running for 4.417)
+2026-11-03T00:47:47.288-05:00  INFO 24964 --- [control-clientes] [http-nio-9600-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-03T00:47:47.540-05:00  WARN 24964 --- [control-clientes] [http-nio-9600-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'multipart/form-data;boundary=--------------------------015e632adb0dd06526e16aac;charset=UTF-8' is not supported]
+2026-11-03T23:57:56.710-05:00  WARN 24964 --- [control-clientes] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=23h46s490ms723µs500ns).

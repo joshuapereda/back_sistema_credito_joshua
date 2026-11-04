@@ -1,6 +1,8 @@
 package com.codeper.ControlClientes.dto;
 
 import java.math.BigDecimal;
+
+
 import com.codeper.ControlClientes.entity.Producto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class ProductoDto {
     private Integer id;
     private String nombre;
-    private String foto;
+    private String  foto;
     private BigDecimal precioVenta;
     private BigDecimal precioCompra;
     private Integer categoriaId;

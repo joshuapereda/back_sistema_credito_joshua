@@ -26,6 +26,9 @@ public class Categoria {
     @Column (nullable = false, length = 50)
     private String nombre;
 
+    @Column (nullable = false, length = 200)
+    private String foto;
+
     @Column (length = 200)
     private String descripcion;
 
