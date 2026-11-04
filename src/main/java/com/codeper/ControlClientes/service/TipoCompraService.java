@@ -2,12 +2,25 @@ package com.codeper.ControlClientes.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateTipoCompraDto;
+import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.TipoCompraDto;
+import com.codeper.ControlClientes.dto.TipoCompraFilterCriteria;
+import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.TipoCompra;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.TipoCompraRepository;
+import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
+import com.codeper.ControlClientes.repository.specofocation.TipoCompraSpecification;
 
 @Service 
 public class TipoCompraService implements ITipoCompraService {
@@ -59,5 +72,37 @@ public class TipoCompraService implements ITipoCompraService {
         throw new ResourNotFoundException("Permiso" , id);
         }
         tipoCompraRepository.deleteById(id);
+    }
+
+    @Override
+    public PageableResponse<TipoCompraDto> getTipoCompraPagination(
+            PageableRequest<TipoCompraFilterCriteria> pageableRequest) {
+        try {
+            //SORT PERMITE MANEJAR ORDENAMIENTO
+            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
+            ? Sort.by(pageableRequest.getSortField()).ascending()
+            : Sort.by(pageableRequest.getSortField()).descending();
+            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+
+            //filtrado
+            Specification<TipoCompra>specification =null;
+            if(pageableRequest.getCriterials() !=null){
+               specification = TipoCompraSpecification.createSpecification(
+                                pageableRequest.getCriterials(),
+                                pageableRequest.getFilterValue());
+            }
+            Page<TipoCompra>tipoCompraPage=tipoCompraRepository.findAll(specification,pageable);
+            //devolver los datos
+            return PageableResponse.<TipoCompraDto>builder()
+            .content(tipoCompraPage.getContent().stream().map(TipoCompraDto::fromEntityTipoCompra).toList())
+            .pageNumber(tipoCompraPage.getNumber())
+            .pageSize(tipoCompraPage.getSize())
+            .totalElements(tipoCompraPage.getTotalElements())
+            .totalPages(tipoCompraPage.getTotalPages())
+            .build();
+            
+        } catch (Exception e) {
+           throw new RuntimeException("Error de paginacion de tipos de compra");
+        }
     }
 }

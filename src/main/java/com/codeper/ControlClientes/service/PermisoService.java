@@ -2,12 +2,25 @@ package com.codeper.ControlClientes.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreatePermisoDto;
 import com.codeper.ControlClientes.dto.PermisoDto;
+import com.codeper.ControlClientes.dto.PermisoFilterCriteria;
+import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.entity.Permiso;
+import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PermisoRepository;
+import com.codeper.ControlClientes.repository.specofocation.PermisoSpecification;
+import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
 
 @Service 
 public class PermisoService implements IPermisoService {
@@ -60,5 +73,36 @@ public class PermisoService implements IPermisoService {
         throw new ResourNotFoundException("Permiso " , id);
         }
         permisoRepository.deleteById(id);
+    }
+
+    @Override
+    public PageableResponse<PermisoDto> getPermisoPagination(PageableRequest<PermisoFilterCriteria> pageableRequest) {
+         try {
+            //SORT PERMITE MANEJAR ORDENAMIENTO
+            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
+            ? Sort.by(pageableRequest.getSortField()).ascending()
+            : Sort.by(pageableRequest.getSortField()).descending();
+            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+
+            //filtrado
+            Specification<Permiso>specification =null;
+            if(pageableRequest.getCriterials() !=null){
+               specification = PermisoSpecification.createSpecification(
+                                pageableRequest.getCriterials(),
+                                pageableRequest.getFilterValue());
+            }
+            Page<Permiso>permisoPage=permisoRepository.findAll(specification,pageable);
+            //devolver los datos
+            return PageableResponse.<PermisoDto>builder()
+            .content(permisoPage.getContent().stream().map(PermisoDto::fromEntityPermiso).toList())
+            .pageNumber(permisoPage.getNumber())
+            .pageSize(permisoPage.getSize())
+            .totalElements(permisoPage.getTotalElements())
+            .totalPages(permisoPage.getTotalPages())
+            .build();
+            
+        } catch (Exception e) {
+           throw new RuntimeException("Error de paginacion de permisos");
+        }
     }
 }
