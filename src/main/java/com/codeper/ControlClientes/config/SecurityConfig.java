@@ -14,6 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.codeper.ControlClientes.auth.JwtAuthenticationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration 
 @EnableWebSecurity 
 @EnableMethodSecurity 
@@ -40,6 +42,8 @@ public class SecurityConfig {
                     .anyRequest().authenticated()
                 )
                     .cors(Customizer.withDefaults())
+                    .exceptionHandling(ex -> ex.authenticationEntryPoint(
+                        (req, res, e) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED)))
                     .sessionManagement(sesseion -> sesseion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authenticationProvider(authemticationProvider)
                     .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);

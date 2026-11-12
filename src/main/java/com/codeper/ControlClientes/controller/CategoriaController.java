@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.codeper.ControlClientes.dto.CreateCategoriaDto;
-import com.codeper.ControlClientes.dto.CreateProductoDto;
-import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.CategoriaDto;
 import com.codeper.ControlClientes.service.ICategoriaService;
 import jakarta.validation.Valid;
