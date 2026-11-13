@@ -1,8 +1,6 @@
 package com.codeper.ControlClientes.dto;
 
 import java.math.BigDecimal;
-
-
 import com.codeper.ControlClientes.entity.Producto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

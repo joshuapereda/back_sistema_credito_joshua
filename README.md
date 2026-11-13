@@ -247,3 +247,27 @@ src/main/java/
     └── impl/UniqueNameCheker.java
 src/main/resources/application.yaml
 ```
+
+---
+
+## Ejecutar con Docker
+
+Requisito: Docker Desktop (incluye Docker Compose). No hace falta tener Java ni PostgreSQL instalados.
+
+```bash
+docker compose up -d --build
+```
+
+- **backend** → `http://localhost:9600` (se compila dentro de Docker con Java 25)
+- **db** → PostgreSQL 17, expuesto en `localhost:5433` (usuario `postgres`, clave `admin`, BD `control-clientes`). Se usa el 5433 para no chocar con un PostgreSQL local.
+- Los datos de la BD se guardan en el volumen `pgdata`, y los logs en `./logs`.
+
+Comandos útiles:
+
+```bash
+docker compose logs -f backend   # ver logs del backend
+docker compose down              # detener (conserva los datos)
+docker compose down -v           # detener y borrar la BD
+```
+
+Dentro de Docker la conexión a la BD se sobrescribe con variables de entorno (`SPRING_DATASOURCE_URL`, etc.) en `docker-compose.yml`; `application.yaml` no se modifica.

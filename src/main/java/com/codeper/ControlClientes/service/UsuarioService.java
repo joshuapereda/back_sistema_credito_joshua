@@ -4,16 +4,29 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateUsuarioDto;
+import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.UsuarioDto;
+import com.codeper.ControlClientes.dto.UsuarioFilterCriteria;
 import com.codeper.ControlClientes.entity.Persona;
+import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.entity.Usuario;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PersonaRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
+import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
+import com.codeper.ControlClientes.repository.specofocation.UsuarioSpecification;
 
 @Service 
 public class UsuarioService implements IUsuarioService {
@@ -109,5 +122,36 @@ public class UsuarioService implements IUsuarioService {
         throw new ResourNotFoundException("Roles " , noExisten);
     }
     return roles;
+    }
+
+    @Override
+    public PageableResponse<UsuarioDto> getUsuarioPagination(PageableRequest<UsuarioFilterCriteria> pageableRequest) {
+        try {
+            //SORT PERMITE MANEJAR ORDENAMIENTO
+            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
+            ? Sort.by(pageableRequest.getSortField()).ascending()
+            : Sort.by(pageableRequest.getSortField()).descending();
+            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+
+            //filtrado
+            Specification<Usuario>specification =null;
+            if(pageableRequest.getCriterials() !=null){
+               specification = UsuarioSpecification.createSpecification(
+                                pageableRequest.getCriterials(),
+                                pageableRequest.getFilterValue());
+            }
+            Page<Usuario>usuarioPage=usuarioRepository.findAll(specification,pageable);
+            //devolver los datos
+            return PageableResponse.<UsuarioDto>builder()
+            .content(usuarioPage.getContent().stream().map(UsuarioDto::fromEntityUsuario).toList())
+            .pageNumber(usuarioPage.getNumber())
+            .pageSize(usuarioPage.getSize())
+            .totalElements(usuarioPage.getTotalElements())
+            .totalPages(usuarioPage.getTotalPages())
+            .build();
+            
+        } catch (Exception e) {
+           throw new RuntimeException("Error de paginacion de usuarios");
+        }
     }  
 }
