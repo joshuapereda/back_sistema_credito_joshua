@@ -14,12 +14,14 @@ public class CategoriaDto {
     
     private Integer id;
     private String nombre;
+    private String  foto;
     private String descripcion;
 
     public static CategoriaDto fromEntityPCategoria( Categoria pCategoria){
         return CategoriaDto.builder()
             .id(pCategoria.getId())
             .nombre(pCategoria.getNombre())
+            .foto(pCategoria.getFoto())
             .descripcion(pCategoria.getDescripcion())
             .build();
     }

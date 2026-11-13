@@ -11,10 +11,10 @@ import com.codeper.ControlClientes.service.IProductoService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController 
 @RequestMapping("api/productos")
@@ -32,13 +32,13 @@ public class ProductoController {
          return ResponseEntity.ok(productoService.obtenerProductoPorId(id));
      }
      @PostMapping
-     public ResponseEntity<ProductoDto> crearProducto(@Valid @RequestBody CreateProductoDto createPProductoDto) {
+     public ResponseEntity<ProductoDto> crearProducto(@Valid @ModelAttribute  CreateProductoDto createPProductoDto) {
          return ResponseEntity.ok(productoService.crearProducto(createPProductoDto));
      }
-     @PutMapping ("/{id}")
-     public ResponseEntity<ProductoDto> actualizarProducto(@PathVariable Integer id, @Valid @RequestBody ProductoDto pproductoActualizado) {
-         return ResponseEntity.ok(productoService.actualizarProducto(id, pproductoActualizado));
-     }
+     @PutMapping("/{id}")
+    public ResponseEntity<ProductoDto> actualizarProducto(@PathVariable Integer id,@Valid @ModelAttribute CreateProductoDto pproductoActualizado) {
+        return ResponseEntity.ok(productoService.actualizarProducto(id, pproductoActualizado));
+    }
      @DeleteMapping("/{id}")
      public void eliminarProducto(@PathVariable Integer id){
         productoService.eliminarProducto(id);

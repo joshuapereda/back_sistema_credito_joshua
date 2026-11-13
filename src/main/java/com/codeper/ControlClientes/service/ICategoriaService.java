@@ -2,7 +2,6 @@ package com.codeper.ControlClientes.service;
 
 import java.util.List;
 import com.codeper.ControlClientes.dto.CreateCategoriaDto;
-import com.codeper.ControlClientes.dto.ProductoFilterCriteria;
 import com.codeper.ControlClientes.common.dto.PageableRequest;
 import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CategoriaDto;

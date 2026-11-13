@@ -27,8 +27,7 @@ public class CreateProductoDto {
     @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
     private String nombre;
 
-    @Size(max = 255, message = "La ruta de la foto no puede superar los 255 caracteres")
-    private String foto;
+    private MultipartFile foto;
 
     @NotNull(message = "El precio de venta es obligatorio")
     @DecimalMin(value = "0.01", message = "El precio de venta debe ser mayor a 0")
@@ -47,7 +46,6 @@ public class CreateProductoDto {
     public static Producto toEntityPProducto(CreateProductoDto dto, Categoria categoria) {
         return Producto.builder()
                 .nombre(dto.getNombre().trim())
-                .foto(dto.getFoto())
                 .precioVenta(dto.getPrecioVenta())
                 .precioCompra(dto.getPrecioCompra())
                 .categoria(categoria)

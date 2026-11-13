@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,11 +41,11 @@ public class CategoriaController {
     }
     // @RequestBody: PERMITE RECIBIR LA INFORMACION EN EL CUERPO DE LA PETICION
     @PostMapping 
-    public ResponseEntity<CategoriaDto>crearCategoria(@Valid @RequestBody CreateCategoriaDto  createPCategoriaDto){
+    public ResponseEntity<CategoriaDto>crearCategoria(@Valid @ModelAttribute  CreateCategoriaDto  createPCategoriaDto){
         return ResponseEntity.ok(pCategoriaService.crearCategoria(createPCategoriaDto));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDto> actualizarCategoria(@PathVariable Integer id, @RequestBody CategoriaDto categoriaActualizado) {
+    public ResponseEntity<CategoriaDto> actualizarCategoria(@PathVariable Integer id, @Valid @RequestBody CategoriaDto categoriaActualizado) {
         return ResponseEntity.ok(pCategoriaService.actualizarCategoria(id, categoriaActualizado));
     }
     @DeleteMapping("/{id}") 

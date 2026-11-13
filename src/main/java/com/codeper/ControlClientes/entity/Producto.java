@@ -32,9 +32,9 @@ public class Producto {
     @Column (nullable = false, length = 50)
     private String nombre;
 
-
     @Column (nullable = false, length = 200)
     private String foto;
+    
     @Column (nullable = false)
     private BigDecimal precioVenta;
 

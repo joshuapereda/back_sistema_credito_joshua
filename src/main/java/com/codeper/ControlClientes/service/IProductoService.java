@@ -12,7 +12,7 @@ public interface IProductoService {
     List<ProductoDto>listarProducto();
     ProductoDto obtenerProductoPorId(Integer id);
     ProductoDto crearProducto(CreateProductoDto createPProductoDto);
-    ProductoDto actualizarProducto(Integer id, ProductoDto pproductoActualizado);
+    ProductoDto actualizarProducto(Integer id, CreateProductoDto productoActualizado);
     void eliminarProducto(Integer id);
     //paginacion
     PageableResponse<ProductoDto>getProductosPagination(PageableRequest<ProductoFilterCriteria>pageableRequest);
