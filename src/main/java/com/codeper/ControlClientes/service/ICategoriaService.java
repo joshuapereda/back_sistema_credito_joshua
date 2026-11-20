@@ -11,7 +11,7 @@ public interface ICategoriaService {
     List<CategoriaDto> listaCategoria();
     CategoriaDto obetenerCategoriaPorId(Integer id);
     CategoriaDto crearCategoria(CreateCategoriaDto createCategoriaDto);
-    CategoriaDto actualizarCategoria(Integer id, CategoriaDto categoriaActualizado);
+    CategoriaDto actualizarCategoria(Integer id, CreateCategoriaDto  categoriaActualizado);
     void eliminarCategoria(Integer id);
      //paginacion
     PageableResponse<CategoriaDto>getCategoriaPagination(PageableRequest<CategoriaFilterCriteria>pageableRequest);

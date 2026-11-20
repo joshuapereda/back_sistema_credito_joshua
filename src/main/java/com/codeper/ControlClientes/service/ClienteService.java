@@ -17,119 +17,126 @@ import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Persona;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.ClienteRepository;
+import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PersonaRepository;
 import com.codeper.ControlClientes.repository.specofocation.ClienteSpecification;
 
-@Service 
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
 public class ClienteService implements IClienteService {
 
-    @Autowired 
+    @Autowired
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private PersonaRepository personaRepository; 
+    private PersonaRepository personaRepository;
+
+    @Autowired
+    private CompraRepository compraRepository;
 
     @Override
     public List<ClienteDto> listarCliente() {
-        return  clienteRepository.findAll().stream().map(cliente ->{
-            //obtener la Persona correspondiente a ese cliente
-            Persona persona= cliente.getPersona();
-            //retornar el listado de cliente
+        return clienteRepository.findAll().stream().map(cliente -> {
+            // obtener la Persona correspondiente a ese cliente
+            Persona persona = cliente.getPersona();
+            // retornar el listado de cliente
             return ClienteDto.fromEntityCliente(cliente, persona);
         }).toList();
     }
 
     @Override
     public ClienteDto obtenerClientePorId(Integer id) {
-        try{
+        try {
             return clienteRepository.findById(id).map(cliente -> {
-            //obtener el Persona correspondiente a ese cliente
-            Persona persona= cliente.getPersona();
-            return ClienteDto.fromEntityCliente(cliente, persona);
+                // obtener el Persona correspondiente a ese cliente
+                Persona persona = cliente.getPersona();
+                return ClienteDto.fromEntityCliente(cliente, persona);
             }).orElseThrow(() -> new ResourNotFoundException("Usuario", id));
-        }catch(ResourNotFoundException e){
+        } catch (ResourNotFoundException e) {
             throw e;
         }
     }
 
     @Override
     public ClienteDto crearCliente(CreateClienteDto createClienteDto) {
-        //  VALIDAR 
-        if(isEmailExist(createClienteDto.getGmail())){
-            throw new RuntimeException("El correo electronico ya está en uso");
-        }
-        
-        Persona persona= CreateClienteDto.toEntityPersona(createClienteDto);
-        persona= personaRepository.save(persona);
-        Cliente cliente = CreateClienteDto.toEntityCliente(createClienteDto,persona);
-        cliente= clienteRepository.save(cliente);
-        //LISTAR
+        Persona persona = CreateClienteDto.toEntityPersona(createClienteDto);
+        persona = personaRepository.save(persona);
+        Cliente cliente = CreateClienteDto.toEntityCliente(createClienteDto, persona);
+        cliente = clienteRepository.save(cliente);
+        // LISTAR
         return ClienteDto.fromEntityCliente(cliente, persona);
     }
 
     @Override
     public ClienteDto actualizarCliente(Integer id, CreateClienteDto clienteActualizado) {
-        //  VALIDAR 
-        if(isEmailExist(clienteActualizado.getGmail())){
-            throw new RuntimeException("El correo electronico ya está en uso");
-        }
-        Cliente clienteRetrieved= clienteRepository.findById(id).orElseThrow(() -> 
-        new ResourNotFoundException("Cliente " , id));
-        //Actualizar Cliente
+        Cliente clienteRetrieved = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourNotFoundException("Cliente ", id));
+        // Actualizar Cliente
         clienteRetrieved.setDocIdentidad(clienteActualizado.getDocIdentidad());
-        Persona personaRetrieved= clienteRetrieved.getPersona();
-        //Actualizar Persona
+        Persona personaRetrieved = clienteRetrieved.getPersona();
+        // Actualizar Persona
         personaRetrieved.setNombre(clienteActualizado.getNombre());
         personaRetrieved.setGmail(clienteActualizado.getGmail());
         personaRetrieved.setTelefono(clienteActualizado.getTelefono());
         personaRetrieved.setDireccion(clienteActualizado.getDireccion());
-        //guardar
-        return ClienteDto.fromEntityCliente(clienteRepository.save(clienteRetrieved),personaRepository.save(personaRetrieved));
+        // guardar
+        return ClienteDto.fromEntityCliente(clienteRepository.save(clienteRetrieved),
+                personaRepository.save(personaRetrieved));
     }
 
     @Override
     public void eliminarCliente(Integer id) {
-       if (!clienteRepository.existsById(id)) {
-            throw new ResourNotFoundException("Cliente", id);
+        if (!clienteRepository.existsById(id)) {
+            throw new EntityNotFoundException("Cliente no encontrado");
         }
-
+        if (compraRepository.existsByClienteId(id)) {
+            throw new IllegalStateException("No se puede eliminar: el cliente tiene compras registradas");
+        }
         clienteRepository.deleteById(id);
-    }
-    
-    boolean isEmailExist(String email) {
-        return personaRepository.existsByGmail(email);
     }
 
     @Override
     public PageableResponse<ClienteDto> getClientePagination(PageableRequest<ClienteFilterCriteria> pageableRequest) {
-       try {
-            //SORT PERMITE MANEJAR ORDENAMIENTO
-            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
-            ? Sort.by(pageableRequest.getSortField()).ascending()
-            : Sort.by(pageableRequest.getSortField()).descending();
-            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
 
-            //filtrado
-            Specification<Cliente>specification =null;
-            if(pageableRequest.getCriterials() !=null){
-               specification = ClienteSpecification.createSpecification(
-                                pageableRequest.getCriterials(),
-                                pageableRequest.getFilterValue());
-            }
-            Page<Cliente>clientePage=clienteRepository.findAll(specification,pageable);
-            //devolver los datos
+        try {
+
+            // SORT PERMITE MANEJAR EL ORDENAMIENTO
+            // ASC = Ascendente
+            // DESC = Descendente
+            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+                    ? Sort.by(pageableRequest.getSortField()).ascending()
+                    : Sort.by(pageableRequest.getSortField()).descending();
+
+            // CONFIGURAMOS LA PAGINACION
+            Pageable pageable = PageRequest.of(pageableRequest.getPageNumber(), pageableRequest.getPageSize(), sort);
+
+            // FILTRADO
+            // Creamos la Specification para aplicar la busqueda general
+            // y los filtros especificos
+            Specification<Cliente> specification = ClienteSpecification.createSpecification(
+                    pageableRequest.getCriterials(),
+                    pageableRequest.getFilterValue());
+            // EJECUTAMOS LA CONSULTA CON FILTROS Y PAGINACION
+            Page<Cliente> clientePage = clienteRepository.findAll(
+                    specification,
+                    pageable);
+            // DEVOLVEMOS LOS RESULTADOS
             return PageableResponse.<ClienteDto>builder()
-            .content(clientePage.getContent().stream()
-                .map(cliente -> ClienteDto.fromEntityCliente(cliente, cliente.getPersona()))
-                .toList())
-            .pageNumber(clientePage.getNumber())
-            .pageSize(clientePage.getSize())
-            .totalElements(clientePage.getTotalElements())
-            .totalPages(clientePage.getTotalPages())
-            .build();
-            
+
+                    // Convertimos cada Cliente en ClienteDto
+                    .content(clientePage.getContent().stream()
+                            .map(cliente -> ClienteDto.fromEntityCliente(
+                                    cliente, cliente.getPersona()))
+                            .toList())
+                    .pageNumber(clientePage.getNumber())
+                    .pageSize(clientePage.getSize())
+                    .totalElements(clientePage.getTotalElements())
+                    .totalPages(clientePage.getTotalPages())
+                    .build();
+
         } catch (Exception e) {
-           throw new RuntimeException("Error de paginacion de clientes");
+            throw new RuntimeException("Error de paginacion de clientes", e);
         }
     }
 }

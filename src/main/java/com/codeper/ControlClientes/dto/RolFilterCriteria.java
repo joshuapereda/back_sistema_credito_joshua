@@ -10,6 +10,4 @@ import lombok.NoArgsConstructor;
 @Builder 
 public class RolFilterCriteria {
     private String nombre;
-    private String descripcion;
-
 }

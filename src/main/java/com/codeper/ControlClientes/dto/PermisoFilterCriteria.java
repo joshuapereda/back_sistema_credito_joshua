@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 @Builder 
 public class PermisoFilterCriteria {
      private String nombre;
-
 }

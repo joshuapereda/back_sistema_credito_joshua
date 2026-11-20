@@ -6,5 +6,6 @@ import com.codeper.ControlClientes.entity.Compra;
 
 
 public interface CompraRepository extends JpaRepository<Compra ,Integer>,JpaSpecificationExecutor<Compra> {
-
+     boolean existsByTipoCompraId(Integer tipoCompraId);
+     boolean existsByClienteId(Integer clienteId);
 }

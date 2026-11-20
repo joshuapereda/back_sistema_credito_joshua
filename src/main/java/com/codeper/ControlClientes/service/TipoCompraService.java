@@ -2,31 +2,23 @@ package com.codeper.ControlClientes.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import com.codeper.ControlClientes.common.dto.PageableRequest;
-import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateTipoCompraDto;
-import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.TipoCompraDto;
-import com.codeper.ControlClientes.dto.TipoCompraFilterCriteria;
-import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.TipoCompra;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
+import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.TipoCompraRepository;
-import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
-import com.codeper.ControlClientes.repository.specofocation.TipoCompraSpecification;
 
 @Service 
 public class TipoCompraService implements ITipoCompraService {
 
     @Autowired 
     private TipoCompraRepository tipoCompraRepository;
+
+    @Autowired 
+    private CompraRepository compraRepository;
+    
     @Override
     public List<TipoCompraDto> listarTipoCompra() {
         return tipoCompraRepository.findAll().stream()
@@ -68,13 +60,16 @@ public class TipoCompraService implements ITipoCompraService {
 
     @Override
     public void eliminarTipoCompra(Integer id) {
-         if (!tipoCompraRepository.existsById(id)) {
-        throw new ResourNotFoundException("Permiso" , id);
+        if (!tipoCompraRepository.existsById(id)) {
+            throw new ResourNotFoundException("Tipo de compra ", id);
+        }
+        if (compraRepository.existsByTipoCompraId(id)) {
+            throw new IllegalStateException("No se puede eliminar: el tipo de compra ya tiene compras registradas");
         }
         tipoCompraRepository.deleteById(id);
     }
 
-    @Override
+    /* @Override
     public PageableResponse<TipoCompraDto> getTipoCompraPagination(
             PageableRequest<TipoCompraFilterCriteria> pageableRequest) {
         try {
@@ -104,5 +99,5 @@ public class TipoCompraService implements ITipoCompraService {
         } catch (Exception e) {
            throw new RuntimeException("Error de paginacion de tipos de compra");
         }
-    }
+    }*/
 }

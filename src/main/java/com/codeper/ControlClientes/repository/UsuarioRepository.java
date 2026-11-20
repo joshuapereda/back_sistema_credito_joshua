@@ -11,6 +11,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> ,JpaS
 
     //METO QUE BUSQUE POR CORREO
     //viene del AppConfig 
-  Optional<Usuario> findByPersonaGmail(String gmail);
+    Optional<Usuario> findByPersonaGmail(String gmail);
+    boolean existsByUsernameAndIdNot(String username, Integer id);
 }
 

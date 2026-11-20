@@ -9,17 +9,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.codeper.ControlClientes.common.dto.PageableRequest;
 import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateProductoDto;
 import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.ProductoFilterCriteria;
 import com.codeper.ControlClientes.entity.Categoria;
+import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
+import com.codeper.ControlClientes.repository.DetalleCompraRepository;
 import com.codeper.ControlClientes.repository.ProductoRepository;
+import com.codeper.ControlClientes.repository.specofocation.ClienteSpecification;
 import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
 //@RequiredArgsConstructor
 @Service 
@@ -31,6 +33,9 @@ public class ProductoService implements IProductoService {
 
     @Autowired 
     private ProductoRepository pProductoRepository;
+
+    @Autowired
+    private DetalleCompraRepository detalleCompraRepository;
     
     //PAGINACION 
     @Override
@@ -38,29 +43,30 @@ public class ProductoService implements IProductoService {
         try {
             //SORT PERMITE MANEJAR ORDENAMIENTO
             Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
-            ? Sort.by(pageableRequest.getSortField()).ascending()
-            : Sort.by(pageableRequest.getSortField()).descending();
+                ? Sort.by(pageableRequest.getSortField()).ascending()
+                : Sort.by(pageableRequest.getSortField()).descending();
+
             Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
 
             //filtrado
-            Specification<Producto>specification =null;
-            if(pageableRequest.getCriterials() !=null){
-               specification = ProductoSpecification.createSpecification(
-                                pageableRequest.getCriterials(),
-                                pageableRequest.getFilterValue());
-            }
-            Page<Producto>productoPage=pProductoRepository.findAll(specification,pageable);
+            Specification<Producto> specification = ProductoSpecification.createSpecification(
+                    pageableRequest.getCriterials(),
+                    pageableRequest.getFilterValue());
+            Page<Producto> productoPage = pProductoRepository.findAll(specification,pageable);       
+           
             //devolver los datos
             return PageableResponse.<ProductoDto>builder()
-            .content(productoPage.getContent().stream().map(ProductoDto::fromEntityProducto).toList())
-            .pageNumber(productoPage.getNumber())
-            .pageSize(productoPage.getSize())
-            .totalElements(productoPage.getTotalElements())
-            .totalPages(productoPage.getTotalPages())
-            .build();
+                .content(productoPage.getContent().stream()
+                        .map(producto -> ProductoDto.fromEntityProducto(producto))
+                        .toList())
+                .pageNumber(productoPage.getNumber())
+                .pageSize(productoPage.getSize())
+                .totalElements(productoPage.getTotalElements())
+                .totalPages(productoPage.getTotalPages())
+                .build();
             
         } catch (Exception e) {
-           throw new RuntimeException("Error de paginacion de productos");
+           throw new RuntimeException("Error de paginacion de productos",e);
         }
     }
 
@@ -117,8 +123,11 @@ public class ProductoService implements IProductoService {
 
     @Override
     public void eliminarProducto(Integer id) {
-       if (!pProductoRepository.existsById(id)) {
-        throw new ResourNotFoundException("Producto  " , id);
+        if (!pProductoRepository.existsById(id)) {
+            throw new ResourNotFoundException("Producto ", id);
+        }
+        if (detalleCompraRepository.existsByProductoId(id)) {
+            throw new IllegalStateException("No se puede eliminar: el producto ya tiene compras registradas");
         }
         pProductoRepository.deleteById(id);
     }

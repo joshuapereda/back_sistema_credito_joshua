@@ -10,148 +10,171 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import com.codeper.ControlClientes.common.dto.PageableRequest;
 import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateUsuarioDto;
-import com.codeper.ControlClientes.dto.ProductoDto;
+import com.codeper.ControlClientes.dto.UpdateUsuarioDto;
 import com.codeper.ControlClientes.dto.UsuarioDto;
 import com.codeper.ControlClientes.dto.UsuarioFilterCriteria;
 import com.codeper.ControlClientes.entity.Persona;
-import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.entity.Usuario;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
+import com.codeper.ControlClientes.repository.ClienteRepository;
 import com.codeper.ControlClientes.repository.PersonaRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
-import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
 import com.codeper.ControlClientes.repository.specofocation.UsuarioSpecification;
 
-@Service 
+@Service
 public class UsuarioService implements IUsuarioService {
 
-    @Autowired 
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired 
+    @Autowired
     private PersonaRepository personaRepository;
 
-    @Autowired 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
     private RolRepository rolRepository;
 
     @Override
     public List<UsuarioDto> listarUsuario() {
-       return usuarioRepository.findAll().stream().map(usuario->{
-        return UsuarioDto.fromEntityUsuario(usuario);
-       }).toList();
+        return usuarioRepository.findAll().stream().map(usuario -> {
+            return UsuarioDto.fromEntityUsuario(usuario);
+        }).toList();
     }
 
     @Override
     public UsuarioDto obtenerUsuarioPorId(Integer id) {
-        //el try es la sintaxis correcto para trabajr con errores 
+        // el try es la sintaxis correcto para trabajr con errores
         try {
-            return usuarioRepository.findById(id).map(usuario->{
-            return UsuarioDto.fromEntityUsuario(usuario);
-            //el ResourNotFoundException es un error Personalizado
-            }).orElseThrow(() -> new ResourNotFoundException("Usuario",id));
+            return usuarioRepository.findById(id).map(usuario -> {
+                return UsuarioDto.fromEntityUsuario(usuario);
+                // el ResourNotFoundException es un error Personalizado
+            }).orElseThrow(() -> new ResourNotFoundException("Usuario", id));
         } catch (ResourNotFoundException e) {
-          throw e;
+            throw e;
         }
     }
 
     @Override
     public UsuarioDto crearUsuario(CreateUsuarioDto createUsuarioDto) {
-        //VALIDAR SI EXISTE LA PERSONA 
+        // VALIDAR SI EXISTE LA PERSONA
         Persona persona = personaRepository.findById(createUsuarioDto.getPersonaId())
-            .orElseThrow(() -> new ResourNotFoundException("Persona",createUsuarioDto.getPersonaId()));
-        // VALIDAR ROL EXISTENTE 
-        List<Rol>roles=validarYObtenerRoles(createUsuarioDto.getRolesId());
+                .orElseThrow(() -> new ResourNotFoundException("Persona", createUsuarioDto.getPersonaId()));
+        // VALIDAR ROL EXISTENTE
+        List<Rol> roles = validarYObtenerRoles(createUsuarioDto.getRolesId());
 
-        Usuario usuario= CreateUsuarioDto.toEntityUsuario(createUsuarioDto, persona, roles);
-        usuario=usuarioRepository.save(usuario);
+        Usuario usuario = CreateUsuarioDto.toEntityUsuario(createUsuarioDto, persona, roles);
+        usuario = usuarioRepository.save(usuario);
         return UsuarioDto.fromEntityUsuario(usuario);
     }
 
-   @Override
-    public UsuarioDto actualizarUsuario(Integer id, CreateUsuarioDto usuarioActualizar) {
-        //VALIDAR USUARIO
+    @Override
+    public UsuarioDto actualizarUsuario(Integer id, UpdateUsuarioDto usuarioActualizar) {
+        // VALIDAR USERNAME DUPLICADO (ignorando al propio usuario)
+        if (usuarioRepository.existsByUsernameAndIdNot(usuarioActualizar.getUsername(), id)) {
+            throw new IllegalStateException("El username ya está en uso");
+        }
+
+        // VALIDAR USUARIO
         Usuario usuarioRetrieved = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResourNotFoundException("Usuario " , id));
+                .orElseThrow(() -> new ResourNotFoundException("Usuario ", id));
 
-        //VALIDAR PERSONA
+        // VALIDAR PERSONA
         Persona persona = personaRepository.findById(usuarioActualizar.getPersonaId())
-                .orElseThrow(() -> new ResourNotFoundException("Persona " , usuarioActualizar.getPersonaId()));
+                .orElseThrow(() -> new ResourNotFoundException("Persona ", usuarioActualizar.getPersonaId()));
 
-        //VALIDAR ROL
-        List<Rol>roles=validarYObtenerRoles(usuarioActualizar.getRolesId());
+        // VALIDAR ROL
+        List<Rol> roles = validarYObtenerRoles(usuarioActualizar.getRolesId());
 
         usuarioRetrieved.setUsername(usuarioActualizar.getUsername());
-        usuarioRetrieved.setPasswprd(usuarioActualizar.getPasswprd());
         usuarioRetrieved.setPersona(persona);
         usuarioRetrieved.setRoles(roles);
 
+        // solo cambia la contraseña si viene con valor
+        if (usuarioActualizar.getPasswprd() != null && !usuarioActualizar.getPasswprd().isBlank()) {
+            usuarioRetrieved.setPasswprd(usuarioActualizar.getPasswprd());
+        }
+
         return UsuarioDto.fromEntityUsuario(usuarioRepository.save(usuarioRetrieved));
-    }   
+    }
 
     @Override
     public void eliminarUsuario(Integer id) {
         if (!usuarioRepository.existsById(id)) {
             throw new ResourNotFoundException("Usuario", id);
         }
+        if (clienteRepository.existsByPersonaId(id)) {
+            throw new IllegalStateException("No se puede eliminar: el usuario está asignado a uno o más personas");
+        }
         usuarioRepository.deleteById(id);
     }
 
     private List<Rol> validarYObtenerRoles(List<Integer> rolesId) {
-    if (rolesId == null || rolesId.isEmpty()) {
-        throw new IllegalArgumentException("Debe enviar al menos un rol");
-    }
+        if (rolesId == null || rolesId.isEmpty()) {
+            throw new IllegalArgumentException("Debe enviar al menos un rol");
+        }
 
-    List<Integer> ids = rolesId.stream().distinct().toList();
-    List<Rol> roles = rolRepository.findAllById(ids);
+        List<Integer> ids = rolesId.stream().distinct().toList();
+        List<Rol> roles = rolRepository.findAllById(ids);
 
-    if (roles.size() != ids.size()) {
-        Set<Integer> encontrados = roles.stream()
-                .map(Rol::getId)
-                .collect(Collectors.toSet());
+        if (roles.size() != ids.size()) {
+            Set<Integer> encontrados = roles.stream()
+                    .map(Rol::getId)
+                    .collect(Collectors.toSet());
 
-        List<Integer> noExisten = ids.stream()
-                .filter(id -> !encontrados.contains(id))
-                .toList();
+            List<Integer> noExisten = ids.stream()
+                    .filter(id -> !encontrados.contains(id))
+                    .toList();
 
-        throw new ResourNotFoundException("Roles " , noExisten);
-    }
-    return roles;
+            throw new ResourNotFoundException("Roles ", noExisten);
+        }
+        return roles;
     }
 
     @Override
     public PageableResponse<UsuarioDto> getUsuarioPagination(PageableRequest<UsuarioFilterCriteria> pageableRequest) {
-        try {
-            //SORT PERMITE MANEJAR ORDENAMIENTO
-            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
-            ? Sort.by(pageableRequest.getSortField()).ascending()
-            : Sort.by(pageableRequest.getSortField()).descending();
-            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
 
-            //filtrado
-            Specification<Usuario>specification =null;
-            if(pageableRequest.getCriterials() !=null){
-               specification = UsuarioSpecification.createSpecification(
-                                pageableRequest.getCriterials(),
-                                pageableRequest.getFilterValue());
-            }
-            Page<Usuario>usuarioPage=usuarioRepository.findAll(specification,pageable);
-            //devolver los datos
+        try {
+            // SORT PERMITE MANEJAR EL ORDENAMIENTO ASC = Ascendente,DESC = Descendente
+            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+                    ? Sort.by(pageableRequest.getSortField()).ascending()
+                    : Sort.by(pageableRequest.getSortField()).descending();
+
+            // CONFIGURAMOS LA PAGINACION
+            Pageable pageable = PageRequest.of(
+                    pageableRequest.getPageNumber(),
+                    pageableRequest.getPageSize(),
+                    sort);
+
+            // FILTRADO
+            Specification<Usuario> specification = UsuarioSpecification.createSpecification(
+                    pageableRequest.getCriterials(),
+                    pageableRequest.getFilterValue());
+
+            // EJECUTAMOS LA CONSULTA CON FILTROS Y PAGINACION
+            Page<Usuario> usuarioPage = usuarioRepository.findAll(specification,pageable);
+
+            // DEVOLVEMOS LOS RESULTADOS
             return PageableResponse.<UsuarioDto>builder()
-            .content(usuarioPage.getContent().stream().map(UsuarioDto::fromEntityUsuario).toList())
-            .pageNumber(usuarioPage.getNumber())
-            .pageSize(usuarioPage.getSize())
-            .totalElements(usuarioPage.getTotalElements())
-            .totalPages(usuarioPage.getTotalPages())
-            .build();
-            
+                    // Convertimos cada Usuario en UsuarioDto
+                    .content(usuarioPage.getContent().stream()
+                            .map(UsuarioDto::fromEntityUsuario)
+                            .toList())
+                    .pageNumber(usuarioPage.getNumber())
+                    .pageSize(usuarioPage.getSize())
+                    .totalElements(usuarioPage.getTotalElements())
+                    .totalPages(usuarioPage.getTotalPages())
+                    .build();
+
         } catch (Exception e) {
-           throw new RuntimeException("Error de paginacion de usuarios");
+            throw new RuntimeException("Error de paginacion de usuarios", e);
         }
-    }  
+    }
+
 }

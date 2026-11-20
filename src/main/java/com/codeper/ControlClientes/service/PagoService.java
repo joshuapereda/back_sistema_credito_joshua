@@ -3,7 +3,6 @@ package com.codeper.ControlClientes.service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,28 +10,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import com.codeper.ControlClientes.common.dto.PageableRequest;
 import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreatePagoDto;
 import com.codeper.ControlClientes.dto.PagoDto;
 import com.codeper.ControlClientes.dto.PagoFilterCriteria;
-import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.entity.Compra;
 import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Pago;
-import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PagoRepository;
 import com.codeper.ControlClientes.repository.specofocation.PagoSpecification;
-import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
-
 import org.springframework.transaction.annotation.Transactional;
 
-@Service 
-public class PagoService  implements IPagoService {
-    @Autowired 
+@Service
+public class PagoService implements IPagoService {
+    @Autowired
     private PagoRepository pagoRepository;
 
     @Autowired
@@ -40,20 +34,20 @@ public class PagoService  implements IPagoService {
 
     @Override
     public List<PagoDto> listarPago() {
-        return  pagoRepository.findAll().stream()
-                .map(PagoDto:: fromEntityPago)
+        return pagoRepository.findAll().stream()
+                .map(PagoDto::fromEntityPago)
                 .toList();
     }
 
     @Override
     public PagoDto obtenerPagoPorId(Integer id) {
         return pagoRepository.findById(id)
-            .map(PagoDto::fromEntityPago)
-            .orElseThrow(() -> new ResourNotFoundException("Pago ", id));
+                .map(PagoDto::fromEntityPago)
+                .orElseThrow(() -> new ResourNotFoundException("Pago ", id));
     }
 
-    @Override   
-    @Transactional 
+    @Override
+    @Transactional
     public PagoDto crearPago(CreatePagoDto createPagoDto) {
 
         if (createPagoDto.getMonto() == null
@@ -62,7 +56,7 @@ public class PagoService  implements IPagoService {
         }
 
         Compra compra = compraRepository.findById(createPagoDto.getCompraId())
-            .orElseThrow(() -> new ResourNotFoundException("Compra ", createPagoDto.getCompraId()));
+                .orElseThrow(() -> new ResourNotFoundException("Compra ", createPagoDto.getCompraId()));
 
         // 1. Validar que aún se pueda pagar
         if (compra.getEstado() == EstadoCompra.PAGADO) {
@@ -120,11 +114,11 @@ public class PagoService  implements IPagoService {
         return PagoDto.fromEntityPago(pago);
     }
 
-   @Override
+    @Override
     @Transactional
     public void eliminarPago(Integer id) {
         Pago pago = pagoRepository.findById(id)
-            .orElseThrow(() -> new ResourNotFoundException("Pago ", id));
+                .orElseThrow(() -> new ResourNotFoundException("Pago ", id));
 
         Compra compra = pago.getCompra();
 
@@ -141,38 +135,67 @@ public class PagoService  implements IPagoService {
             saldo = saldo.subtract(p.getMonto());
             p.setSaldoRestante(saldo);
         }
+
+        if (saldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("El monto de los pagos excede el total de la compra.");
+        }
+
         compra.setSaldo(saldo);
+        compra.setEstado(
+                saldo.compareTo(BigDecimal.ZERO) == 0 ? EstadoCompra.PAGADO : EstadoCompra.PENDIENTE);
         compraRepository.save(compra);
     }
 
-    @Override
-    public PageableResponse<PagoDto> getPagoPagination(PageableRequest<PagoFilterCriteria> pageableRequest) {
-         try {
-            //SORT PERMITE MANEJAR ORDENAMIENTO
-            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
-            ? Sort.by(pageableRequest.getSortField()).ascending()
-            : Sort.by(pageableRequest.getSortField()).descending();
-            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+@Override
+public PageableResponse<PagoDto> getPagoPagination( PageableRequest<PagoFilterCriteria> pageableRequest) {
 
-            //filtrado
-            Specification<Pago>specification =null;
-            if(pageableRequest.getCriterials() !=null){
-               specification = PagoSpecification.createSpecification(
-                                pageableRequest.getCriterials(),
-                                pageableRequest.getFilterValue());
-            }
-            Page<Pago>pagoPage=pagoRepository.findAll(specification,pageable);
-            //devolver los datos
-            return PageableResponse.<PagoDto>builder()
-            .content(pagoPage.getContent().stream().map(PagoDto::fromEntityPago).toList())
-            .pageNumber(pagoPage.getNumber())
-            .pageSize(pagoPage.getSize())
-            .totalElements(pagoPage.getTotalElements())
-            .totalPages(pagoPage.getTotalPages())
-            .build();
-            
-        } catch (Exception e) {
-           throw new RuntimeException("Error de paginacion de pagos");
-        }
+    try {
+
+        // SORT PERMITE MANEJAR EL ORDENAMIENTO ASC = Ascendente, DESC = Descendente
+        Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+                ? Sort.by(pageableRequest.getSortField()).ascending()
+                : Sort.by(pageableRequest.getSortField()).descending();
+
+        // CONFIGURAMOS LA PAGINACION
+        Pageable pageable = PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(),sort);
+
+        // FILTRADO
+        // Creamos la Specification para aplicar los filtros
+        // filterValue = Busqueda general por nombre del cliente
+        // criterials = Filtros especificos por nombre del cliente
+        Specification<Pago> specification =
+                PagoSpecification.createSpecification(
+                        pageableRequest.getCriterials(),
+                        pageableRequest.getFilterValue()
+                );
+
+        // EJECUTAMOS LA CONSULTA
+        Page<Pago> pagoPage = pagoRepository.findAll(specification, pageable);
+
+        // DEVOLVEMOS LOS RESULTADOS
+        return PageableResponse.<PagoDto>builder()
+
+                // Convertimos cada entidad Pago en PagoDto
+                .content(pagoPage.getContent().stream()
+                        .map(PagoDto::fromEntityPago)
+                        .toList())
+
+                // Numero de pagina actual
+                .pageNumber(pagoPage.getNumber())
+
+                // Cantidad de registros por pagina
+                .pageSize(pagoPage.getSize())
+
+                // Total de registros encontrados
+                .totalElements(pagoPage.getTotalElements())
+
+                // Cantidad total de paginas
+                .totalPages(pagoPage.getTotalPages())
+
+                .build();
+
+    } catch (Exception e) {
+        throw new RuntimeException("Error de paginacion de pagos", e);
     }
+  }
 }

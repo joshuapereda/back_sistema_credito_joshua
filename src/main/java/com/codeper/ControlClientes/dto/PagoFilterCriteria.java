@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor 
 @Builder 
 public class PagoFilterCriteria {
-    private String estadoCompra;
     private String nombreCliente;
 
 }

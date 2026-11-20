@@ -13,7 +13,6 @@ public class ProductoFilterCriteria {
     //Definir criterios de busqueda
     //definir campos por lo que se va buscar
     private String nombre;
-    private String descripcion;
     private String nombreCategoria;
 
 

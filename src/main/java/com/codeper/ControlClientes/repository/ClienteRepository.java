@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import com.codeper.ControlClientes.entity.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente ,Integer >,JpaSpecificationExecutor<Cliente> {
-    
+    boolean existsByPersonaId(Integer personaId);
 }

@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateRolDto;
 import com.codeper.ControlClientes.dto.RolDto;
+import com.codeper.ControlClientes.dto.RolFilterCriteria;
 import com.codeper.ControlClientes.service.IRolService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +37,11 @@ public class RolController {
     @PostMapping
     public ResponseEntity<RolDto> crearRol(@Valid @RequestBody CreateRolDto createRolDto) {
         return ResponseEntity.ok(rolService.crearRol(createRolDto));
+    }
+    @PostMapping("/pagination")
+    public ResponseEntity<PageableResponse<RolDto>> getRolPagination(
+            @RequestBody PageableRequest<RolFilterCriteria> pageableRequest) {
+        return ResponseEntity.ok(rolService.getRolPagination(pageableRequest));
     }
     @PutMapping("/{id}")
     public ResponseEntity <RolDto> actualizarRol (@PathVariable Integer id, @RequestBody RolDto rolActualizado) {

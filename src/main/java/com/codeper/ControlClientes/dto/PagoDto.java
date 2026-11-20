@@ -15,15 +15,11 @@ import lombok.NoArgsConstructor;
 public class PagoDto {
 
     private Integer id;
-
     private BigDecimal monto;
-
     private LocalDateTime fechaHora;
-    
+    private Integer compraId; 
     private String nombreClienteCompra;
-    
     private BigDecimal saldoRestante;
-
     private BigDecimal totalCompra;
 
     public static PagoDto fromEntityPago(Pago pago){
@@ -31,6 +27,7 @@ public class PagoDto {
                 .id(pago.getId())
                 .monto(pago.getMonto())
                 .fechaHora(pago.getFechaHora())
+                .compraId(pago.getCompra().getId()) 
                 .nombreClienteCompra(pago.getCompra().getCliente().getPersona().getNombre())
                 .saldoRestante(pago.getSaldoRestante())
                 .totalCompra(pago.getCompra().getTotal())

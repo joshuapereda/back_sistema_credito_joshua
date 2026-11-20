@@ -5,8 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
+import com.codeper.ControlClientes.dto.CompraDto;
+import com.codeper.ControlClientes.dto.CompraFilterCriteria;
 import com.codeper.ControlClientes.dto.CreatePagoDto;
 import com.codeper.ControlClientes.dto.PagoDto;
+import com.codeper.ControlClientes.dto.PagoFilterCriteria;
 import com.codeper.ControlClientes.service.IPagoService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +42,11 @@ public class PagoController {
     @PostMapping
     public ResponseEntity<PagoDto> crearPago(@RequestBody CreatePagoDto createPagoDto) {
         return ResponseEntity.ok(pagoService.crearPago(createPagoDto));
+    }
+    @PostMapping("/pagination")
+    public ResponseEntity<PageableResponse<PagoDto>> getPagoPagination(
+            @RequestBody PageableRequest<PagoFilterCriteria> pageableRequest) {
+        return ResponseEntity.ok(pagoService.getPagoPagination(pageableRequest));
     }
 
     @PutMapping("/{id}")

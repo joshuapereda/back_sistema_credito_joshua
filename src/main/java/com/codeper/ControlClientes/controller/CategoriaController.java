@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.codeper.ControlClientes.dto.CreateCategoriaDto;
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CategoriaDto;
+import com.codeper.ControlClientes.dto.CategoriaFilterCriteria;
 import com.codeper.ControlClientes.service.ICategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController 
@@ -44,8 +47,13 @@ public class CategoriaController {
     public ResponseEntity<CategoriaDto>crearCategoria(@Valid @ModelAttribute  CreateCategoriaDto  createPCategoriaDto){
         return ResponseEntity.ok(pCategoriaService.crearCategoria(createPCategoriaDto));
     }
+    @PostMapping("/pagination")
+    public ResponseEntity<PageableResponse<CategoriaDto>> getCategoriaPagination(
+            @RequestBody PageableRequest<CategoriaFilterCriteria> pageableRequest) {
+        return ResponseEntity.ok(pCategoriaService.getCategoriaPagination(pageableRequest));
+    }
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDto> actualizarCategoria(@PathVariable Integer id, @Valid @RequestBody CategoriaDto categoriaActualizado) {
+    public ResponseEntity<CategoriaDto> actualizarCategoria(@PathVariable Integer id, @Valid @ModelAttribute  CreateCategoriaDto  categoriaActualizado) {
         return ResponseEntity.ok(pCategoriaService.actualizarCategoria(id, categoriaActualizado));
     }
     @DeleteMapping("/{id}") 

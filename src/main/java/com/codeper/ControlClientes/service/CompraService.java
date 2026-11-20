@@ -10,13 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import com.codeper.ControlClientes.common.dto.PageableRequest;
 import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CompraDto;
 import com.codeper.ControlClientes.dto.CompraFilterCriteria;
 import com.codeper.ControlClientes.dto.CreateCompraDto;
-import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Compra;
 import com.codeper.ControlClientes.entity.DetalleCompra;
@@ -32,8 +30,6 @@ import com.codeper.ControlClientes.repository.ProductoRepository;
 import com.codeper.ControlClientes.repository.TipoCompraRepository;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
 import com.codeper.ControlClientes.repository.specofocation.CompraSpecification;
-import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -201,31 +197,37 @@ public class CompraService implements ICompraService {
     public PageableResponse<CompraDto> getCompraPagination(PageableRequest<CompraFilterCriteria> pageableRequest) {
         try {
             //SORT PERMITE MANEJAR ORDENAMIENTO
-            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
-            ? Sort.by(pageableRequest.getSortField()).ascending()
-            : Sort.by(pageableRequest.getSortField()).descending();
-            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASCENDENTE, DESC = DESCENDENTE
+                ? Sort.by(pageableRequest.getSortField()).ascending()
+                : Sort.by(pageableRequest.getSortField()).descending();
 
-            //filtrado
-            Specification<Compra>specification =null;
-            if(pageableRequest.getCriterials() !=null){
-               specification = CompraSpecification.createSpecification(
-                                pageableRequest.getCriterials(),
-                                pageableRequest.getFilterValue());
+            // DESEMPATE: si hay valores iguales, ordena por id descendente
+            // (así el orden no cambia entre páginas)
+            if (!"id".equals(pageableRequest.getSortField())) {
+                sort = sort.and(Sort.by("id").descending());
             }
-            Page<Compra>compraPage=compraRepository.findAll(specification,pageable);
+
+            Pageable pageable = PageRequest.of(pageableRequest.getPageNumber(), pageableRequest.getPageSize(), sort);
+
+            ///filtrado
+            Specification<Compra> specification = CompraSpecification.createSpecification(
+                    pageableRequest.getCriterials(),
+                    pageableRequest.getFilterValue());
+
+            Page<Compra> compraPage = compraRepository.findAll(specification, pageable);
+
             //devolver los datos
             return PageableResponse.<CompraDto>builder()
-            .content(compraPage.getContent().stream().map(CompraDto::fromEntityCompra).toList())
-            .pageNumber(compraPage.getNumber())
-            .pageSize(compraPage.getSize())
-            .totalElements(compraPage.getTotalElements())
-            .totalPages(compraPage.getTotalPages())
-            .build();
-            
+                .content(compraPage.getContent().stream().map(CompraDto::fromEntityCompra).toList())
+                .pageNumber(compraPage.getNumber())
+                .pageSize(compraPage.getSize())
+                .totalElements(compraPage.getTotalElements())
+                .totalPages(compraPage.getTotalPages())
+                .build();
+
         } catch (Exception e) {
-           throw new RuntimeException("Error de paginacion de Compras");
+            e.printStackTrace();
+            throw new RuntimeException("Error de paginacion de Compras");
         }
     }
-
 }

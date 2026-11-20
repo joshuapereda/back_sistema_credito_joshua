@@ -24,8 +24,13 @@ public class CompraDto {
     private BigDecimal saldo;
 
     // Relaciones: en la respuesta van como texto (nombre), no como objetos
+    private Integer clienteId;
     private String cliente;
+
+    private Integer usuarioId;
     private String usuario;
+
+    private Integer tipoCompraId;
     private String tipoCompra;
 
     // Líneas de la compra: una lista, un elemento por producto
@@ -52,8 +57,11 @@ public class CompraDto {
                 .fechaHora(compra.getFechaHora())
                 .total(compra.getTotal())
                 .saldo(compra.getSaldo())
+                .clienteId(compra.getCliente().getId())
                 .cliente(compra.getCliente().getPersona().getNombre())
+                .usuarioId(compra.getUsuario().getId())
                 .usuario(compra.getUsuario().getUsername())
+                .tipoCompraId(compra.getTipoCompra().getId())
                 .tipoCompra(compra.getTipoCompra().getNombre())
                 .estado(compra.getEstado()) 
                 // stream sobre la LISTA de detalles: cada DetalleCompra -> un DetalleDto

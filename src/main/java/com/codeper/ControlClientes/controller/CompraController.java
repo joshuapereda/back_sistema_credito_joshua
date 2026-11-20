@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CompraDto;
+import com.codeper.ControlClientes.dto.CompraFilterCriteria;
 import com.codeper.ControlClientes.dto.CreateCompraDto;
 import com.codeper.ControlClientes.service.ICompraService;
 import jakarta.validation.Valid;
@@ -34,6 +37,11 @@ public class CompraController {
     @PostMapping()
     public ResponseEntity<CompraDto> crearCompra(@Valid @RequestBody CreateCompraDto  createCompraDto) {        
         return ResponseEntity.ok(compraService.crearCompra(createCompraDto));
+    }
+    @PostMapping("/pagination")
+    public ResponseEntity<PageableResponse<CompraDto>> getCompraPagination(
+            @RequestBody PageableRequest<CompraFilterCriteria> pageableRequest) {
+        return ResponseEntity.ok(compraService.getCompraPagination(pageableRequest));
     }
     @PutMapping("/{id}")
     public ResponseEntity<CompraDto> actualizarCompra(@PathVariable Integer id, @Valid @RequestBody CreateCompraDto createCompraDto) {

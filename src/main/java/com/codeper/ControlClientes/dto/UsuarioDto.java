@@ -18,6 +18,7 @@ public class UsuarioDto {
     private String username;
     //Persona
     private String gmail;
+    private Integer personaId;
     private String nombrePersona;
     //Rol 
     private List<Integer>rolesId;
@@ -26,6 +27,7 @@ public class UsuarioDto {
         return UsuarioDto.builder()
             .id(usuario.getId())
             .username(usuario.getUsername())
+            .personaId(usuario.getPersona().getId())
             .gmail(usuario.getPersona().getGmail())
             .nombrePersona(usuario.getPersona().getNombre())
            .rolesId(usuario.getRoles().stream()

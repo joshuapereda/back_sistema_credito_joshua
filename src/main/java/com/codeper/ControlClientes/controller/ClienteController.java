@@ -6,7 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.codeper.ControlClientes.dto.CreateClienteDto;
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.ClienteDto;
+import com.codeper.ControlClientes.dto.ClienteFilterCriteria;
 import com.codeper.ControlClientes.service.IClienteService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +37,11 @@ public class ClienteController {
     @PostMapping
      public ResponseEntity<ClienteDto> crearCliente(@Valid @RequestBody CreateClienteDto createClienteDto) {
         return ResponseEntity.ok(clienteService.crearCliente(createClienteDto));
+    }
+    @PostMapping("/pagination")
+    public ResponseEntity<PageableResponse<ClienteDto>> getClientePagination(
+            @RequestBody PageableRequest<ClienteFilterCriteria> pageableRequest) {
+        return ResponseEntity.ok(clienteService.getClientePagination(pageableRequest));
     }
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDto> actualizarCliente(@PathVariable Integer id, @RequestBody CreateClienteDto createClienteDto) {

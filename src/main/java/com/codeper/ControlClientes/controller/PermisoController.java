@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.codeper.ControlClientes.common.dto.PageableRequest;
+import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreatePermisoDto;
 import com.codeper.ControlClientes.dto.PermisoDto;
+import com.codeper.ControlClientes.dto.PermisoFilterCriteria;
 import com.codeper.ControlClientes.service.IPermisoService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +37,11 @@ public class PermisoController {
     @PostMapping()
     public ResponseEntity<PermisoDto> crearPermiso(@Valid @RequestBody CreatePermisoDto createPermisoDto) {
         return ResponseEntity.ok(permisoService.crearPermiso(createPermisoDto));
+    }
+    @PostMapping("/pagination")
+    public ResponseEntity<PageableResponse<PermisoDto>> getPermisoPagination(
+            @RequestBody PageableRequest<PermisoFilterCriteria> pageableRequest) {
+        return ResponseEntity.ok(permisoService.getPermisoPagination(pageableRequest));
     }
     @PutMapping("/{id}")
     public ResponseEntity<PermisoDto> actualizarPermiso(@PathVariable Integer id,@Valid @RequestBody CreatePermisoDto createPermisoDto) {

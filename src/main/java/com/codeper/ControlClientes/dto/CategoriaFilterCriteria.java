@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @Builder 
 public class CategoriaFilterCriteria {
     private String nombre;
-    private String descripcion;
 }

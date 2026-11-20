@@ -1,38 +1,54 @@
+
 package com.codeper.ControlClientes.repository.specofocation;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.criteria.Predicate;
+
 import org.springframework.data.jpa.domain.Specification;
+
 import com.codeper.ControlClientes.dto.CategoriaFilterCriteria;
 import com.codeper.ControlClientes.entity.Categoria;
 
 public class CategoriaSpecification {
- public static Specification<Categoria> createSpecification(CategoriaFilterCriteria criterials, String filterValue){
-        //consulta un QUERY
-        return (root,query,criteriaBuilder)->{
-            List<Predicate> predicates=new ArrayList<>();
-            //si no es nulo y no esta vacio significa que tenemos un valor para aplicar el filtro
-            if(filterValue !=null && !filterValue.trim().isEmpty()){
-                //Utilizamos el like a nivel sql
-                String likeFilterValue="%"+filterValue.toLowerCase()+"%";
-                predicates.add(criteriaBuilder.or(
-                    //where nombre like "%{filterValue}" or descripcion ...(deacuerdo a los criterios de bsuqueda)
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("nombre")),filterValue),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("descripcion")),filterValue)
+
+    public static Specification<Categoria> createSpecification(CategoriaFilterCriteria criterials, String filterValue) {
+
+        return (root, query, cb) -> {
+
+            // Lista donde almacenaremos las condiciones de busqueda
+            List<Predicate> predicates = new ArrayList<>();
+
+            // BUSQUEDA GENERAL
+            // Buscamos por el nombre de la categoria
+            if (filterValue != null && !filterValue.trim().isEmpty()) {
+
+                // Agregamos % para buscar coincidencias parciales
+                String likeFilterValue = "%" + filterValue.trim().toLowerCase() + "%";
+
+                predicates.add(cb.like(
+                        cb.lower(root.<String>get("nombre")),
+                        likeFilterValue
                 ));
             }
-            //FILTROS ESPECIFICOS
-            if(criterials.getNombre() !=null && !criterials.getNombre().trim().isEmpty()){
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nombre")),
-                 "%"+criterials.getNombre().toLowerCase()+"%"));
+
+            // FILTROS ESPECIFICOS
+            // Comprobamos que los criterios no sean null
+            if (criterials != null) {
+
+                // FILTRO POR NOMBRE
+                if (criterials.getNombre() != null
+                        && !criterials.getNombre().trim().isEmpty()) {
+
+                    predicates.add(cb.like(
+                            cb.lower(root.<String>get("nombre")),
+                            "%" + criterials.getNombre().trim().toLowerCase() + "%"
+                    ));
+                }
             }
-            if(criterials.getDescripcion() !=null && !criterials.getDescripcion().trim().isEmpty()){
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("descripcion")),
-                 "%"+criterials.getDescripcion().toLowerCase()+"%"));
-            }
-            return criteriaBuilder.and(predicates);
+            // AND: Aplicamos todas las condiciones de busqueda
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 }
-

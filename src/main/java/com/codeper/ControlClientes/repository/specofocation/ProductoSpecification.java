@@ -7,38 +7,52 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import com.codeper.ControlClientes.dto.ProductoFilterCriteria;
 import com.codeper.ControlClientes.entity.Producto;
-
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 public class ProductoSpecification {
     public static Specification<Producto> createSpecification(ProductoFilterCriteria criterials, String filterValue){
         //consulta un QUERY
-        return (root,query,criteriaBuilder)->{
+        return (root,query,cb)->{
             List<Predicate> predicates=new ArrayList<>();
-            //si no es nulo y no esta vacio significa que tenemos un valor para aplicar el filtro
+
+            // JOIN: Accedemos a Categoria desde Producto
+            Join<Object, Object> categoria = root.join("categoria", JoinType.LEFT);
+            
+            // Obtenemos los atributos que utilizaremos para buscar
+            var nombre = cb.lower(root.<String>get("nombre"));
+            var nombreCategoria = cb.lower(categoria.<String>get("nombre"));
+
+            // BUSQUEDA GENERAL
             if(filterValue !=null && !filterValue.trim().isEmpty()){
                 //Utilizamos el like a nivel sql
-                String likeFilterValue="%"+filterValue.toLowerCase()+"%";
-                predicates.add(criteriaBuilder.or(
-                    //where nombre like "%{filterValue}" or descripcion ...(deacuerdo a los criterios de bsuqueda)
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("nombre")),filterValue),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("descripcion")),filterValue),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.join("categoria").get("nombre")),filterValue)
+                String likeFilterValue = "%" + filterValue.trim().toLowerCase() + "%";
+                predicates.add(cb.or(
+                        cb.like(nombre, likeFilterValue),
+                        cb.like(nombreCategoria, likeFilterValue)
                 ));
             }
-            //FILTROS ESPECIFICOS
-            if(criterials.getNombre() !=null && !criterials.getNombre().trim().isEmpty()){
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nombre")),
-                 "%"+criterials.getNombre().toLowerCase()+"%"));
+            // FILTROS ESPECIFICOS
+            if (criterials != null) {
+
+                if (criterials.getNombre() != null
+                        && !criterials.getNombre().trim().isEmpty()) {
+
+                    predicates.add(cb.like(
+                            nombre,
+                            "%" + criterials.getNombre().trim().toLowerCase() + "%"
+                    ));
+                }
+
+                if (criterials.getNombreCategoria() != null
+                        && !criterials.getNombreCategoria().trim().isEmpty()) {
+
+                    predicates.add(cb.like(
+                            nombreCategoria,
+                            "%" + criterials.getNombreCategoria().trim().toLowerCase() + "%"
+                    ));
+                }
             }
-            if(criterials.getDescripcion() !=null && !criterials.getDescripcion().trim().isEmpty()){
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("descripcion")),
-                 "%"+criterials.getDescripcion().toLowerCase()+"%"));
-            }
-            //Busqueda para una relacion con JOIN (valor que se optiene de otra tabla )
-            if(criterials.getNombreCategoria() !=null && !criterials.getNombreCategoria().trim().isEmpty()){
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.join("categoria").get("nombre")),
-                 "%"+criterials.getNombreCategoria().toLowerCase()+"%"));
-            }
-            return criteriaBuilder.and(predicates);
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

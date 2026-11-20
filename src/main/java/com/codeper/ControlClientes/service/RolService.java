@@ -10,72 +10,67 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import com.codeper.ControlClientes.common.dto.PageableRequest;
 import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CreateRolDto;
-import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.RolDto;
 import com.codeper.ControlClientes.dto.RolFilterCriteria;
 import com.codeper.ControlClientes.entity.Permiso;
-import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PermisoRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
-import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
 import com.codeper.ControlClientes.repository.specofocation.RolSpecification;
 
-@Service 
+@Service
 public class RolService implements IRolService {
 
-    @Autowired 
+    @Autowired
     private RolRepository rolRepository;
 
-    @Autowired 
+    @Autowired
     private PermisoRepository permisoRepository;
 
-  
     @Override
     public List<RolDto> listarRol() {
-       return rolRepository.findAll().stream()
-            .map(RolDto::fromEntityRol)
-            .toList();
+        return rolRepository.findAll().stream()
+                .map(RolDto::fromEntityRol)
+                .toList();
     }
 
     @Override
     public RolDto listarRolPorId(Integer id) {
-        try{
+        try {
             return rolRepository.findById(id)
-                .map(RolDto::fromEntityRol)
-                .orElseThrow(()->new ResourNotFoundException("Rol ", id));
-        }catch(ResourNotFoundException e){
+                    .map(RolDto::fromEntityRol)
+                    .orElseThrow(() -> new ResourNotFoundException("Rol ", id));
+        } catch (ResourNotFoundException e) {
             throw e;
         }
     }
 
     @Override
     public RolDto crearRol(CreateRolDto createRolDto) {
-     // Validar que existan los permisos
+        // Validar que existan los permisos
         List<Permiso> permisos = validarYObtenerPermisos(createRolDto.getPermisosId());
 
         // 4. Recién aquí se crea el rol
-       Rol rol= CreateRolDto.toEntityRol(createRolDto, permisos);
-       rol= rolRepository.save(rol);
-       return RolDto.fromEntityRol(rol);
+        Rol rol = CreateRolDto.toEntityRol(createRolDto, permisos);
+        rol = rolRepository.save(rol);
+        return RolDto.fromEntityRol(rol);
     }
 
     @Override
     public RolDto actualizarRol(Integer id, RolDto rolActualizar) {
         Rol rol = rolRepository.findById(id)
-                .orElseThrow(() -> new ResourNotFoundException("Rol " , id));
+                .orElseThrow(() -> new ResourNotFoundException("Rol ", id));
         // Validar que existan los permisos
         List<Permiso> permisos = validarYObtenerPermisos(rolActualizar.getPermisosId());
-       
+
         rol.setNombre(rolActualizar.getNombre());
         rol.setDescripcion(rolActualizar.getDescripcion());
         rol.setPermisos(permisos);
-        rol=rolRepository.save(rol);
+        rol = rolRepository.save(rol);
 
         return RolDto.fromEntityRol(rol);
     }
@@ -83,61 +78,72 @@ public class RolService implements IRolService {
     @Override
     public void eliminarRol(Integer id) {
         if (!rolRepository.existsById(id)) {
-        throw new ResourNotFoundException("Rol " , id);
+            throw new ResourNotFoundException("Rol ", id);
         }
-        rolRepository.deleteById(id);
+        if (permisoRepository.existsByRolesId(id)) {
+            throw new IllegalStateException("No se puede eliminar: el rol está asignado a uno o más permisos");
+        }
+        permisoRepository.deleteById(id);
     }
 
     private List<Permiso> validarYObtenerPermisos(List<Integer> permisosId) {
-    if (permisosId == null || permisosId.isEmpty()) {
-        throw new IllegalArgumentException("Debe enviar al menos un permiso");
-    }
+        if (permisosId == null || permisosId.isEmpty()) {
+            throw new IllegalArgumentException("Debe enviar al menos un permiso");
+        }
 
-    List<Integer> ids = permisosId.stream().distinct().toList();
-    List<Permiso> permisos = permisoRepository.findAllById(ids);
+        List<Integer> ids = permisosId.stream().distinct().toList();
+        List<Permiso> permisos = permisoRepository.findAllById(ids);
 
-    if (permisos.size() != ids.size()) {
-        Set<Integer> encontrados = permisos.stream()
-                .map(Permiso::getId)
-                .collect(Collectors.toSet());
+        if (permisos.size() != ids.size()) {
+            Set<Integer> encontrados = permisos.stream()
+                    .map(Permiso::getId)
+                    .collect(Collectors.toSet());
 
-        List<Integer> noExisten = ids.stream()
-                .filter(id -> !encontrados.contains(id))
-                .toList();
+            List<Integer> noExisten = ids.stream()
+                    .filter(id -> !encontrados.contains(id))
+                    .toList();
 
-        throw new RuntimeException("Permisos no encontrados: " + noExisten);
-    }
+            throw new RuntimeException("Permisos no encontrados: " + noExisten);
+        }
         return permisos;
     }
 
     @Override
     public PageableResponse<RolDto> getRolPagination(PageableRequest<RolFilterCriteria> pageableRequest) {
         try {
-            //SORT PERMITE MANEJAR ORDENAMIENTO
-            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
-            ? Sort.by(pageableRequest.getSortField()).ascending()
-            : Sort.by(pageableRequest.getSortField()).descending();
-            Pageable pageable= PageRequest.of(pageableRequest.getPageNumber(),pageableRequest.getPageSize(), sort);
+            // SORT PERMITE MANEJAR EL ORDENAMIENTO
+            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+                    ? Sort.by(pageableRequest.getSortField()).ascending()
+                    : Sort.by(pageableRequest.getSortField()).descending();
 
-            //filtrado
-            Specification<Rol>specification =null;
-            if(pageableRequest.getCriterials() !=null){
-               specification = RolSpecification.createSpecification(
-                                pageableRequest.getCriterials(),
-                                pageableRequest.getFilterValue());
-            }
-            Page<Rol>rolPage=rolRepository.findAll(specification,pageable);
-            //devolver los datos
+            // CONFIGURAMOS LA PAGINACION
+            Pageable pageable = PageRequest.of(
+                    pageableRequest.getPageNumber(),
+                    pageableRequest.getPageSize(),
+                    sort);
+
+            // FILTRADO: BUSQUEDA GENERAL Y FILTROS ESPECIFICOS
+            Specification<Rol> specification = RolSpecification.createSpecification(
+                    pageableRequest.getCriterials(),
+                    pageableRequest.getFilterValue());
+
+            // CONSULTAMOS LOS ROLES CON FILTROS Y PAGINACION
+            Page<Rol> rolPage = rolRepository.findAll(specification, pageable);
+
+            // DEVOLVEMOS LOS DATOS PAGINADOS
             return PageableResponse.<RolDto>builder()
-            .content(rolPage.getContent().stream().map(RolDto::fromEntityRol).toList())
-            .pageNumber(rolPage.getNumber())
-            .pageSize(rolPage.getSize())
-            .totalElements(rolPage.getTotalElements())
-            .totalPages(rolPage.getTotalPages())
-            .build();
-            
+                    .content(rolPage.getContent().stream()
+                            .map(RolDto::fromEntityRol)
+                            .toList())
+                    .pageNumber(rolPage.getNumber())
+                    .pageSize(rolPage.getSize())
+                    .totalElements(rolPage.getTotalElements())
+                    .totalPages(rolPage.getTotalPages())
+                    .build();
+
         } catch (Exception e) {
-           throw new RuntimeException("Error de paginacion de roles");
+            throw new RuntimeException("Error de paginacion de roles", e);
         }
     }
+
 }
