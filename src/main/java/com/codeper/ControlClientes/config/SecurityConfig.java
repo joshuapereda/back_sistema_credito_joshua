@@ -3,6 +3,7 @@ package com.codeper.ControlClientes.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -35,6 +36,8 @@ public class SecurityConfig {
                     //Dar seguridad a las peticiones
                     //permitAll - permite pones que es una ruta avierta cualquiera púede ingresar
                     .requestMatchers("/api/auth/**", "/error").permitAll()
+                    //permitAll - permite pones que es una ruta avierta cualquiera púede ingresar
+                    .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
                     .requestMatchers("/productos").hasAnyAuthority("LISTAR_PRODUCTOS","ROLE_ENCARGADO_ALMACEN")
                     .requestMatchers("/ventas").hasAnyAuthority("ROL_ADMIN")
                     //con esto va indicar que el resto de las ruta no va pedir  ni roles ni permisos 
