@@ -63,4 +63,5 @@ application:
 
     #definir el path de la carpeta donde se guardaran los archivos
 storage:
-    location: C:/Proyectos_Joshua/Back/ControlClientes/images       
+    # relativa a la carpeta del proyecto: si lo mueves, sigue funcionando
+    location: images

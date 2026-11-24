@@ -283,6 +283,25 @@ Backlog que sale de la revisión del código. Cada historia se puede entregar y 
 
 ---
 
+### HU-17 · Las fotos cargan aunque se mueva el proyecto
+
+**Como** vendedor
+**quiero** ver las fotos de los productos
+**para** reconocerlos rápido.
+
+**Criterios de aceptación**
+- **Dado** una foto guardada, **cuando** pido `GET /api/files/{nombre}`, **entonces** recibo la foto (200).
+- **Dado** que el proyecto cambia de carpeta, **entonces** las fotos siguen cargando.
+- **Dado** una foto que no existe, **entonces** recibo **404**.
+
+**Qué se cambió**
+
+| Archivo | Para qué sirve |
+|---|---|
+| `application.yaml` | `storage.location` pasa de una ruta fija a `images` (relativa) |
+
+---
+
 ## Fuera de alcance (decidido)
 
 - **Credenciales de la BD en `application.yaml`**: se mantienen así por ahora.
