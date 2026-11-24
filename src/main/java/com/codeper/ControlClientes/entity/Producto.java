@@ -1,9 +1,6 @@
 package com.codeper.ControlClientes.entity;
 
 import java.math.BigDecimal;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

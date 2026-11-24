@@ -5,11 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.codeper.ControlClientes.common.dto.PageableRequest;
 import com.codeper.ControlClientes.common.dto.PageableResponse;
-import com.codeper.ControlClientes.dto.ClienteDto;
-import com.codeper.ControlClientes.dto.ClienteFilterCriteria;
 import com.codeper.ControlClientes.dto.CreateProductoDto;
 import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.ProductoFilterCriteria;
