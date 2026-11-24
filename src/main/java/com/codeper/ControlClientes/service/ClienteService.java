@@ -62,6 +62,7 @@ public class ClienteService implements IClienteService {
 
     @Override
     public ClienteDto crearCliente(CreateClienteDto createClienteDto) {
+        validarCorreo(createClienteDto.getGmail(), null);
         Persona persona = CreateClienteDto.toEntityPersona(createClienteDto);
         persona = personaRepository.save(persona);
         Cliente cliente = CreateClienteDto.toEntityCliente(createClienteDto, persona);
@@ -74,6 +75,7 @@ public class ClienteService implements IClienteService {
     public ClienteDto actualizarCliente(Integer id, CreateClienteDto clienteActualizado) {
         Cliente clienteRetrieved = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourNotFoundException("Cliente ", id));
+        validarCorreo(clienteActualizado.getGmail(), clienteRetrieved.getPersona().getId());
         // Actualizar Cliente
         clienteRetrieved.setDocIdentidad(clienteActualizado.getDocIdentidad());
         Persona personaRetrieved = clienteRetrieved.getPersona();
@@ -85,6 +87,20 @@ public class ClienteService implements IClienteService {
         // guardar
         return ClienteDto.fromEntityCliente(clienteRepository.save(clienteRetrieved),
                 personaRepository.save(personaRetrieved));
+    }
+
+    // El login busca por correo: no puede repetirse. Es opcional: vacío no se valida.
+    // personaId es null al crear
+    private void validarCorreo(String gmail, Integer personaId) {
+        if (gmail == null || gmail.isBlank()) {
+            return;
+        }
+        boolean repetido = personaId == null
+                ? personaRepository.existsByGmailIgnoreCase(gmail)
+                : personaRepository.existsByGmailIgnoreCaseAndIdNot(gmail, personaId);
+        if (repetido) {
+            throw new ConflictException("El correo electrónico ya está en uso");
+        }
     }
 
     @Override
