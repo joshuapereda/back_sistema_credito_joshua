@@ -1,5 +1,7 @@
 package com.codeper.ControlClientes.common;
 
+import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +21,10 @@ public class CustomErrorResponse<T> {
     private String timestamp; //fecha
     private T message; //mensaje de error 
     private String path; //ruta del error 
+
+    //solo en validaciones: campo -> mensaje (si es null no se envía)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Map<String, String> fieldErrors;
 
 
 }
