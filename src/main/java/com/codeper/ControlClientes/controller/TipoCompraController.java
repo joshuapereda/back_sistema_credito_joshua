@@ -36,7 +36,7 @@ public class TipoCompraController {
         return ResponseEntity.ok(tipoCompraService.crearTipoCompra(createTipoCompraDto));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<TipoCompraDto> actualizarTipoCompra(@PathVariable Integer id, @RequestBody CreateTipoCompraDto createTipoCompraDto) {
+    public ResponseEntity<TipoCompraDto> actualizarTipoCompra(@PathVariable Integer id, @Valid @RequestBody CreateTipoCompraDto createTipoCompraDto) {
         return ResponseEntity.ok(tipoCompraService.editarTipoCompra(id, createTipoCompraDto));
     }
     @DeleteMapping("/{id}")
