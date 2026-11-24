@@ -16,6 +16,7 @@ Backlog que sale de la revisión del código. Cada historia se puede entregar y 
 | HU-07 | Contraseñas cifradas | Seguridad | Alta | 3 |
 | HU-08 | Inicio de sesión y acceso por roles/permisos | Seguridad | Media | 8 |
 | HU-09 | Corregir nombres con errores de escritura | Deuda técnica | Baja | 2 |
+| HU-10 | Resumen para el dashboard | Dashboard | Media | 3 |
 
 **Orden sugerido:** HU-01 → HU-02 → HU-03 → HU-05 → HU-04 → HU-06 → HU-07 → HU-09 → HU-08
 (HU-05 antes de HU-04 y HU-06 porque estas necesitan devolver códigos 404/409 claros).
@@ -200,6 +201,38 @@ Backlog que sale de la revisión del código. Cada historia se puede entregar y 
   ALTER TABLE usuario RENAME COLUMN passwprd TO password;
   ```
 - Avisar al frontend del cambio de `passwprd` → `password` en el JSON.
+
+---
+
+## Épica: Dashboard
+
+### HU-10 · Resumen para el dashboard
+
+**Como** administrador
+**quiero** pedir los totales del negocio en una sola llamada
+**para** mostrarlos en el dashboard sin descargar todas las compras.
+
+**Criterios de aceptación**
+- **Dado** un usuario con token, **cuando** pide `GET /api/dashboard/resumen`, **entonces** recibe saldo por cobrar, ventas del mes, compras pendientes, clientes, cobrado hoy y los 5 productos más vendidos.
+- **Dado** que no hay compras ni pagos, **entonces** las sumas valen 0, no `null`.
+- **Dado** un usuario sin token, **entonces** recibe **401**.
+
+**Qué se creó o cambió**
+
+| Archivo | Para qué sirve |
+|---|---|
+| `dto/DashboardResumenDto` (nuevo) | La respuesta completa |
+| `dto/ProductoVendidoDto` (nuevo) | Una fila del ranking |
+| `repository/CompraRepository` | Suma saldos y ventas, cuenta por estado |
+| `repository/PagoRepository` | Suma pagos entre dos fechas |
+| `repository/DetalleCompraRepository` | Productos más vendidos |
+| `service/IDashboardService`, `DashboardService` (nuevos) | Juntan los datos |
+| `controller/DashboardController` (nuevo) | Expone el endpoint |
+| `test/service/DashboardServiceTest` (nuevo) | Pruebas sin BD |
+
+**Notas técnicas**
+- No se creó ninguna entidad: todo sale de tablas que ya existen.
+- "Cobrado hoy" suma solo pagos de créditos: las ventas al contado no generan pago.
 
 ---
 
