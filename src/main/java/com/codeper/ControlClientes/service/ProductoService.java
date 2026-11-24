@@ -16,7 +16,6 @@ import com.codeper.ControlClientes.dto.CreateProductoDto;
 import com.codeper.ControlClientes.dto.ProductoDto;
 import com.codeper.ControlClientes.dto.ProductoFilterCriteria;
 import com.codeper.ControlClientes.entity.Categoria;
-import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.exception.BadRequestException;
 import com.codeper.ControlClientes.exception.ConflictException;
@@ -24,7 +23,6 @@ import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
 import com.codeper.ControlClientes.repository.DetalleCompraRepository;
 import com.codeper.ControlClientes.repository.ProductoRepository;
-import com.codeper.ControlClientes.repository.specofocation.ClienteSpecification;
 import com.codeper.ControlClientes.repository.specofocation.ProductoSpecification;
 //@RequiredArgsConstructor
 @Service 
@@ -39,6 +37,10 @@ public class ProductoService implements IProductoService {
 
     @Autowired
     private DetalleCompraRepository detalleCompraRepository;
+    
+    @Autowired 
+    private FileService fileService;
+
     
     //PAGINACION 
     @Override
@@ -73,9 +75,6 @@ public class ProductoService implements IProductoService {
             throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
         }
     }
-
-    @Autowired 
-    private FileService fileService;
 
 
     @Override
