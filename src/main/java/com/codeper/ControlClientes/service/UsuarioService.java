@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,8 @@ import com.codeper.ControlClientes.dto.UsuarioFilterCriteria;
 import com.codeper.ControlClientes.entity.Persona;
 import com.codeper.ControlClientes.entity.Rol;
 import com.codeper.ControlClientes.entity.Usuario;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.ClienteRepository;
 import com.codeper.ControlClientes.repository.PersonaRepository;
@@ -78,7 +81,7 @@ public class UsuarioService implements IUsuarioService {
     public UsuarioDto actualizarUsuario(Integer id, UpdateUsuarioDto usuarioActualizar) {
         // VALIDAR USERNAME DUPLICADO (ignorando al propio usuario)
         if (usuarioRepository.existsByUsernameAndIdNot(usuarioActualizar.getUsername(), id)) {
-            throw new IllegalStateException("El username ya está en uso");
+            throw new ConflictException("El username ya está en uso");
         }
 
         // VALIDAR USUARIO
@@ -110,14 +113,14 @@ public class UsuarioService implements IUsuarioService {
             throw new ResourNotFoundException("Usuario", id);
         }
         if (clienteRepository.existsByPersonaId(id)) {
-            throw new IllegalStateException("No se puede eliminar: el usuario está asignado a uno o más personas");
+            throw new ConflictException("No se puede eliminar: el usuario está asignado a uno o más personas");
         }
         usuarioRepository.deleteById(id);
     }
 
     private List<Rol> validarYObtenerRoles(List<Integer> rolesId) {
         if (rolesId == null || rolesId.isEmpty()) {
-            throw new IllegalArgumentException("Debe enviar al menos un rol");
+            throw new BadRequestException("Debe enviar al menos un rol");
         }
 
         List<Integer> ids = rolesId.stream().distinct().toList();
@@ -142,7 +145,7 @@ public class UsuarioService implements IUsuarioService {
 
         try {
             // SORT PERMITE MANEJAR EL ORDENAMIENTO ASC = Ascendente,DESC = Descendente
-            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+            Sort sort = "asc".equalsIgnoreCase(pageableRequest.getSortOrder())
                     ? Sort.by(pageableRequest.getSortField()).ascending()
                     : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -172,8 +175,9 @@ public class UsuarioService implements IUsuarioService {
                     .totalPages(usuarioPage.getTotalPages())
                     .build();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error de paginacion de usuarios", e);
+        } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
         }
     }
 

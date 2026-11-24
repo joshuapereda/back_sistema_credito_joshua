@@ -119,6 +119,29 @@ Backlog que sale de la revisión del código. Cada historia se puede entregar y 
 - Crear excepciones propias, por ejemplo `RecursoNoEncontradoException` y `ReglaNegocioException`, y reemplazar los `RuntimeException` genéricos de los servicios.
 - `MethodArgumentNotValidException` → 400 con `fieldErrors`.
 
+**Qué se creó o cambió (24/11/2026)**
+
+| Archivo | Para qué sirve |
+|---|---|
+| `exception/RestExceptionHandler` | Responde el código correcto (antes siempre 500) |
+| `exception/BadRequestException` (nuevo) | 400: datos mal enviados |
+| `exception/UnauthorizedException` (nuevo) | 401: token inválido |
+| `exception/ConflictException` (ya existía) | 409: regla de negocio |
+| `common/CustomErrorResponse` | Agrega `fieldErrors` (campo → mensaje) |
+| `service/*` | Cambian `RuntimeException` por la excepción que toca |
+| `auth/AuthService`, `JwtAuthenticationFilter` | Token malo → 401 |
+| `PagoController`, `TipoCompraController` | Les faltaba `@Valid` |
+| `test/exception/RestExceptionHandlerTest` (nuevo) | Prueba cada código |
+
+| Código | Cuándo |
+|---|---|
+| 400 | Falla una validación o la petición está mal hecha |
+| 401 | Login incorrecto o token inválido |
+| 403 | No tiene permiso |
+| 404 | No existe el registro, la ruta o el archivo |
+| 409 | Choca con una regla (compra ya pagada, registro en uso) |
+| 500 | Solo errores inesperados, sin mostrar detalles |
+
 ---
 
 ## Épica: Clientes

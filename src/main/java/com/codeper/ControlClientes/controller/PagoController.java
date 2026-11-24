@@ -14,6 +14,7 @@ import com.codeper.ControlClientes.dto.CreatePagoDto;
 import com.codeper.ControlClientes.dto.PagoDto;
 import com.codeper.ControlClientes.dto.PagoFilterCriteria;
 import com.codeper.ControlClientes.service.IPagoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public class PagoController {
     }
 
     @PostMapping
-    public ResponseEntity<PagoDto> crearPago(@RequestBody CreatePagoDto createPagoDto) {
+    public ResponseEntity<PagoDto> crearPago(@Valid @RequestBody CreatePagoDto createPagoDto) {
         return ResponseEntity.ok(pagoService.crearPago(createPagoDto));
     }
     @PostMapping("/pagination")

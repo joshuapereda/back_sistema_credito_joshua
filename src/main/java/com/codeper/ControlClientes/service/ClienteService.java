@@ -2,6 +2,7 @@ package com.codeper.ControlClientes.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,13 +16,14 @@ import com.codeper.ControlClientes.dto.ClienteDto;
 import com.codeper.ControlClientes.dto.ClienteFilterCriteria;
 import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Persona;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.ClienteRepository;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PersonaRepository;
 import com.codeper.ControlClientes.repository.specofocation.ClienteSpecification;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ClienteService implements IClienteService {
@@ -52,7 +54,7 @@ public class ClienteService implements IClienteService {
                 // obtener el Persona correspondiente a ese cliente
                 Persona persona = cliente.getPersona();
                 return ClienteDto.fromEntityCliente(cliente, persona);
-            }).orElseThrow(() -> new ResourNotFoundException("Usuario", id));
+            }).orElseThrow(() -> new ResourNotFoundException("Cliente", id));
         } catch (ResourNotFoundException e) {
             throw e;
         }
@@ -88,10 +90,10 @@ public class ClienteService implements IClienteService {
     @Override
     public void eliminarCliente(Integer id) {
         if (!clienteRepository.existsById(id)) {
-            throw new EntityNotFoundException("Cliente no encontrado");
+            throw new ResourNotFoundException("Cliente", id);
         }
         if (compraRepository.existsByClienteId(id)) {
-            throw new IllegalStateException("No se puede eliminar: el cliente tiene compras registradas");
+            throw new ConflictException("No se puede eliminar: el cliente tiene compras registradas");
         }
         clienteRepository.deleteById(id);
     }
@@ -104,7 +106,7 @@ public class ClienteService implements IClienteService {
             // SORT PERMITE MANEJAR EL ORDENAMIENTO
             // ASC = Ascendente
             // DESC = Descendente
-            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+            Sort sort = "asc".equalsIgnoreCase(pageableRequest.getSortOrder())
                     ? Sort.by(pageableRequest.getSortField()).ascending()
                     : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -135,8 +137,9 @@ public class ClienteService implements IClienteService {
                     .totalPages(clientePage.getTotalPages())
                     .build();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error de paginacion de clientes", e);
+        } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
         }
     }
 }

@@ -2,6 +2,7 @@ package com.codeper.ControlClientes.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,8 @@ import com.codeper.ControlClientes.dto.ProductoFilterCriteria;
 import com.codeper.ControlClientes.entity.Categoria;
 import com.codeper.ControlClientes.entity.Cliente;
 import com.codeper.ControlClientes.entity.Producto;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
 import com.codeper.ControlClientes.repository.DetalleCompraRepository;
@@ -42,7 +45,7 @@ public class ProductoService implements IProductoService {
     public PageableResponse<ProductoDto> getProductosPagination(PageableRequest<ProductoFilterCriteria> pageableRequest) {
         try {
             //SORT PERMITE MANEJAR ORDENAMIENTO
-            Sort sort=pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASENDENTE ,DESC=DESENDENTE
+            Sort sort="asc".equalsIgnoreCase(pageableRequest.getSortOrder()) //ASC = ASENDENTE ,DESC=DESENDENTE
                 ? Sort.by(pageableRequest.getSortField()).ascending()
                 : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -65,8 +68,9 @@ public class ProductoService implements IProductoService {
                 .totalPages(productoPage.getTotalPages())
                 .build();
             
-        } catch (Exception e) {
-           throw new RuntimeException("Error de paginacion de productos",e);
+        } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
         }
     }
 
@@ -127,7 +131,7 @@ public class ProductoService implements IProductoService {
             throw new ResourNotFoundException("Producto ", id);
         }
         if (detalleCompraRepository.existsByProductoId(id)) {
-            throw new IllegalStateException("No se puede eliminar: el producto ya tiene compras registradas");
+            throw new ConflictException("No se puede eliminar: el producto ya tiene compras registradas");
         }
         pProductoRepository.deleteById(id);
     }

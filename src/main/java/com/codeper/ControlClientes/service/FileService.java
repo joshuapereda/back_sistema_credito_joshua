@@ -12,6 +12,9 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.codeper.ControlClientes.dto.FileDownloadResponse;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.DomainException;
+import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import jakarta.annotation.PostConstruct;
 
 @Service 
@@ -37,10 +40,12 @@ public class FileService implements IFileService {
         try {
             Path fileSavedPath=fileStorageLocation.resolve(filePath).normalize();
             if(!fileSavedPath.startsWith(fileStorageLocation)){
-                throw new RuntimeException("Ruta de archivo no válida: " + filePath);
+                throw new BadRequestException("Ruta de archivo no válida: " + filePath);
             }
             File file=fileSavedPath.toFile();
             return file;
+        } catch (DomainException e) {
+            throw e; // conserva su código (400 o 404)
         } catch (Exception e) {
             throw new RuntimeException("No se pudo recuperar el archivo. Por favor, intente nuevamente.", e);
         }
@@ -65,7 +70,7 @@ public class FileService implements IFileService {
             Path path=Path.of(file.getAbsolutePath());
             Resource resource=new UrlResource(path.toUri());
             if(!resource.exists()){
-                throw new RuntimeException("Archivo no encontrado: " + filePath);
+                throw new ResourNotFoundException("Archivo", filePath);
             }
             String contentType="";
             try {
@@ -79,6 +84,8 @@ public class FileService implements IFileService {
                     .contentType(contentType)
                      .resource(resource)
                     .build();
+        } catch (DomainException e) {
+            throw e; // conserva su código (400 o 404)
         } catch (Exception e) {
             throw new RuntimeException("No se pudo descargar el archivo. Por favor, intente nuevamente.", e);
         }

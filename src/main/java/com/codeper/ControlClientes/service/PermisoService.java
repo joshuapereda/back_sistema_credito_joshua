@@ -2,6 +2,7 @@ package com.codeper.ControlClientes.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,8 @@ import com.codeper.ControlClientes.dto.CreatePermisoDto;
 import com.codeper.ControlClientes.dto.PermisoDto;
 import com.codeper.ControlClientes.dto.PermisoFilterCriteria;
 import com.codeper.ControlClientes.entity.Permiso;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PermisoRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
@@ -72,7 +75,7 @@ public class PermisoService implements IPermisoService {
             throw new ResourNotFoundException("Permiso ", id);
         }
         if (rolRepository.existsByPermisosId(id)) {
-            throw new IllegalStateException("No se puede eliminar: el permiso está asignado a uno o más roles");
+            throw new ConflictException("No se puede eliminar: el permiso está asignado a uno o más roles");
         }
         permisoRepository.deleteById(id);
     }
@@ -82,7 +85,7 @@ public class PermisoService implements IPermisoService {
 
         try {
             // SORT PERMITE MANEJAR EL ORDENAMIENTO
-            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+            Sort sort = "asc".equalsIgnoreCase(pageableRequest.getSortOrder())
                     ? Sort.by(pageableRequest.getSortField()).ascending()
                     : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -111,8 +114,9 @@ public class PermisoService implements IPermisoService {
                     .totalPages(permisoPage.getTotalPages())
                     .build();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error de paginacion de permisos", e);
+        } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
         }
     }
 }

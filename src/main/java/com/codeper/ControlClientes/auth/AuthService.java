@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import com.codeper.ControlClientes.exception.UnauthorizedException;
+import io.jsonwebtoken.JwtException;
 
 import com.codeper.ControlClientes.entity.Usuario;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
@@ -25,7 +27,7 @@ public class AuthService {
             uthenticationManager.authenticate(
                   new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             Usuario usuario=usuarioRepository.findByPersonaGmail((authRequest.getUsername()))
-            .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
+            .orElseThrow(()-> new UnauthorizedException("Usuario no encontrado"));
 
             String accessToken= jwtService.generateAccessToken(usuario);
             String refreshToken=jwtService.generateRefreshToken(usuario);
@@ -43,12 +45,12 @@ public class AuthService {
     public AuthResponse refreshToken(String authentication){
         try {
             if (authentication == null || !authentication.startsWith("Bearer ")) {
-                throw new RuntimeException("Token invalido");
+                throw new UnauthorizedException("Token inválido");
             }
             String token= authentication.substring(7);
             String username= jwtService.extractUsername(token);
             Usuario usuario= usuarioRepository.findByPersonaGmail(username)
-                .orElseThrow(()->new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(()->new UnauthorizedException("Usuario no encontrado"));
             String accessToken= jwtService.generateAccessToken(usuario);
             String refreshToken=jwtService.generateRefreshToken(usuario);
             return AuthResponse.builder()
@@ -57,8 +59,9 @@ public class AuthService {
                     .identifier(usuario.getId())
                     .expiration(expiration)
                     .build();
-        } catch (Exception e) {
-            throw e;
+        } catch (JwtException | IllegalArgumentException e) {
+            // token vencido, vacío o alterado -> 401
+            throw new UnauthorizedException("Token inválido o vencido");
         }
     }
 }

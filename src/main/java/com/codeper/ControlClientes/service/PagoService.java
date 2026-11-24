@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,8 @@ import com.codeper.ControlClientes.dto.PagoFilterCriteria;
 import com.codeper.ControlClientes.entity.Compra;
 import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Pago;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.PagoRepository;
@@ -52,7 +55,7 @@ public class PagoService implements IPagoService {
 
         if (createPagoDto.getMonto() == null
                 || createPagoDto.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("El monto debe ser mayor a cero.");
+            throw new BadRequestException("El monto debe ser mayor a cero.");
         }
 
         Compra compra = compraRepository.findById(createPagoDto.getCompraId())
@@ -60,13 +63,13 @@ public class PagoService implements IPagoService {
 
         // 1. Validar que aún se pueda pagar
         if (compra.getEstado() == EstadoCompra.PAGADO) {
-            throw new RuntimeException("Esta compra ya está pagada.");
+            throw new ConflictException("Esta compra ya está pagada.");
         }
 
         // 2. Calcular y validar el nuevo saldo
         BigDecimal saldoRes = compra.getSaldo().subtract(createPagoDto.getMonto());
         if (saldoRes.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("El monto del pago excede el saldo de la compra.");
+            throw new ConflictException("El monto del pago excede el saldo de la compra.");
         }
 
         // 3. Crear el pago
@@ -100,7 +103,7 @@ public class PagoService implements IPagoService {
         // Paso 2: validar el monto
         if (actualizarPagoDto.getMonto() == null
                 || actualizarPagoDto.getMonto().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("El monto debe ser mayor a cero.");
+            throw new BadRequestException("El monto debe ser mayor a cero.");
         }
 
         // Paso 3: cambiar el monto y guardarlo ya en la BD (flush)
@@ -137,7 +140,7 @@ public class PagoService implements IPagoService {
         }
 
         if (saldo.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("El monto de los pagos excede el total de la compra.");
+            throw new ConflictException("El monto de los pagos excede el total de la compra.");
         }
 
         compra.setSaldo(saldo);
@@ -152,7 +155,7 @@ public PageableResponse<PagoDto> getPagoPagination( PageableRequest<PagoFilterCr
     try {
 
         // SORT PERMITE MANEJAR EL ORDENAMIENTO ASC = Ascendente, DESC = Descendente
-        Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+        Sort sort = "asc".equalsIgnoreCase(pageableRequest.getSortOrder())
                 ? Sort.by(pageableRequest.getSortField()).ascending()
                 : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -194,8 +197,9 @@ public PageableResponse<PagoDto> getPagoPagination( PageableRequest<PagoFilterCr
 
                 .build();
 
-    } catch (Exception e) {
-        throw new RuntimeException("Error de paginacion de pagos", e);
+    } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
     }
   }
 }
