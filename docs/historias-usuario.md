@@ -259,6 +259,30 @@ Backlog que sale de la revisión del código. Cada historia se puede entregar y 
 
 ---
 
+## Épica: Correcciones de datos
+
+### HU-13 · No borrar ni repetir datos por error
+
+**Como** administrador
+**quiero** que eliminar un rol borre solo ese rol y que no haya correos repetidos
+**para** no perder permisos ni romper el inicio de sesión.
+
+**Criterios de aceptación**
+- **Dado** un rol sin permisos, **cuando** lo elimino, **entonces** se borra ese rol y ningún permiso.
+- **Dado** un correo que ya usa otra persona, **cuando** creo o edito un cliente, **entonces** recibo **409** con "El correo electrónico ya está en uso".
+- **Dado** que edito un cliente y mantengo su correo, o lo dejo vacío, **entonces** se guarda sin error.
+
+**Qué se creó o cambió**
+
+| Archivo | Para qué sirve |
+|---|---|
+| `service/RolService` | Borra en `rolRepository` (antes en `permisoRepository`) |
+| `repository/PersonaRepository` | Busca correos repetidos |
+| `service/ClienteService` | Valida el correo al crear y editar |
+| `test/service/RolServiceTest`, `ClienteServiceTest` (nuevos) | Pruebas sin BD |
+
+---
+
 ## Fuera de alcance (decidido)
 
 - **Credenciales de la BD en `application.yaml`**: se mantienen así por ahora.

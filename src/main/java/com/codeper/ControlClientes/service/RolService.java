@@ -86,7 +86,7 @@ public class RolService implements IRolService {
         if (permisoRepository.existsByRolesId(id)) {
             throw new ConflictException("No se puede eliminar: el rol está asignado a uno o más permisos");
         }
-        permisoRepository.deleteById(id);
+        rolRepository.deleteById(id); // antes borraba en permisos
     }
 
     private List<Permiso> validarYObtenerPermisos(List<Integer> permisosId) {
