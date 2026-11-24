@@ -14,7 +14,10 @@ import com.codeper.ControlClientes.common.dto.PageableResponse;
 import com.codeper.ControlClientes.dto.CategoriaDto;
 import com.codeper.ControlClientes.dto.CategoriaFilterCriteria;
 import com.codeper.ControlClientes.entity.Categoria;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CategoriaRepository;
 import com.codeper.ControlClientes.repository.ProductoRepository;
@@ -83,7 +86,7 @@ public class CategoriaService implements ICategoriaService {
             throw new ResourNotFoundException("Categoria ", id);
         }
         if (productoRepository.existsByCategoriaId(id)) {
-            throw new IllegalStateException("No se puede eliminar: la categoría tiene productos asociados");
+            throw new ConflictException("No se puede eliminar: la categoría tiene productos asociados");
         }
         pCategoriaRepository.deleteById(id);
     }
@@ -101,7 +104,7 @@ public PageableResponse<CategoriaDto> getCategoriaPagination(PageableRequest<Cat
     try {
 
         // SORT PERMITE MANEJAR EL ORDENAMIENTO ASC = Ascendente, DESC = Descendente
-        Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+        Sort sort = "asc".equalsIgnoreCase(pageableRequest.getSortOrder())
                 ? Sort.by(pageableRequest.getSortField()).ascending()
                 : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -134,8 +137,9 @@ public PageableResponse<CategoriaDto> getCategoriaPagination(PageableRequest<Cat
 
                 .build();
 
-    } catch (Exception e) {
-        throw new RuntimeException("Error de paginacion de categorias", e);
+    } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
     }
 } 
 }

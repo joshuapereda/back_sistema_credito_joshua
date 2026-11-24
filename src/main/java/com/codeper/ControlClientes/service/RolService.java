@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,8 @@ import com.codeper.ControlClientes.dto.RolDto;
 import com.codeper.ControlClientes.dto.RolFilterCriteria;
 import com.codeper.ControlClientes.entity.Permiso;
 import com.codeper.ControlClientes.entity.Rol;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.PermisoRepository;
 import com.codeper.ControlClientes.repository.RolRepository;
@@ -81,14 +84,14 @@ public class RolService implements IRolService {
             throw new ResourNotFoundException("Rol ", id);
         }
         if (permisoRepository.existsByRolesId(id)) {
-            throw new IllegalStateException("No se puede eliminar: el rol está asignado a uno o más permisos");
+            throw new ConflictException("No se puede eliminar: el rol está asignado a uno o más permisos");
         }
         permisoRepository.deleteById(id);
     }
 
     private List<Permiso> validarYObtenerPermisos(List<Integer> permisosId) {
         if (permisosId == null || permisosId.isEmpty()) {
-            throw new IllegalArgumentException("Debe enviar al menos un permiso");
+            throw new BadRequestException("Debe enviar al menos un permiso");
         }
 
         List<Integer> ids = permisosId.stream().distinct().toList();
@@ -103,7 +106,7 @@ public class RolService implements IRolService {
                     .filter(id -> !encontrados.contains(id))
                     .toList();
 
-            throw new RuntimeException("Permisos no encontrados: " + noExisten);
+            throw new ResourNotFoundException("Permisos", noExisten);
         }
         return permisos;
     }
@@ -112,7 +115,7 @@ public class RolService implements IRolService {
     public PageableResponse<RolDto> getRolPagination(PageableRequest<RolFilterCriteria> pageableRequest) {
         try {
             // SORT PERMITE MANEJAR EL ORDENAMIENTO
-            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc")
+            Sort sort = "asc".equalsIgnoreCase(pageableRequest.getSortOrder())
                     ? Sort.by(pageableRequest.getSortField()).ascending()
                     : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -141,8 +144,9 @@ public class RolService implements IRolService {
                     .totalPages(rolPage.getTotalPages())
                     .build();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error de paginacion de roles", e);
+        } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
         }
     }
 

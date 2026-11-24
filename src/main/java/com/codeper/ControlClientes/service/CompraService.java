@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,8 @@ import com.codeper.ControlClientes.entity.EstadoCompra;
 import com.codeper.ControlClientes.entity.Producto;
 import com.codeper.ControlClientes.entity.TipoCompra;
 import com.codeper.ControlClientes.entity.Usuario;
+import com.codeper.ControlClientes.exception.BadRequestException;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.ClienteRepository;
 import com.codeper.ControlClientes.repository.CompraRepository;
@@ -30,7 +33,6 @@ import com.codeper.ControlClientes.repository.ProductoRepository;
 import com.codeper.ControlClientes.repository.TipoCompraRepository;
 import com.codeper.ControlClientes.repository.UsuarioRepository;
 import com.codeper.ControlClientes.repository.specofocation.CompraSpecification;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service 
@@ -143,7 +145,7 @@ public class CompraService implements ICompraService {
     
     for (CreateCompraDto.DetalleItemDto item : dto.getDetalles()) {
         Producto producto = productoRepository.findById(item.getProductoId())
-            .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con id: " + item.getProductoId()));
+            .orElseThrow(() -> new ResourNotFoundException("Producto", item.getProductoId()));
 
         BigDecimal subtotal = producto.getPrecioVenta()
             .multiply(BigDecimal.valueOf(item.getCantidad()));
@@ -165,7 +167,7 @@ public class CompraService implements ICompraService {
     private void aplicarSaldoYEstado(Compra compra, BigDecimal totalPagado) {
         TipoCompra tipo = compra.getTipoCompra();
         if (tipo.getEsCredito() == null) {
-            throw new RuntimeException("El tipo de compra '" + tipo.getNombre()
+            throw new ConflictException("El tipo de compra '" + tipo.getNombre()
                 + "' no indica si es a crédito o al contado (campo esCredito).");
         }
 
@@ -177,7 +179,7 @@ public class CompraService implements ICompraService {
 
         BigDecimal saldo = compra.getTotal().subtract(totalPagado);
         if (saldo.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("El nuevo total (" + compra.getTotal()
+            throw new ConflictException("El nuevo total (" + compra.getTotal()
                 + ") es menor a lo que el cliente ya pagó (" + totalPagado + ").");
         }
 
@@ -197,7 +199,7 @@ public class CompraService implements ICompraService {
     public PageableResponse<CompraDto> getCompraPagination(PageableRequest<CompraFilterCriteria> pageableRequest) {
         try {
             //SORT PERMITE MANEJAR ORDENAMIENTO
-            Sort sort = pageableRequest.getSortOrder().equalsIgnoreCase("asc") //ASC = ASCENDENTE, DESC = DESCENDENTE
+            Sort sort = "asc".equalsIgnoreCase(pageableRequest.getSortOrder()) //ASC = ASCENDENTE, DESC = DESCENDENTE
                 ? Sort.by(pageableRequest.getSortField()).ascending()
                 : Sort.by(pageableRequest.getSortField()).descending();
 
@@ -225,9 +227,9 @@ public class CompraService implements ICompraService {
                 .totalPages(compraPage.getTotalPages())
                 .build();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error de paginacion de Compras");
+        } catch (PropertyReferenceException | IllegalArgumentException e) {
+            // sortField que no existe o página inválida -> 400
+            throw new BadRequestException("Datos de paginación inválidos: " + e.getMessage());
         }
     }
 }

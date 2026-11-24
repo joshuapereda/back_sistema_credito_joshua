@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.codeper.ControlClientes.dto.CreateTipoCompraDto;
 import com.codeper.ControlClientes.dto.TipoCompraDto;
 import com.codeper.ControlClientes.entity.TipoCompra;
+import com.codeper.ControlClientes.exception.ConflictException;
 import com.codeper.ControlClientes.exception.ResourNotFoundException;
 import com.codeper.ControlClientes.repository.CompraRepository;
 import com.codeper.ControlClientes.repository.TipoCompraRepository;
@@ -64,7 +65,7 @@ public class TipoCompraService implements ITipoCompraService {
             throw new ResourNotFoundException("Tipo de compra ", id);
         }
         if (compraRepository.existsByTipoCompraId(id)) {
-            throw new IllegalStateException("No se puede eliminar: el tipo de compra ya tiene compras registradas");
+            throw new ConflictException("No se puede eliminar: el tipo de compra ya tiene compras registradas");
         }
         tipoCompraRepository.deleteById(id);
     }
